@@ -1,0 +1,13 @@
+# OSX Files
+.DS_Store
+
+# Sublime Files
+*.sublime-*
+
+# NPM
+node_modules
+npm-debug.log
+
+# Build Output
+dist
+
