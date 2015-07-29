@@ -19,5 +19,6 @@ npm install
 #### Step 4.
 Run the development server
 `npm run start`
+Now go to http://localhost:3000 to view the site.
 
 
