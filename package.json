@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "node server.js",
+    "build": "NODE_ENV=production webpack -p --config webpack.config.production.js && cp index.html dist && surge -d wallfly.surge.sh",
     "lint": "eslint ."
   },
   "devDependencies": {
