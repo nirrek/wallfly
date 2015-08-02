@@ -3,6 +3,7 @@ import moment from 'moment';
 import DayPicker from 'react-day-picker';
 var axios = require('axios');
 var fecha = require('fecha');
+var config = require('../utils/config.js');
 
 // simulate a user Store
 var user = {
@@ -25,7 +26,7 @@ class Calendar extends React.Component {
   }
 
   componentWillMount() {
-    axios.get(`http://localhost:8000/users/${user.id}/events`, {
+    axios.get(`${config.server}/users/${user.id}/events`, {
       withCredentials: true
     })
     .then((response) => {

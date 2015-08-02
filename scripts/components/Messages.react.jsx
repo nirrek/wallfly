@@ -2,6 +2,7 @@ import React from 'react';
 var axios = require('axios');
 var fecha = require('fecha');
 var login = require('../utils/Login.js');
+var config = require('../utils/config.js');
 
 class Avatar extends React.Component {
   static propTypes = {
@@ -21,7 +22,7 @@ class Avatar extends React.Component {
 
 let avatarStyle = {
   borderRadius: 20,
-}
+};
 
 class ChatMessage extends React.Component {
   static propTypes = {
@@ -109,7 +110,7 @@ class ChatPanel extends React.Component {
   }
 
   getMessages(callback) {
-    axios.get(`http://localhost:8000/users/${login.getUser().id}/messages`, {
+    axios.get(`${config.server}/users/${login.getUser().id}/messages`, {
         withCredentials: true, // send cookies for cross-site requests
     })
     .then((response) => {
@@ -131,7 +132,7 @@ class ChatPanel extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    axios.post(`http://localhost:8000/users/${login.getUser().id}/messages`, {
+    axios.post(`${config.server}/users/${login.getUser().id}/messages`, {
       sender: this.sender,
       receiver: this.receiver,
       message: this.state.messageDraft,
