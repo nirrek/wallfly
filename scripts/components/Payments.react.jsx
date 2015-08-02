@@ -1,13 +1,40 @@
 import React from 'react';
+var axios = require('axios');
+var fecha = require('fecha');
+
+// simulate a user Store
+var user = {
+  id: 5,
+}
 
 class Payments extends React.Component {
+  state = {
+    payments: [], // list of recent payments
+  }
+
+  componentWillMount() {
+    axios.get(`http://localhost:8000/users/${user.id}/payments`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        this.setState({
+          payments: response.data
+        });
+        console.log(response.data);
+      })
+      .catch((response) => {
+        // TODO - read up on error handling
+        console.log(response);
+      });
+  }
+
   render() {
-    let rows = [1, 2, 3, 4, 5, 6, 7].sort((a, b) => b - a).map(month => {
+    let rows = this.state.payments.map(payment => {
       return (
         <tr>
-          <td>02-0{month}-2015</td>
-          <td>Ben Park</td>
-          <td>$600</td>
+          <td>{fecha.format(new Date(payment.date), 'Do MMM YYYY')}</td>
+          <td>{payment.property}</td>
+          <td>{payment.amount}</td>
         </tr>
       );
     });
@@ -18,7 +45,7 @@ class Payments extends React.Component {
         <table>
           <tr>
             <th>Date</th>
-            <th>Tenant</th>
+            <th>Property</th>
             <th>Amount</th>
           </tr>
           {rows}

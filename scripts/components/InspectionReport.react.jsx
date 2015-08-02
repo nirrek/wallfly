@@ -1,23 +1,42 @@
 import React from 'react';
+var axios = require('axios');
+var fecha = require('fecha');
+
+// simulate a user Store
+var user = {
+  id: 5,
+}
 
 class InspectionReport extends React.Component {
-  render() {
-    let data = [
-      {
-        date: '05-05-2015',
-        inspector: 'Mr Agent',
-        comment: 'Water tank is leaking, and there are some cracks in the ceiling',
-        image: 'http://www.waterheaterrepairbridgeportct.com/wp-content/uploads/2013/08/water-heater-leaking.jpg',
-      }
-    ];
+  state = {
+    inspections: [], // list of repair requests
+  }
 
-    let rows = data.map(data => {
+  componentWillMount() {
+    axios.get(`http://localhost:8000/users/${user.id}/inspections`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        this.setState({
+          inspections: response.data
+        });
+        console.log(response.data);
+      })
+      .catch((response) => {
+        // TODO - read up on error handling
+        console.log(response);
+      });
+  }
+
+  render() {
+    let { inspections } = this.state;
+
+    let rows = inspections.map(inspection => {
       return (
         <tr>
-          <td>{data.date}</td>
-          <td>{data.inspector}</td>
-          <td>{data.comment}</td>
-          <td><img src={data.image} /></td>
+          <td>{fecha.format(new Date(inspection.date), 'Do MMM YYYY')}</td>
+          <td>{inspection.inspector}</td>
+          <td>{inspection.comments}</td>
         </tr>
       );
     });
@@ -28,8 +47,7 @@ class InspectionReport extends React.Component {
           <tr>
             <th>Date</th>
             <th>Inspector</th>
-            <th>Comment</th>
-            <th>Image</th>
+            <th>Comments</th>
           </tr>
           {rows}
         </table>

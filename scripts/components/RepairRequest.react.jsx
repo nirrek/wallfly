@@ -1,24 +1,43 @@
 import React from 'react';
+var axios = require('axios');
+var fecha = require('fecha');
+
+// simulate a user Store
+var user = {
+  id: 5,
+}
 
 class RepairRequest extends React.Component {
-  render() {
-    let data = [
-      {
-        date: '05-05-2015',
-        subject: 'Leaking water tank',
-        request: 'Hi can you fix up the water tank? The water tank is leaking' +
-                 'since yesterday. Thank you.',
-        image: 'http://www.waterheaterrepairbridgeportct.com/wp-content/uploads/2013/08/water-heater-leaking.jpg',
-      }
-    ];
+  state = {
+    repairRequests: [], // list of repair requests
+  }
 
-    let rows = data.map(data => {
+  componentWillMount() {
+    axios.get(`http://localhost:8000/users/${user.id}/repairs`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        this.setState({
+          repairRequests: response.data
+        });
+        console.log(response.data);
+      })
+      .catch((response) => {
+        // TODO - read up on error handling
+        console.log(response);
+      });
+  }
+
+  render() {
+    let { repairRequests } = this.state;
+
+    let rows = repairRequests.map(request => {
       return (
         <tr>
-          <td>{data.date}</td>
-          <td>{data.subject}</td>
-          <td>{data.request}</td>
-          <td><img src={data.image} /></td>
+          <td>{fecha.format(new Date(request.date), 'Do MMM YYYY')}</td>
+          <td>{request.subject}</td>
+          <td>{request.request}</td>
+          <td><img src={request.photo} /></td>
         </tr>
       );
     });

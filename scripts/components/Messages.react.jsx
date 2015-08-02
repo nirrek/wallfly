@@ -1,4 +1,7 @@
 import React from 'react';
+var axios = require('axios');
+var fecha = require('fecha');
+var login = require('../utils/Login.js');
 
 class Avatar extends React.Component {
   static propTypes = {
@@ -23,7 +26,7 @@ let avatarStyle = {
 class ChatMessage extends React.Component {
   static propTypes = {
     avatarUrl: React.PropTypes.string,
-    message: React.PropTypes.string.is
+    message: React.PropTypes.string.isRequired,
   }
 
   render() {
@@ -88,22 +91,86 @@ let msgStyle = {
   },
 }
 
+// TODO, pull up the handler logic into a higher component
 class ChatPanel extends React.Component {
+  state = {
+    messages: [],
+    messageDraft: '',
+  }
+
+  constructor(props) {
+    super(props);
+    this.sender = login.getUser().id;
+    this.receiver = null;
+  }
+
+  componentWillMount() {
+    this.getMessages(this.sender);
+  }
+
+  getMessages(callback) {
+    axios.get(`http://localhost:8000/users/${login.getUser().id}/messages`, {
+        withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      let { data } = response;
+
+      this.receiver = data.agent;
+      this.setState({
+        messages: data.messages
+      });
+
+      if (callback) callback();
+    })
+    .catch((response) => {
+      // TODO - error handling
+    });
+  }
+
+  onSend = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    axios.post(`http://localhost:8000/users/${login.getUser().id}/messages`, {
+      sender: this.sender,
+      receiver: this.receiver,
+      message: this.state.messageDraft,
+    }, {
+        withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      this.getMessages(() => {
+        this.setState({ messageDraft: '' });
+      });
+    })
+    .catch((response) => {
+      // TODO - read up on error handling
+      console.log(response);
+    });
+  }
+
+  onChange = (event) => {
+    this.setState({ messageDraft: event.target.value });
+  }
+
   render() {
-    let msg = 'hey there this is I need some help with the apartment' +
-              'hey there this is I need some help with the apartment' +
-              'hey there this is I need some help with the apartment' +
-              'hey there this is I need some help with the apartment';
+    let { messages, messageDraft } = this.state;
+
+    let messageComponents = messages.map(message => {
+      var isUser = message.sender === login.getUser().id;
+      var avatar = isUser ? 'https://s3.amazonaws.com/uifaces/faces/twitter/madysondesigns/48.jpg'
+                          : 'https://s3.amazonaws.com/uifaces/faces/twitter/jm_denis/48.jpg'
+      return <ChatMessage key={message.id} isUser={isUser} avatarUrl={avatar} message={message.message} />;
+    });
 
     return (
       <div>
         <div>
-          <ChatMessage isUser={true} avatarUrl={'https://s3.amazonaws.com/uifaces/faces/twitter/madysondesigns/48.jpg'} message={msg} />
-          <ChatMessage isUser={false} avatarUrl={'https://s3.amazonaws.com/uifaces/faces/twitter/jm_denis/48.jpg'} message={'No worries I can do that.'} />
-          <ChatMessage isUser={true} avatarUrl={'https://s3.amazonaws.com/uifaces/faces/twitter/madysondesigns/48.jpg'} message={'Great. Thanks so much'} />
+          {messageComponents}
         </div>
         <div style={{display: 'flex'}}>
-          <textarea style={panelStyle.textarea} /><button>Send</button>
+          <textarea value={messageDraft} onChange={this.onChange} style={panelStyle.textarea} />
+          <button onClick={this.onSend}>Send</button>
         </div>
       </div>
     );
@@ -125,7 +192,7 @@ class RepairRequest extends React.Component {
     return (
       <div style={style.page}>
         <h3>Chat with Mr Agent</h3>
-        <ChatPanel />
+        <ChatPanel/>
       </div>
     );
   }
