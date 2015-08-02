@@ -14,6 +14,7 @@ import Calendar from './components/Calendar.react.jsx';
 import InspectionReport from './components/InspectionReport.react.jsx';
 import RtaForm from './components/RtaForm.react.jsx';
 import Messages from './components/Messages.react.jsx';
+import Login from './components/Login.react.jsx';
 
 require('../styles/main.scss');
 
@@ -79,7 +80,8 @@ App.childContextTypes = {
 
 React.render((
   <Router history={history}>
-    <Router path="/" component={App}>
+    <Router component={App}>
+      <Router path="/" component={Login} />
       <Router path="propertyDetails" component={PropertyDetails} />
       <Router path="payments" component={Payments} />
       <Router path="repairRequest" component={RepairRequest} />
