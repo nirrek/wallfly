@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 var axios = require('axios');
 var fecha = require('fecha');
 var config = require('../utils/config.js');
@@ -8,10 +8,12 @@ var user = {
   id: 5,
 }
 
-class Payments extends React.Component {
-  state = {
-    payments: [], // list of recent payments
-  }
+var Payments = React.createClass({
+  getInitialState() {
+    return {
+      payments: [], // list of recent payments
+    };
+  },
 
   componentWillMount() {
     axios.get(`${config.server}/users/${user.id}/payments`, {
@@ -27,10 +29,10 @@ class Payments extends React.Component {
         // TODO - read up on error handling
         console.log(response);
       });
-  }
+  },
 
   render() {
-    let rows = this.state.payments.map(payment => {
+    var rows = this.state.payments.map(payment => {
       return (
         <tr>
           <td>{fecha.format(new Date(payment.date), 'Do MMM YYYY')}</td>
@@ -54,9 +56,9 @@ class Payments extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
