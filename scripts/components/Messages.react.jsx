@@ -1,8 +1,11 @@
 var React = require('react');
-var axios = require('axios');
 var fecha = require('fecha');
 var login = require('../utils/Login.js');
 var config = require('../utils/config.js');
+var Api = require('../utils/Api.js');
+
+// TODO make a current user model accessible.
+var userId = 5;
 
 var Avatar = React.createClass({
   propTypes: {
@@ -108,44 +111,42 @@ var ChatPanel = React.createClass({
   },
 
   getMessages(callback) {
-    axios.get(`${config.server}/users/${login.getUser().id}/messages`, {
-        withCredentials: true, // send cookies for cross-site requests
-    })
-    .then((response) => {
-      var { data } = response;
+    Api.getMessages({
+      callback: (err, response) => {
+        var { data } = response;
 
-      this.receiver = data.agent;
-      this.setState({
-        messages: data.messages
-      });
+        this.receiver = data.agent;
+        this.setState({
+          messages: data.messages
+        });
 
-      if (callback) callback();
+        if (callback) callback();
+      }
     })
-    .catch((response) => {
-      // TODO - error handling
-    });
   },
 
   onSend(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    axios.post(`${config.server}/users/${login.getUser().id}/messages`, {
-      sender: this.sender,
-      receiver: this.receiver,
-      message: this.state.messageDraft,
-    }, {
-        withCredentials: true, // send cookies for cross-site requests
+    Api.postMessages({
+      data: {
+        sender: this.sender,
+        receiver: this.receiver,
+        message: this.state.messageDraft,
+      },
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return;
+        }
+
+        // Refetch all messages from the server.
+        this.getMessages(() => {
+          this.setState({ messageDraft: '' });
+        });
+      }
     })
-    .then((response) => {
-      this.getMessages(() => {
-        this.setState({ messageDraft: '' });
-      });
-    })
-    .catch((response) => {
-      // TODO - read up on error handling
-      console.log(response);
-    });
   },
 
   onChange(event) {
@@ -156,8 +157,8 @@ var ChatPanel = React.createClass({
     var { messages, messageDraft } = this.state;
 
     var messageComponents = messages.map(message => {
-      var isUser = message.sender === login.getUser().id;
-      var avatar = isUser ? 'https://s3.amazonaws.com/uifaces/faces/twitter/madysondesigns/48.jpg'
+      var isUser = message.sender === userId;
+      var avatar = isUser ? 'https://avatars3.githubusercontent.com/u/1008618?v=3&s=460'
                           : 'https://s3.amazonaws.com/uifaces/faces/twitter/jm_denis/48.jpg'
       return <ChatMessage key={message.id} isUser={isUser} avatarUrl={avatar} message={message.message} />;
     });

@@ -1,8 +1,15 @@
 var axios = require('axios');
+var config = require('./config.js');
 
-let host = 'http://localhost:8000'
+let host = config.server;
 let userId; // current logged in user. Used in url creation.
 
+/**
+ * Api Module
+ * The Api module contains all interactions with the server. If you want to
+ * make network requests to the server, then it should be a method in the Api
+ * module that initiates the request.
+ */
 let Api = {
 
   // Log in
@@ -39,7 +46,39 @@ let Api = {
 
       callback(new Error(error), response);
     });
-  }
+  },
+
+  // Fetch messages for the current user.
+  getMessages({ callback = () => {} } = {}) {
+    axios.get(`${host}/users/${userId}/messages`, {
+        withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.getMessages(): ${error}`);
+
+      callback(new Error(error), response);
+    });
+  },
+
+  // Post new messages from the current user
+  postMessages({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/users/${userId}/messages`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.postMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
 };
 
 export default Api;
