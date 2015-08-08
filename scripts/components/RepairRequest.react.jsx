@@ -1,7 +1,7 @@
 var React = require('react');
 var axios = require('axios');
-var fecha = require('fecha');
 var config = require('../utils/config.js');
+var moment = require('moment');
 
 // simulate a user Store
 var user = {
@@ -37,7 +37,7 @@ var RepairRequest = React.createClass({
     var rows = repairRequests.map(request => {
       return (
         <tr>
-          <td>{fecha.format(new Date(request.date), 'Do MMM YYYY')}</td>
+          <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.subject}</td>
           <td>{request.request}</td>
           <td><img src={request.photo} /></td>

@@ -1,7 +1,7 @@
 var React = require('react');
 var axios = require('axios');
-var fecha = require('fecha');
 var config = require('../utils/config.js');
+var moment = require('moment');
 
 // simulate a user Store
 var user = {
@@ -35,7 +35,7 @@ var Payments = React.createClass({
     var rows = this.state.payments.map(payment => {
       return (
         <tr>
-          <td>{fecha.format(new Date(payment.date), 'Do MMM YYYY')}</td>
+          <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
           <td>{payment.amount}</td>
         </tr>

@@ -1,7 +1,7 @@
 var React = require('react');
 var axios = require('axios');
-var fecha = require('fecha');
 var config = require('../utils/config.js');
+var moment = require('moment');
 
 // simulate a user Store
 var user = {
@@ -37,7 +37,7 @@ var InspectionReport = React.createClass({
     var rows = inspections.map(inspection => {
       return (
         <tr>
-          <td>{fecha.format(new Date(inspection.date), 'Do MMM YYYY')}</td>
+          <td>{moment(inspection.date).format('Do MMM YYYY')}</td>
           <td>{inspection.inspector}</td>
           <td>{inspection.comments}</td>
         </tr>
