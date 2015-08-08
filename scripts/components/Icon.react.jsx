@@ -1,6 +1,10 @@
-import React from 'react'
+var React = require('react');
 
-let Icon = React.createClass({
+/**
+ * Icon Component
+ * The icon component is used to render inline SVG icons.
+ */
+var Icon = React.createClass({
   propTypes: {
     icon: React.PropTypes.string.isRequired,
     size: React.PropTypes.oneOfType([
