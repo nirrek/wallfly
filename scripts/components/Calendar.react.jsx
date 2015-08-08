@@ -1,23 +1,21 @@
-import React from 'react';
-import moment from 'moment';
-import DayPicker from 'react-day-picker';
-var fecha = require('fecha');
+var React = require('react');
+var moment = require('moment');
+var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
 
 require('../../styles/DayPicker.scss');
 
-let events = [
-  { date: new Date(2015, 6, 22), title: 'Fans being installed' }
-];
-
-const modifiers = {
-  "firstOfMonth": (day) => day.getDate() === 1,
-}
-
-class Calendar extends React.Component {
-  state = {
-    events: [], // list of calendar events
-  }
+/**
+ * Calendar component.
+ * The calendar component provides a calendar view that contains
+ * important events for the user.
+ */
+var Calendar = React.createClass({
+  getInitialState() {
+    return {
+      events: [], // list of calendar events
+    };
+  },
 
   componentWillMount() {
     Api.getEvents({
@@ -27,18 +25,18 @@ class Calendar extends React.Component {
           return;
         }
 
-        let massagedEvents = response.data.map(event => {
+        var massagedEvents = response.data.map(event => {
           event.date = moment(event.date);
           return event;
         })
         this.setState({ events: massagedEvents });
       }
     })
-  }
+  },
 
-  renderDay = (day) => {
-    let events = this.getEventsForDay(day);
-    let eventsEntries = events.map(event => {
+  renderDay(day) {
+    var events = this.getEventsForDay(day);
+    var eventsEntries = events.map(event => {
       return (
         <div key={day.getTime()}>
           {event.event}
@@ -52,12 +50,12 @@ class Calendar extends React.Component {
         { eventsEntries }
       </div>
     );
-  }
+  },
 
   getEventsForDay(day) {
     day = moment(day);
     return this.state.events.filter((event) => event.date.isSame(day, 'day'));
-  }
+  },
 
   render() {
     return (
@@ -68,9 +66,14 @@ class Calendar extends React.Component {
       </div>
     );
   }
+});
+
+// Modifiers specify what <DayPicker> inteprets particular days as.
+var modifiers = {
+  "firstOfMonth": (day) => day.getDate() === 1,
 }
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
