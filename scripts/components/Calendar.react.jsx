@@ -3,11 +3,7 @@ import moment from 'moment';
 import DayPicker from 'react-day-picker';
 var axios = require('axios');
 var fecha = require('fecha');
-
-// simulate a user Store
-var user = {
-  id: 5,
-}
+var Api = require('../utils/Api.js');
 
 require('../../styles/DayPicker.scss');
 
@@ -25,19 +21,20 @@ class Calendar extends React.Component {
   }
 
   componentWillMount() {
-    axios.get(`http://localhost:8000/users/${user.id}/events`, {
-      withCredentials: true
+    Api.getEvents({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return;
+        }
+
+        let massagedEvents = response.data.map(event => {
+          event.date = moment(event.date);
+          return event;
+        })
+        this.setState({ events: massagedEvents });
+      }
     })
-    .then((response) => {
-      let massagedEvents = response.data.map(event => {
-        event.date = moment(event.date);
-        return event;
-      })
-      this.setState({ events: massagedEvents });
-    })
-    .catch((response) => {
-      // TODO error handling
-    });
   }
 
   renderDay = (day) => {
