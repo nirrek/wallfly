@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 var axios = require('axios');
 var fecha = require('fecha');
 var config = require('../utils/config.js');
@@ -8,10 +8,12 @@ var user = {
   id: 5,
 }
 
-class RepairRequest extends React.Component {
-  state = {
-    repairRequests: [], // list of repair requests
-  }
+var RepairRequest = React.createClass({
+  getInitialState() {
+    return {
+      repairRequests: [], // list of repair requests
+    };
+  },
 
   componentWillMount() {
     axios.get(`${config.server}/users/${user.id}/repairs`, {
@@ -27,12 +29,12 @@ class RepairRequest extends React.Component {
         // TODO - read up on error handling
         console.log(response);
       });
-  }
+  },
 
   render() {
-    let { repairRequests } = this.state;
+    var { repairRequests } = this.state;
 
-    let rows = repairRequests.map(request => {
+    var rows = repairRequests.map(request => {
       return (
         <tr>
           <td>{fecha.format(new Date(request.date), 'Do MMM YYYY')}</td>
@@ -57,9 +59,9 @@ class RepairRequest extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
