@@ -1,16 +1,19 @@
-import React from 'react';
-import { FontIcon, IconButton, NavigationMenu } from 'material-ui';
+var React = require('react');
+var materialUi = require('material-ui');
+var FontIcon = materialUi.FontIcon;
+var IconButton = materialUi.IconButton;
+var NavigationMenu = materialUi.NavigationMenu;
 
-class Header extends React.Component {
-  static propTypes = {
+/**
+ * Header Component.
+ * The header component is the main site header at the top of the view.
+ */
+var Header = React.createClass({
+  propTypes: {
     // Callback when the the menu icon is toggled by the user.
     onMenuClick: React.PropTypes.func.isRequired,
     isMenuDocked: React.PropTypes.bool.isRequired,
-  }
-
-  onClick() {
-    alert('hey');
-  }
+  },
 
   render() {
     let { onMenuClick, isMenuDocked } = this.props;
@@ -32,16 +35,10 @@ class Header extends React.Component {
         <div style={styles.logo}>WallFly</div>
         <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton>
         <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>
-
       </div>
-      // <AppBar
-      //   title="Title"
-      //   showMenuIconButton={!isMenuDocked}
-      //   iconClassNameRight="muidocs-icon-navigation-expand-more"
-      //   onLeftIconButtonTouchTap={onMenuToggle}/>
     );
   }
-}
+});
 
 var styles = {
   header: {
