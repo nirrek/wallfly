@@ -2,6 +2,7 @@ var React = require('react');
 var axios = require('axios');
 var config = require('../utils/config.js');
 var moment = require('moment');
+var Api = require('../utils/Api.js');
 
 // simulate a user Store
 var user = {
@@ -16,25 +17,24 @@ var Payments = React.createClass({
   },
 
   componentWillMount() {
-    axios.get(`${config.server}/users/${user.id}/payments`, {
-        withCredentials: true, // send cookies for cross-site requests
-      })
-      .then((response) => {
+    Api.getPayments({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return console.log(err);
+        }
+
         this.setState({
           payments: response.data
         });
-        console.log(response.data);
-      })
-      .catch((response) => {
-        // TODO - read up on error handling
-        console.log(response);
-      });
+      }
+    })
   },
 
   render() {
     var rows = this.state.payments.map(payment => {
       return (
-        <tr>
+        <tr key={payment.date}>
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
           <td>{payment.amount}</td>
