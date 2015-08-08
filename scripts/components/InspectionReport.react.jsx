@@ -1,12 +1,6 @@
 var React = require('react');
-var axios = require('axios');
-var config = require('../utils/config.js');
 var moment = require('moment');
-
-// simulate a user Store
-var user = {
-  id: 5,
-}
+var Api = require('../utils/Api.js');
 
 var InspectionReport = React.createClass({
   getInitialState() {
@@ -16,19 +10,16 @@ var InspectionReport = React.createClass({
   },
 
   componentWillMount() {
-    axios.get(`${config.server}/users/${user.id}/inspections`, {
-        withCredentials: true, // send cookies for cross-site requests
-      })
-      .then((response) => {
-        this.setState({
-          inspections: response.data
-        });
-        console.log(response.data);
-      })
-      .catch((response) => {
-        // TODO - read up on error handling
-        console.log(response);
-      });
+    Api.getInspections({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return console.log(err);
+        }
+
+        this.setState({ inspections: response.data });
+      }
+    });
   },
 
   render() {
@@ -36,7 +27,7 @@ var InspectionReport = React.createClass({
 
     var rows = inspections.map(inspection => {
       return (
-        <tr>
+        <tr key={inspection.date}>
           <td>{moment(inspection.date).format('Do MMM YYYY')}</td>
           <td>{inspection.inspector}</td>
           <td>{inspection.comments}</td>

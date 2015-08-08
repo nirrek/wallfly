@@ -79,6 +79,20 @@ let Api = {
     });
   },
 
+  // Fetch property inspection details
+  getInspections({ callback=()=>{} }) {
+    axios.get(`${host}/users/${userId}/inspections`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getInspections(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
 };
 
 export default Api;
