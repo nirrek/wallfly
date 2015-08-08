@@ -1,9 +1,8 @@
-import React from 'react';
+var React = require('react');
 
-class RequestForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+var RequestForm = React.createClass({
+  getInitialState() {
+    return {
       // Form state
       bondNumber: 0,
       lodger: {
@@ -29,7 +28,7 @@ class RequestForm extends React.Component {
       disputeExtra: '',
       notices: [],
     };
-  }
+  },
 
   render() {
     return (
@@ -41,13 +40,10 @@ class RequestForm extends React.Component {
       </form>
     );
   }
-}
+});
 
-class RtaForm extends React.Component {
-
-
+var RtaForm = React.createClass({
   render() {
-
     return (
       <div style={style.page}>
         <div style={style.row}>
@@ -78,9 +74,9 @@ class RtaForm extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
