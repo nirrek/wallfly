@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 import DayPicker from 'react-day-picker';
-var axios = require('axios');
 var fecha = require('fecha');
 var Api = require('../utils/Api.js');
 
