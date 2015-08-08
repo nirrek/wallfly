@@ -48,23 +48,49 @@ var Login = React.createClass({
     var authFailMessage = authFailure ? 'Username or password invalid' : null;
 
     return (
-      <div>
+      <div style={style.page}>
         <h1>Login</h1>
-        <form onSubmit={this.onSubmit}>
-          <div> { authFailMessage } </div>
+        <form style={style.form} onSubmit={this.onSubmit}>
+          <div style={style.error}> { authFailMessage } </div>
           <input value={username}
                  onChange={this.onChange.bind(this, 'username')}
                  name="username"
-                 placeholder="username" />
+                 placeholder="username"
+                 style={style.input}/>
           <input value={password}
                  onChange={this.onChange.bind(this, 'password')}
                  name="password"
-                 placeholder="password" />
+                 placeholder="password"
+                 style={style.input}/>
           <button type="submit">Login</button>
         </form>
       </div>
     );
   }
 });
+
+var style = {
+  page: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '20em',
+  },
+  input: {
+    border: '1px solid rgba(0,0,0, .05)',
+    backgroundColor: '#efefef',
+    borderRadius: 4,
+    padding: '1em',
+    fontSize: 16,
+    marginBottom: '1em',
+  },
+  error: {
+    color: '#CE5646',
+  }
+};
 
 export default Login;
