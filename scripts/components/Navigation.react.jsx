@@ -1,13 +1,16 @@
-import React from 'react';
-import { Navigation } from 'react-router';
-import { List, ListItem, FontIcon } from 'material-ui';
+var React = require('react');
+var Navigation = require('react-router').Navigation;
+var MaterialUi = require('material-ui');
+var List = MaterialUi.List;
+var ListItem = MaterialUi.ListItem;
+var FontIcon = MaterialUi.FontIcon;
 
-let NavigationList = React.createClass({
+var NavigationList = React.createClass({
   mixins: [ Navigation ],
 
   render() {
 
-    let navItemData = [
+    var navItemData = [
       { text: 'Property Details', path: '/propertyDetails', icon: 'location_city' },
       { text: 'Payments', path: '/payments', icon: 'attach_money' },
       { text: 'Repair Request', path: '/repairRequest', icon: 'report_problem' },
@@ -17,8 +20,8 @@ let NavigationList = React.createClass({
       { text: 'Messages', path: '/messages', icon: 'message' },
     ];
 
-    let navItems = navItemData.map(data => {
-      let icon = <FontIcon className='material-icons'>{data.icon}</FontIcon>
+    var navItems = navItemData.map(data => {
+      var icon = <FontIcon className='material-icons'>{data.icon}</FontIcon>
       return (
         <ListItem key={data.text}
                   primaryText={data.text}
@@ -39,7 +42,7 @@ let NavigationList = React.createClass({
   }
 });
 
-let styles = {
+var styles = {
   spacer: {
     backgroundColor: '#2ECC71',
     height: 50,
