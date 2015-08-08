@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 var axios = require('axios');
 var fecha = require('fecha');
 var config = require('../utils/config.js');
@@ -8,10 +8,12 @@ var user = {
   id: 5,
 }
 
-class InspectionReport extends React.Component {
-  state = {
-    inspections: [], // list of repair requests
-  }
+var InspectionReport = React.createClass({
+  getInitialState() {
+    return {
+      inspections: [], // list of repair requests
+    }
+  },
 
   componentWillMount() {
     axios.get(`${config.server}/users/${user.id}/inspections`, {
@@ -27,12 +29,12 @@ class InspectionReport extends React.Component {
         // TODO - read up on error handling
         console.log(response);
       });
-  }
+  },
 
   render() {
-    let { inspections } = this.state;
+    var { inspections } = this.state;
 
-    let rows = inspections.map(inspection => {
+    var rows = inspections.map(inspection => {
       return (
         <tr>
           <td>{fecha.format(new Date(inspection.date), 'Do MMM YYYY')}</td>
@@ -55,9 +57,9 @@ class InspectionReport extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
