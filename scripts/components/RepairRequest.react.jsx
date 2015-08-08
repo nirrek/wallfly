@@ -1,12 +1,6 @@
 var React = require('react');
-var axios = require('axios');
-var config = require('../utils/config.js');
 var moment = require('moment');
-
-// simulate a user Store
-var user = {
-  id: 5,
-}
+var Api = require('../utils/Api.js');
 
 var RepairRequest = React.createClass({
   getInitialState() {
@@ -16,19 +10,18 @@ var RepairRequest = React.createClass({
   },
 
   componentWillMount() {
-    axios.get(`${config.server}/users/${user.id}/repairs`, {
-        withCredentials: true, // send cookies for cross-site requests
-      })
-      .then((response) => {
+    Api.getRepairRequests({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return console.log(err);
+        }
+
         this.setState({
           repairRequests: response.data
         });
-        console.log(response.data);
-      })
-      .catch((response) => {
-        // TODO - read up on error handling
-        console.log(response);
-      });
+      }
+    });
   },
 
   render() {
@@ -36,7 +29,7 @@ var RepairRequest = React.createClass({
 
     var rows = repairRequests.map(request => {
       return (
-        <tr>
+        <tr key={request.date}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.subject}</td>
           <td>{request.request}</td>

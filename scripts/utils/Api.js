@@ -107,6 +107,21 @@ let Api = {
         console.log(`Error in Api.getPayments(): ${error}`);
         callback(new Error(error), response);
       });
+  },
+
+  // Fetch list of repair requests
+  getRepairRequests({ callback=()=>{} }) {
+    axios.get(`${host}/users/${userId}/repairs`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getRepairRequests(): ${error}`);
+        callback(new Error(error), response);
+      });
   }
 };
 
