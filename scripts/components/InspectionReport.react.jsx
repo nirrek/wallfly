@@ -1,6 +1,7 @@
 import React from 'react';
 var axios = require('axios');
 var fecha = require('fecha');
+var config = require('../utils/config.js');
 
 // simulate a user Store
 var user = {
@@ -13,7 +14,7 @@ class InspectionReport extends React.Component {
   }
 
   componentWillMount() {
-    axios.get(`http://localhost:8000/users/${user.id}/inspections`, {
+    axios.get(`${config.server}/users/${user.id}/inspections`, {
         withCredentials: true, // send cookies for cross-site requests
       })
       .then((response) => {

@@ -1,7 +1,10 @@
 // Login.js is a module for holding the state of the logged in user.
 // This is a termporary module until Stores are setup.
 
-var user = null; // the logged in user
+// the logged in user
+var user = {
+  id: null
+};
 
 function setUser(loggedInUser) {
   user = loggedInUser;

@@ -1,5 +1,6 @@
 import React from 'react';
 var axios = require('axios');
+var config = require('../utils/config.js');
 
 // simulate a user Store
 var user = {
@@ -24,7 +25,7 @@ class PropertyDetails extends React.Component {
 
   componentWillMount() {
     console.log('mounting');
-    axios.get(`http://localhost:8000/users/${user.id}/property`, {
+    axios.get(`${config.server}/users/${user.id}/property`, {
         withCredentials: true, // send cookies for cross-site requests
       })
       .then((response) => {
