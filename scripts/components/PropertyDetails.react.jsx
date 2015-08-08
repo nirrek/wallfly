@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 var axios = require('axios');
 var config = require('../utils/config.js');
 
@@ -7,21 +7,23 @@ var user = {
   id: 5,
 }
 
-class PropertyDetails extends React.Component {
-  state = {
-    ownerFN: '',
-    ownerLN: '',
-    ownerPhone: '',
-    ownerEmail: '',
-    agentFN: '',
-    agentLN: '',
-    agentPhone: '',
-    agentEmail: '',
-    tenantFN: '',
-    tenantLN: '',
-    tenantPhone: '',
-    tenantEmail: '',
-  }
+var PropertyDetails = React.createClass({
+  getInitialState() {
+    return {
+      ownerFN: '',
+      ownerLN: '',
+      ownerPhone: '',
+      ownerEmail: '',
+      agentFN: '',
+      agentLN: '',
+      agentPhone: '',
+      agentEmail: '',
+      tenantFN: '',
+      tenantLN: '',
+      tenantPhone: '',
+      tenantEmail: '',
+    }
+  },
 
   componentWillMount() {
     console.log('mounting');
@@ -38,23 +40,23 @@ class PropertyDetails extends React.Component {
         // TODO - read up on error handling
         console.log(response);
       });
-  }
+  },
 
   render() {
 
-    let ownerDetailRows = [
+    var ownerDetailRows = [
       { header: 'Name', value: `${this.state.ownerFN} ${this.state.ownerLN}` },
       { header: 'Phone', value: this.state.ownerPhone },
       { header: 'Email', value: this.state.ownerEmail },
     ];
 
-    let agentDetailRows = [
+    var agentDetailRows = [
       { header: 'Name', value: `${this.state.agentFN} ${this.state.agentLN}` },
       { header: 'Phone', value: this.state.agentPhone },
       { header: 'Email', value: this.state.agentEmail },
     ];
 
-    let tenantDetailRows = [
+    var tenantDetailRows = [
       { header: 'Name', value: `${this.state.tenantFN} ${this.state.tenantLN}` },
       { header: 'Phone', value: this.state.tenantPhone },
       { header: 'Email', value: this.state.tenantEmail },
@@ -62,7 +64,7 @@ class PropertyDetails extends React.Component {
 
     console.log(ownerDetailRows);
 
-    let ownerDetails = ownerDetailRows.map(row => {
+    var ownerDetails = ownerDetailRows.map(row => {
 
     })
 
@@ -93,9 +95,9 @@ class PropertyDetails extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
