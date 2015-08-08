@@ -1,16 +1,16 @@
-import React from 'react';
+var React = require('react');
 var axios = require('axios');
 var fecha = require('fecha');
 var login = require('../utils/Login.js');
 var config = require('../utils/config.js');
 
-class Avatar extends React.Component {
-  static propTypes = {
+var Avatar = React.createClass({
+  propTypes: {
     avatarUrl: React.PropTypes.string
-  }
+  },
 
   render() {
-    let { avatarUrl } = this.props;
+    var { avatarUrl } = this.props;
 
     if (!avatarUrl) {
       avatarUrl = 'https://pbs.twimg.com/profile_images/479315519729070081/ty2LLr9m.jpeg';
@@ -18,32 +18,32 @@ class Avatar extends React.Component {
 
     return <img style={avatarStyle} width='40' height='40' src={avatarUrl} />;
   }
-}
+});
 
-let avatarStyle = {
+var avatarStyle = {
   borderRadius: 20,
 };
 
-class ChatMessage extends React.Component {
-  static propTypes = {
+var ChatMessage = React.createClass({
+  propTypes: {
     avatarUrl: React.PropTypes.string,
     message: React.PropTypes.string.isRequired,
-  }
+  },
 
   render() {
-    let { avatarUrl, message, isUser } = this.props;
+    var { avatarUrl, message, isUser } = this.props;
 
-    let containerStyle = Object.assign({},
+    var containerStyle = Object.assign({},
       msgStyle.container,
       isUser ? msgStyle.containerUser : {},
     );
 
-    let messageStyle = Object.assign({},
+    var messageStyle = Object.assign({},
       msgStyle.msg,
       isUser ? msgStyle.msgUser : {},
     );
 
-    let avatarWrapperStyle = Object.assign({},
+    var avatarWrapperStyle = Object.assign({},
       msgStyle.avatarWrapper,
       isUser ? msgStyle.avatarWrapperUser : {},
     );
@@ -59,9 +59,9 @@ class ChatMessage extends React.Component {
       </div>
     );
   }
-}
+});
 
-let msgStyle = {
+var msgStyle = {
   container: {
     display: 'flex',
     marginBottom: '1em',
@@ -93,28 +93,26 @@ let msgStyle = {
 }
 
 // TODO, pull up the handler logic into a higher component
-class ChatPanel extends React.Component {
-  state = {
-    messages: [],
-    messageDraft: '',
-  }
-
-  constructor(props) {
-    super(props);
-    this.sender = login.getUser().id;
-    this.receiver = null;
-  }
+var ChatPanel = React.createClass({
+  getInitialState() {
+    return {
+      messages: [],
+      messageDraft: '',
+    }
+  },
 
   componentWillMount() {
+    this.sender = login.getUser().id;
+    this.receiver = null;
     this.getMessages(this.sender);
-  }
+  },
 
   getMessages(callback) {
     axios.get(`${config.server}/users/${login.getUser().id}/messages`, {
         withCredentials: true, // send cookies for cross-site requests
     })
     .then((response) => {
-      let { data } = response;
+      var { data } = response;
 
       this.receiver = data.agent;
       this.setState({
@@ -126,9 +124,9 @@ class ChatPanel extends React.Component {
     .catch((response) => {
       // TODO - error handling
     });
-  }
+  },
 
-  onSend = (event) => {
+  onSend(event) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -148,16 +146,16 @@ class ChatPanel extends React.Component {
       // TODO - read up on error handling
       console.log(response);
     });
-  }
+  },
 
-  onChange = (event) => {
+  onChange(event) {
     this.setState({ messageDraft: event.target.value });
-  }
+  },
 
   render() {
-    let { messages, messageDraft } = this.state;
+    var { messages, messageDraft } = this.state;
 
-    let messageComponents = messages.map(message => {
+    var messageComponents = messages.map(message => {
       var isUser = message.sender === login.getUser().id;
       var avatar = isUser ? 'https://s3.amazonaws.com/uifaces/faces/twitter/madysondesigns/48.jpg'
                           : 'https://s3.amazonaws.com/uifaces/faces/twitter/jm_denis/48.jpg'
@@ -176,9 +174,9 @@ class ChatPanel extends React.Component {
       </div>
     );
   }
-}
+});
 
-let panelStyle = {
+var panelStyle = {
   textarea: {
     borderRadius: 5,
     borderColor: '#ddd',
@@ -188,7 +186,7 @@ let panelStyle = {
   }
 };
 
-class RepairRequest extends React.Component {
+var RepairRequest = React.createClass({
   render() {
     return (
       <div style={style.page}>
@@ -197,9 +195,9 @@ class RepairRequest extends React.Component {
       </div>
     );
   }
-}
+});
 
-let style = {
+var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
