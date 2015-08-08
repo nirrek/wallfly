@@ -1,5 +1,4 @@
 var React = require('react');
-var axios = require('axios');
 var Api = require('../utils/Api.js');
 var Navigation = require('react-router').Navigation;
 

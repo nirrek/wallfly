@@ -1,7 +1,5 @@
 var React = require('react');
-var fecha = require('fecha');
 var login = require('../utils/Login.js');
-var config = require('../utils/config.js');
 var Api = require('../utils/Api.js');
 
 // TODO make a current user model accessible.
