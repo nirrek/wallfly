@@ -1,13 +1,6 @@
 var React = require('react');
-var axios = require('axios');
-var config = require('../utils/config.js');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
-
-// simulate a user Store
-var user = {
-  id: 5,
-}
 
 var Payments = React.createClass({
   getInitialState() {
