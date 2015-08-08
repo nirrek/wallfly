@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "axios": "^0.5.4",
-    "fecha": "^0.2.1",
     "flux": "^2.0.3",
     "material-ui": "^0.10.1",
     "moment": "^2.10.5",
