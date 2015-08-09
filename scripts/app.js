@@ -22,9 +22,8 @@ var Login = require('./components/Login.react.jsx');
 require('../styles/main.scss');
 
 var App = React.createClass({
-  constructor(props) {
-    super(props);
-    this.state = {
+  getInitialState() {
+    return {
       isSidebarOpen: false,
       isSidebarDocked: true,
     }
