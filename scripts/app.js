@@ -1,37 +1,40 @@
-import React from 'react';
-import { Router, Route, Link } from 'react-router';
-import { history } from 'react-router/lib/BrowserHistory';
-import Sidebar from 'react-sidebar';
-import Header from './components/Header.react.jsx';
-import NavigationList from './components/Navigation.react.jsx'
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import mui from 'material-ui';
+var React = require('react');
+var ReactRouter = require('react-router');
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var Link = ReactRouter.Link;
+var history = require('react-router/lib/BrowserHistory').history;
+var Sidebar = require('react-sidebar');
+var Header = require('./components/Header.react.jsx');
+var NavigationList = require('./components/Navigation.react.jsx');
+var injectTapEventPlugin = require('react-tap-event-plugin');
+var mui = require('material-ui');
 let ThemeManager = new mui.Styles.ThemeManager();
-import PropertyDetails from './components/PropertyDetails.react.jsx';
-import Payments from './components/Payments.react.jsx';
-import RepairRequest from './components/RepairRequest.react.jsx';
-import Calendar from './components/Calendar.react.jsx';
-import InspectionReport from './components/InspectionReport.react.jsx';
-import RtaForm from './components/RtaForm.react.jsx';
-import Messages from './components/Messages.react.jsx';
-import Login from './components/Login.react.jsx';
+var PropertyDetails = require('./components/PropertyDetails.react.jsx');
+var Payments = require('./components/Payments.react.jsx');
+var RepairRequest = require('./components/RepairRequest.react.jsx');
+var Calendar = require('./components/Calendar.react.jsx');
+var InspectionReport = require('./components/InspectionReport.react.jsx');
+var RtaForm = require('./components/RtaForm.react.jsx');
+var Messages = require('./components/Messages.react.jsx');
+var Login = require('./components/Login.react.jsx');
 
 require('../styles/main.scss');
 
-class App extends React.Component {
+var App = React.createClass({
   constructor(props) {
     super(props);
     this.state = {
       isSidebarOpen: false,
       isSidebarDocked: true,
     }
-  }
+  },
 
   getChildContext() {
     return {
       muiTheme: ThemeManager.getCurrentTheme()
     };
-  }
+  },
 
   componentWillMount() {
     this.mql = window.matchMedia(`(min-width: 800px)`);
@@ -40,23 +43,23 @@ class App extends React.Component {
 
     // material-ui components depend on this for touch event listening.
     injectTapEventPlugin();
-  }
+  },
 
   componentWillUnmount() {
     this.mql.removeListener(this.mediaQueryChanged);
-  }
+  },
 
-  mediaQueryChanged = () => {
+  mediaQueryChanged() {
     this.setState({ isSidebarDocked: this.mql.matches });
-  }
+  },
 
-  onSetSidebarOpen = (isOpen) => {
+  onSetSidebarOpen(isOpen) {
     this.setState({ isSidebarOpen: isOpen });
-  }
+  },
 
-  openMenu = () => {
+  openMenu() {
     this.setState({ isSidebarOpen: true });
-  }
+  },
 
   render() {
     return(
@@ -72,7 +75,7 @@ class App extends React.Component {
       </div>
     );
   }
-}
+});
 
 App.childContextTypes = {
   muiTheme: React.PropTypes.object
