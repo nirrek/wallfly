@@ -1,11 +1,5 @@
 var React = require('react');
-var axios = require('axios');
-var config = require('../utils/config.js');
-
-// simulate a user Store
-var user = {
-  id: 5,
-}
+var Api = require('../utils/Api.js');
 
 var PropertyDetails = React.createClass({
   getInitialState() {
@@ -26,20 +20,18 @@ var PropertyDetails = React.createClass({
   },
 
   componentWillMount() {
-    console.log('mounting');
-    axios.get(`${config.server}/users/${user.id}/property`, {
-        withCredentials: true, // send cookies for cross-site requests
-      })
-      .then((response) => {
+    Api.getPropertyDetails({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return console.log(err);
+        }
+
         // Having the state object coupled to the response object shape
         // might be annoying to reason about. Explitness may be preferable.
-        this.setState(response.data, () => console.log(this.state));
-        console.log(response.data);
-      })
-      .catch((response) => {
-        // TODO - read up on error handling
-        console.log(response);
-      });
+        this.setState(response.data);
+      }
+    });
   },
 
   render() {
@@ -61,12 +53,6 @@ var PropertyDetails = React.createClass({
       { header: 'Phone', value: this.state.tenantPhone },
       { header: 'Email', value: this.state.tenantEmail },
     ]
-
-    console.log(ownerDetailRows);
-
-    var ownerDetails = ownerDetailRows.map(row => {
-
-    })
 
     return (
       <div style={style.page}>

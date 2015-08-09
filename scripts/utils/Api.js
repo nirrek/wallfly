@@ -122,7 +122,22 @@ let Api = {
         console.log(`Error in Api.getRepairRequests(): ${error}`);
         callback(new Error(error), response);
       });
-  }
+  },
+
+  // Fetch information for a given tenants property
+  getPropertyDetails({ callback=()=>{} }) {
+    axios.get(`${host}/users/${userId}/property`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyDetails(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
 };
 
 export default Api;
