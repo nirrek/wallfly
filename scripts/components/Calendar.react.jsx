@@ -86,4 +86,4 @@ var style = {
   }
 };
 
-export default Calendar;
+module.exports = Calendar;

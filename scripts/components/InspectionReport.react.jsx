@@ -58,4 +58,4 @@ var style = {
   }
 };
 
-export default InspectionReport;
+module.exports = InspectionReport;

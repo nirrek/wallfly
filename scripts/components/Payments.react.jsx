@@ -59,4 +59,4 @@ var style = {
   }
 };
 
-export default Payments;
+module.exports = Payments;

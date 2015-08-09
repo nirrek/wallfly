@@ -91,4 +91,4 @@ var style = {
   }
 };
 
-export default RtaForm;
+module.exports = RtaForm;

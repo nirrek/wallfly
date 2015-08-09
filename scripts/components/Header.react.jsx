@@ -64,4 +64,4 @@ var styles = {
   }
 }
 
-export default Header;
+module.exports = Header;

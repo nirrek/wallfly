@@ -62,4 +62,4 @@ var style = {
   }
 };
 
-export default RepairRequest;
+module.exports = RepairRequest;

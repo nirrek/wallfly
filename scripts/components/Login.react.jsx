@@ -94,4 +94,4 @@ var style = {
   }
 };
 
-export default Login;
+module.exports = Login;

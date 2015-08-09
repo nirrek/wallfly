@@ -54,4 +54,4 @@ var Icon = React.createClass({
   }
 });
 
-export default Icon;
+module.exports = Icon;

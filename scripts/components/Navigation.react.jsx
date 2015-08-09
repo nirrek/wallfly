@@ -49,4 +49,4 @@ var styles = {
   }
 }
 
-export default NavigationList;
+module.exports = NavigationList;

@@ -137,4 +137,4 @@ let Api = {
   },
 };
 
-export default Api;
+module.exports = Api;

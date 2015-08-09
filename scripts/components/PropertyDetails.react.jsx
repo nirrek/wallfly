@@ -91,4 +91,4 @@ var style = {
   }
 };
 
-export default PropertyDetails;
+module.exports = PropertyDetails;
