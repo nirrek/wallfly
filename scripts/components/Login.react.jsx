@@ -28,8 +28,10 @@ var Login = React.createClass({
     event.stopPropagation();
 
     Api.login({
-      username: this.state.username,
-      password: this.state.password,
+      data: {
+        username: this.state.username,
+        password: this.state.password,
+      },
       callback: (err, response) => {
         if (err) {
           this.setState({ authFailure: true });

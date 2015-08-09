@@ -12,12 +12,9 @@ let userId; // current logged in user. Used in url creation.
  */
 let Api = {
 
-  // Log in
-  login({ username='',  password='', callback = () => {} } = {}) {
-    axios.post(`${host}/login`, {
-      username,
-      password
-    }, {
+  // Log a user in
+  login({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/login`, data, {
       withCredentials: true
     })
     .then((response) => { // 2xx response
