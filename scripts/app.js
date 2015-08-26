@@ -22,6 +22,10 @@ var Login = require('./components/Login.jsx');
 require('../styles/main.scss');
 
 var App = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+  },
+
   getInitialState() {
     return {
       isSidebarOpen: false,
@@ -61,7 +65,7 @@ var App = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <div>
         <Sidebar sidebar={<NavigationList />}
                  open={this.state.isSidebarOpen}
