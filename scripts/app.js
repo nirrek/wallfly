@@ -26,7 +26,7 @@ var App = React.createClass({
     return {
       isSidebarOpen: false,
       isSidebarDocked: true,
-    }
+    };
   },
 
   getChildContext() {
