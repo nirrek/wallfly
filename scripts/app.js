@@ -21,7 +21,10 @@ var Login = require('./components/Login.jsx');
 
 require('../styles/main.scss');
 
-var App = React.createClass({
+var AuthedSection = React.createClass({
+  childContextTypes: { muiTheme: React.PropTypes.object },
+  getChildContext() { return { muiTheme: new mui.Styles.ThemeManager() }; },
+
   getInitialState() {
     return {
       isSidebarOpen: false,
@@ -29,19 +32,10 @@ var App = React.createClass({
     }
   },
 
-  getChildContext() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    };
-  },
-
   componentWillMount() {
     this.mql = window.matchMedia(`(min-width: 800px)`);
     this.mql.addListener(this.mediaQueryChanged);
     this.setState({ isSidebarDocked: this.mql.matches });
-
-    // material-ui components depend on this for touch event listening.
-    injectTapEventPlugin();
   },
 
   componentWillUnmount() {
@@ -76,21 +70,36 @@ var App = React.createClass({
   }
 });
 
-App.childContextTypes = {
-  muiTheme: React.PropTypes.object
-};
+
+
+var App = React.createClass({
+  componentWillMount() {
+    // material-ui components depend on this for touch event listening.
+    injectTapEventPlugin();
+  },
+
+  render() {
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    );
+  }
+});
 
 React.render((
   <Router history={history}>
     <Router component={App}>
       <Router path="/" component={Login} />
-      <Router path="propertyDetails" component={PropertyDetails} />
-      <Router path="payments" component={Payments} />
-      <Router path="repairRequest" component={RepairRequest} />
-      <Router path="calendar" component={Calendar} />
-      <Router path="inspectionReport" component={InspectionReport} />
-      <Router path="rtaForm" component={RtaForm} />
-      <Router path="messages" component={Messages} />
+      <Router path="" component={AuthedSection}>
+        <Router path="propertyDetails" component={PropertyDetails} />
+        <Router path="payments" component={Payments} />
+        <Router path="repairRequest" component={RepairRequest} />
+        <Router path="calendar" component={Calendar} />
+        <Router path="inspectionReport" component={InspectionReport} />
+        <Router path="rtaForm" component={RtaForm} />
+        <Router path="messages" component={Messages} />
+      </Router>
     </Router>
   </Router>
 ), document.getElementById('react'));
