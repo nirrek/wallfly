@@ -94,6 +94,7 @@ var style = {
   },
   heading: {
     textAlign: 'center',
+    margin: 0,
   },
   form: {
     display: 'flex',
