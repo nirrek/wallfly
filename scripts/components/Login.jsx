@@ -1,6 +1,11 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
 var Navigation = require('react-router').Navigation;
+var MuiContextified = require('./MuiContextified.jsx');
+var mui = require('material-ui');
+var TextField = mui.TextField;
+var RaisedButton = mui.RaisedButton;
+var Paper = mui.Paper;
 
 /**
  * Login View
@@ -50,21 +55,23 @@ var Login = React.createClass({
 
     return (
       <div style={style.page}>
-        <h1>Login</h1>
-        <form style={style.form} onSubmit={this.onSubmit}>
-          <div style={style.error}> { authFailMessage } </div>
-          <input value={username}
-                 onChange={this.onChange.bind(this, 'username')}
-                 name="username"
-                 placeholder="username"
-                 style={style.input}/>
-          <input value={password}
-                 onChange={this.onChange.bind(this, 'password')}
-                 name="password"
-                 placeholder="password"
-                 style={style.input}/>
-          <button type="submit">Login</button>
-        </form>
+        <Paper zDepth={1} style={style.loginContainer}>
+          <h1 style={style.heading}>Login</h1>
+          <form style={style.form} onSubmit={this.onSubmit}>
+            <div style={style.error}> { authFailMessage } </div>
+            <TextField
+              value={username}
+              name="username"
+              onChange={this.onChange.bind(this, 'username')}
+              floatingLabelText="Username" />
+            <TextField
+              value={password}
+              name="password"
+              onChange={this.onChange.bind(this, 'password')}
+              floatingLabelText="Password" />
+            <RaisedButton type="submit" label="Login" primary={true} backgroundColor="#2ECC71" style={style.button} />
+          </form>
+        </Paper>
       </div>
     );
   }
@@ -73,25 +80,32 @@ var Login = React.createClass({
 var style = {
   page: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: '20px',
+    flexGrow: 1,
+  },
+  loginContainer: {
+    padding: '2em',
+    // display: 'flex',
+    // flexDirection: 'row',
+    // 'justifyContent': 'center',
+  },
+  heading: {
+    textAlign: 'center',
+    margin: 0,
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     maxWidth: '20em',
   },
-  input: {
-    border: '1px solid rgba(0,0,0, .05)',
-    backgroundColor: '#efefef',
-    borderRadius: 4,
-    padding: '1em',
-    fontSize: 16,
-    marginBottom: '1em',
-  },
-  error: {
-    color: '#CE5646',
+  button: {
+    marginTop: '2em',
+    width: '4em',
   }
 };
 
-module.exports = Login;
+module.exports = MuiContextified(Login);
