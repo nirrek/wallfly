@@ -30,6 +30,7 @@
     "material-ui": "^0.10.1",
     "moment": "^2.10.5",
     "react": "^0.13.3",
+    "react-cookie": "^0.3.4",
     "react-day-picker": "^1.0.3",
     "react-router": "^1.0.0-beta3",
     "react-sidebar": "^1.0.3",

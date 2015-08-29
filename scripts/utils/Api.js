@@ -1,8 +1,9 @@
 var axios = require('axios');
 var config = require('./config.js');
+var User = require('./User.js');
 
 let host = config.server;
-let userId; // current logged in user. Used in url creation.
+let userId = User.getUserId(); // current logged in user. Used in url creation.
 
 /**
  * Api Module
