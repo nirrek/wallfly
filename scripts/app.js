@@ -16,6 +16,7 @@ var RtaForm = require('./components/RtaForm.jsx');
 var Messages = require('./components/Messages.jsx');
 var Login = require('./components/Login.jsx');
 var AuthedSection = require('./components/AuthedSection.jsx');
+var UnauthedSection = require('./components/UnauthedSection.jsx');
 
 require('../styles/main.scss');
 
@@ -37,7 +38,9 @@ var App = React.createClass({
 React.render((
   <Router history={history}>
     <Router component={App}>
-      <Router path="/" component={Login} />
+      <Router path="" component={UnauthedSection}>
+        <Router path="/" component={Login} />
+      </Router>
       <Router path="" component={AuthedSection}>
         <Router path="propertyDetails" component={PropertyDetails} />
         <Router path="payments" component={Payments} />
