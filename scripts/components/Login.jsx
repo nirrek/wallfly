@@ -84,7 +84,7 @@ var style = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
-    height: '100%',
+    flexGrow: 1,
   },
   loginContainer: {
     padding: '2em',
