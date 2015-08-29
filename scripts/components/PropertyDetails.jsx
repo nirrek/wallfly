@@ -1,5 +1,13 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
+var MaterialUi = require('material-ui');
+var LinearProgress = MaterialUi.LinearProgress;
+var Card = MaterialUi.Card;
+var CardMedia = MaterialUi.CardMedia;
+var CardTitle = MaterialUi.CardTitle;
+var Paper = MaterialUi.Paper;
+var Avatar = MaterialUi.Avatar;
+var MuiContextified = require('./MuiContextified.jsx');
 
 var PropertyDetails = React.createClass({
   getInitialState() {
@@ -16,7 +24,7 @@ var PropertyDetails = React.createClass({
       tenantLN: '',
       tenantPhone: '',
       tenantEmail: '',
-    }
+    };
   },
 
   componentWillMount() {
@@ -52,11 +60,15 @@ var PropertyDetails = React.createClass({
       { header: 'Name', value: `${this.state.tenantFN} ${this.state.tenantLN}` },
       { header: 'Phone', value: this.state.tenantPhone },
       { header: 'Email', value: this.state.tenantEmail },
-    ]
+    ];
 
     return (
       <div style={style.page}>
-        <img width="400" src={this.state.photo} />
+        <Card style={{maxWidth: 400}}>
+          <CardMedia overlay={<CardTitle title="22 Payne St" subtitle="Auchenflower"/>}>
+            <img width="400" src={this.state.photo} />
+          </CardMedia>
+        </Card>
 
         <div>
           <h3>Owner</h3>
@@ -91,4 +103,4 @@ var style = {
   }
 };
 
-module.exports = PropertyDetails;
+module.exports = MuiContextified(PropertyDetails);

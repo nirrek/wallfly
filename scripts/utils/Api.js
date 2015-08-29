@@ -63,6 +63,7 @@ let Api = {
 
   // Post new messages from the current user
   postMessages({ data={}, callback=()=>{} }) {
+    data.sender = userId;
     axios.post(`${host}/users/${userId}/messages`, data, {
       withCredentials: true
     })

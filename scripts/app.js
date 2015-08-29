@@ -22,14 +22,15 @@ var Login = require('./components/Login.jsx');
 require('../styles/main.scss');
 
 var AuthedSection = React.createClass({
-  childContextTypes: { muiTheme: React.PropTypes.object },
-  getChildContext() { return { muiTheme: new mui.Styles.ThemeManager() }; },
+  propTypes: {
+    children: React.PropTypes.any,
+  },
 
   getInitialState() {
     return {
       isSidebarOpen: false,
       isSidebarDocked: true,
-    }
+    };
   },
 
   componentWillMount() {
@@ -55,7 +56,7 @@ var AuthedSection = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <div>
         <Sidebar sidebar={<NavigationList />}
                  open={this.state.isSidebarOpen}
