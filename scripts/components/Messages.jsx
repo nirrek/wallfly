@@ -1,9 +1,6 @@
 var React = require('react');
-var login = require('../utils/Login.js');
+var User = require('../utils/User.js');
 var Api = require('../utils/Api.js');
-
-// TODO make a current user model accessible.
-var userId = 5;
 
 var Avatar = React.createClass({
   propTypes: {
@@ -103,7 +100,7 @@ var ChatPanel = React.createClass({
   },
 
   componentWillMount() {
-    this.sender = login.getUser().id;
+    this.sender = User.getUserId();
     this.receiver = null;
     this.getMessages(this.sender);
   },
@@ -155,7 +152,7 @@ var ChatPanel = React.createClass({
     var { messages, messageDraft } = this.state;
 
     var messageComponents = messages.map(message => {
-      var isUser = message.sender === userId;
+      var isUser = message.sender === User.getUserId();
       var avatar = isUser ? 'https://avatars3.githubusercontent.com/u/1008618?v=3&s=460'
                           : 'https://s3.amazonaws.com/uifaces/faces/twitter/jm_denis/48.jpg'
       return <ChatMessage key={message.id} isUser={isUser} avatarUrl={avatar} message={message.message} />;
