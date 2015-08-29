@@ -13,10 +13,15 @@ var Header = React.createClass({
     // Callback when the the menu icon is toggled by the user.
     onMenuClick: React.PropTypes.func.isRequired,
     isMenuDocked: React.PropTypes.bool.isRequired,
+    isBasic: React.PropTypes.bool, // basic lacks app-like controls.
+  },
+
+  getDefaultProps() {
+    isBasic: false
   },
 
   render() {
-    let { onMenuClick, isMenuDocked } = this.props;
+    let { onMenuClick, isMenuDocked, isBasic } = this.props;
 
     let menuIcon = null;
     if (!isMenuDocked) {
@@ -29,14 +34,22 @@ var Header = React.createClass({
       )
     }
 
-    return (
-      <div style={styles.header}>
-        {menuIcon}
-        <div style={styles.logo}>WallFly</div>
-        <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton>
-        <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>
-      </div>
-    );
+    if (isBasic) {
+      return (
+        <div style={styles.header}>
+          <div style={styles.logo}>WallFly</div>
+        </div>
+      );
+    } else {
+      return (
+        <div style={styles.header}>
+          {menuIcon}
+          <div style={styles.logo}>WallFly</div>
+          <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton>
+          <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>
+        </div>
+      );
+    }
   }
 });
 
