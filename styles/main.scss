@@ -2,6 +2,21 @@ html, body {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   color: #333;
   line-height: 1.5;
+  height: 100%;
+  margin: 0;
+}
+
+// Cascade 100% height down the tree
+html, body, #react {
+  height: 100%;
+}
+
+// Apply natural box model layout to all elements
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 .material-icons {
