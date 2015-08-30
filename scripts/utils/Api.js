@@ -13,6 +13,21 @@ let userId = User.getUserId(); // current logged in user. Used in url creation.
  */
 let Api = {
 
+  createAccount({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/users`, data, {
+      withCredentials: true
+    })
+    .then((response) => { // 2xx response
+      callback(null, response);
+    })
+    .catch((response) => { // Non 2xx response
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.createAccount(): ${error}`);
+
+      callback(new Error(error), response);
+    });
+  },
+
   // Log a user in
   login({ data={}, callback=()=>{} }) {
     axios.post(`${host}/login`, data, {
