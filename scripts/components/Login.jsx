@@ -53,6 +53,11 @@ var Login = React.createClass({
     });
   },
 
+  onRegister(event) {
+    event.preventDefault();
+    this.transitionTo('createAccount');
+  },
+
   render() {
     var { username, password, authFailure } = this.state;
     var authFailMessage = authFailure ? 'Username or password invalid' : null;
@@ -71,11 +76,15 @@ var Login = React.createClass({
             <TextField
               value={password}
               name="password"
+              type="password"
               onChange={this.onChange.bind(this, 'password')}
               floatingLabelText="Password" />
             <RaisedButton type="submit" label="Login" primary={true} backgroundColor="#2ECC71" style={style.button} />
           </form>
         </Paper>
+        <div style={style.registerContainer}>
+          Don't have an account? <a href="#" onClick={this.onRegister}>Register Now</a>
+        </div>
       </div>
     );
   }
@@ -84,7 +93,7 @@ var Login = React.createClass({
 var style = {
   page: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
@@ -109,6 +118,9 @@ var style = {
   button: {
     marginTop: '2em',
     width: '4em',
+  },
+  registerContainer: {
+    padding: '1em'
   }
 };
 
