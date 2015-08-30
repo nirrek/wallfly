@@ -15,6 +15,7 @@ var InspectionReport = require('./components/InspectionReport.jsx');
 var RtaForm = require('./components/RtaForm.jsx');
 var Messages = require('./components/Messages.jsx');
 var Login = require('./components/Login.jsx');
+var CreateAccount = require('./components/CreateAccount.jsx');
 var AuthedSection = require('./components/AuthedSection.jsx');
 var UnauthedSection = require('./components/UnauthedSection.jsx');
 
@@ -40,6 +41,7 @@ React.render((
     <Router component={App}>
       <Router path="" component={UnauthedSection}>
         <Router path="/" component={Login} />
+        <Router path="/createAccount" component={CreateAccount} />
       </Router>
       <Router path="" component={AuthedSection}>
         <Router path="propertyDetails" component={PropertyDetails} />
