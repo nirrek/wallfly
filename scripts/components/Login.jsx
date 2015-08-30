@@ -7,6 +7,7 @@ var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var cookie = require('react-cookie');
+var User = require('../utils/User.js');
 
 /**
  * Login View
@@ -44,8 +45,7 @@ var Login = React.createClass({
           return;
         }
 
-        // Store userId in a cookie so can pull back into JS state on reload.
-        cookie.save('userId', response.data.id);
+        User.setUser(response.data);
 
         // Transition to the propertyDetails view on successful login.
         this.transitionTo('propertyDetails');
