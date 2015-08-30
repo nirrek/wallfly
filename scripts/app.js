@@ -7,6 +7,8 @@ var history = require('react-router/lib/BrowserHistory').history;
 var injectTapEventPlugin = require('react-tap-event-plugin');
 var mui = require('material-ui');
 let ThemeManager = new mui.Styles.ThemeManager();
+var User = require('./utils/User.js');
+var Api = require('./utils/Api.js');
 var PropertyDetails = require('./components/PropertyDetails.jsx');
 var Payments = require('./components/Payments.jsx');
 var RepairRequest = require('./components/RepairRequest.jsx');
@@ -25,6 +27,14 @@ var App = React.createClass({
   componentWillMount() {
     // material-ui components depend on this for touch event listening.
     injectTapEventPlugin();
+
+    // If the root app component is being mounted, and a userId is cached,
+    // then it means a refresh has occurred. Must repopulate user model.
+    if (User.getUserId()) {
+      Api.getUser({
+        callback(err, response) { User.setUser(response.data); }
+      });
+    }
   },
 
   render() {

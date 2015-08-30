@@ -40,6 +40,21 @@ let Api = {
     .catch((response) => { // Non 2xx response received.
       let error = response.data.errorMessage;
       console.log(`Error in Api.login(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // Fetches a user model for the current user
+  getUser({ callback = () => {} } = {}) {
+    axios.get(`${host}/users/${userId}`, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.getUser(): ${error}`);
 
       callback(new Error(error), response);
     });

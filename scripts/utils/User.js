@@ -1,6 +1,6 @@
 var cookie = require('react-cookie');
 
-var userId;
+var user; // the user model
 
 module.exports = {
   /**
@@ -9,24 +9,30 @@ module.exports = {
    *                            returns undefined.
    */
   getUserId() {
-    if (!userId) { // try to load from a cookie if undefined
-      userId = cookie.load('userId');
+    // The user model is not set. Typically this means that the browser has
+    // been refreshed, thus the JS memory being cleared. Try cookies for userId
+    if (!user) { // user model not initialized. Check for
+      return cookie.load('userId');
     }
 
-    return userId;
+    return user.id;
+  },
+
+  getUser() {
+    return user;
   },
 
   /**
    * Sets the current user. Currently only storing the userId.
    */
   setUser(userModel) {
-    userId = userModel.id;
-    cookie.save('userId', userId);
+    user = userModel;
+    cookie.save('userId', user.id);
   },
 
   // Deletes the current user model, including associated cookie data.
   deleteUser() {
-    userId = undefined;
+    user = undefined;
     cookie.remove('userId');
   }
 };
