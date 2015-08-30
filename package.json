@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node server.js",
+    "start": "npm install && node server.js",
     "build": "NODE_ENV=production webpack -p --config webpack.config.production.js && cp index.html dist && surge -p dist -d wallfly.surge.sh",
     "lint": "eslint ."
   },
