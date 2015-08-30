@@ -153,6 +153,22 @@ let Api = {
       });
   },
 
+  // Add a new repair request
+  addRepairRequest({ data={}, callback=()=>{} }) {
+    data.sender = userId;
+    axios.post(`${host}/users/${userId}/repairs`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addRepairRequest(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   // Fetch information for a given tenants property
   getPropertyDetails({ callback=()=>{} }) {
     axios.get(`${host}/users/${userId}/property`, {
