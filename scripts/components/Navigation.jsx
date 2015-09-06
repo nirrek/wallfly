@@ -4,8 +4,35 @@ var MaterialUi = require('material-ui');
 var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
+var Api = require('../utils/Api.js');
 
 var NavigationList = React.createClass({
+  // Sets the state to be ready to retrieve user model
+  getInitialState() {
+    return {
+      userId: '',
+      userType: '',
+      username: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: ''
+    };
+  },
+
+  componentWillMount() {
+    Api.getUser({
+      callback: (err, response) => {
+        if (err) {
+          // TODO
+          return console.log(err);
+        }
+
+        this.setState(response.data);
+      }
+    });
+  },
+
   mixins: [ Navigation ],
 
   render() {
@@ -20,7 +47,30 @@ var NavigationList = React.createClass({
       { text: 'Messages', path: '/messages', icon: 'message' },
     ];
 
+    var agentItemData = [
+      { text: '', path: '', icon: '' }
+    ];
+
     var navItems = navItemData.map(data => {
+      var icon = <FontIcon className='material-icons'>{data.icon}</FontIcon>
+      return (
+        <ListItem key={data.text}
+                  primaryText={data.text}
+                  leftIcon={icon}
+                  onClick={() => this.transitionTo(data.path)}
+                  />
+      );
+    });
+
+    // Checks if the user is an Agent
+    if (this.state.userType == "agent") {
+      var agentItemData = [
+        { text: 'Property List', path: '/propertyList', icon: 'list' }
+      ];
+    }
+
+    // Maps the agent menu data
+    var agentItems = agentItemData.map(data => {
       var icon = <FontIcon className='material-icons'>{data.icon}</FontIcon>
       return (
         <ListItem key={data.text}
@@ -35,6 +85,7 @@ var NavigationList = React.createClass({
       <div>
         <div style={styles.spacer} />
         <List style={{width: '15em'}}>
+          {agentItems}
           {navItems}
         </List>
       </div>
