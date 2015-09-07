@@ -1,6 +1,9 @@
 var React = require('react');
 var User = require('../utils/User.js');
 var Api = require('../utils/Api.js');
+var MuiContextified = require('./MuiContextified.jsx');
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
 
 var Avatar = React.createClass({
   propTypes: {
@@ -92,6 +95,12 @@ var msgStyle = {
 
 // TODO, pull up the handler logic into a higher component
 var ChatPanel = React.createClass({
+  getPropTypes() {
+    return {
+      sender: React.PropTypes.Number.isRequired,
+    }
+  },
+
   getInitialState() {
     return {
       messages: [],
@@ -100,17 +109,27 @@ var ChatPanel = React.createClass({
   },
 
   componentWillMount() {
-    this.sender = User.getUserId();
+    this.sender = this.props.sender;
     this.receiver = null;
-    this.getMessages(this.sender);
+    this.getMessages();
+
+    this.token = window.setInterval(() => {
+      this.getMessages();
+    }, 5000);
   },
+
+  componentWillUnmount() {
+    window.clearInterval(this.token);
+  },
+
+  token: null, // interval token
 
   getMessages(callback) {
     Api.getMessages({
       callback: (err, response) => {
         var { data } = response;
 
-        this.receiver = data.agent;
+        this.receiver = data.agent;  // TODO dont make agent hardcoded
         this.setState({
           messages: data.messages
         });
@@ -165,7 +184,7 @@ var ChatPanel = React.createClass({
         </div>
         <div style={{display: 'flex'}}>
           <textarea value={messageDraft} onChange={this.onChange} style={panelStyle.textarea} />
-          <button onClick={this.onSend}>Send</button>
+          <RaisedButton style={{}} secondary={true} onClick={this.onSend}>Send</RaisedButton>
         </div>
       </div>
     );
@@ -179,15 +198,18 @@ var panelStyle = {
     flexGrow: 1,
     marginRight: 15,
     padding: '1em',
+    outline: 'none',
   }
 };
 
-var RepairRequest = React.createClass({
+var Messages = React.createClass({
   render() {
+    var userId = User.getUserId();
+
     return (
       <div style={style.page}>
         <h3>Chat with Mr Agent</h3>
-        <ChatPanel/>
+        <ChatPanel sender={userId} />
       </div>
     );
   }
@@ -201,4 +223,4 @@ var style = {
   }
 };
 
-module.exports = RepairRequest;
+module.exports = MuiContextified(Messages);
