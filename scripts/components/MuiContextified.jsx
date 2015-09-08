@@ -1,6 +1,8 @@
 var React = require('react');
 var MaterialUi = require('material-ui');
+var palette = require('../../styles/palette.js');
 var theme = new MaterialUi.Styles.ThemeManager();
+theme.setPalette(palette);
 
 /**
  * A higher order component that endows the composed component with a correctly
