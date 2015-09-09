@@ -41,7 +41,9 @@ var NavigationList = React.createClass({
       { text: 'Messages', path: '/messages', icon: 'message' },
     ];
 
+    // Check the type of the current user
     if (this.state.type == "agent") {
+      // Append the information item to navItemData
       navItemData.push({ text: 'Property List', path: '/propertyList', icon: 'list' });
     }
 
