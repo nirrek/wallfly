@@ -167,6 +167,30 @@ let Api = {
         callback(new Error(error), response);
       });
   },
+
+
+  // ---------------------------------------------------------------------------
+  // Owner / Agent endpoints
+  // ---------------------------------------------------------------------------
+  getPropertyList({ callback=()=>{} }) {
+    userId = User.getUserId();
+    console.log('UserID = ', userId);
+
+    axios.get(`${host}/properties`, {
+        params: {
+          userId: userId,
+        },
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyList(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
 };
 
 module.exports = Api;
