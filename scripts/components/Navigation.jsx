@@ -4,20 +4,22 @@ var MaterialUi = require('material-ui');
 var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
+var MuiContextified = require('./MuiContextified.jsx');
 
 var NavigationList = React.createClass({
   mixins: [ Navigation ],
 
   render() {
+    var prefix = '/tenant';
 
     var navItemData = [
-      { text: 'Property Details', path: '/propertyDetails', icon: 'location_city' },
-      { text: 'Payments', path: '/payments', icon: 'attach_money' },
-      { text: 'Repair Request', path: '/repairRequest', icon: 'report_problem' },
-      { text: 'Inspection Report', path: '/inspectionReport', icon: 'visibility' },
-      { text: 'RTA Form', path: '/rtaForm', icon: 'assignment' },
-      { text: 'Calendar', path: '/calendar', icon: 'event' },
-      { text: 'Messages', path: '/messages', icon: 'message' },
+      { text: 'Property Details', path: `${prefix}/propertyDetails`, icon: 'location_city' },
+      { text: 'Payments', path: `${prefix}/payments`, icon: 'attach_money' },
+      { text: 'Repair Request', path: `${prefix}/repairRequest`, icon: 'report_problem' },
+      { text: 'Inspection Report', path: `${prefix}/inspectionReport`, icon: 'visibility' },
+      { text: 'RTA Form', path: `${prefix}/rtaForm`, icon: 'assignment' },
+      { text: 'Calendar', path: `${prefix}/calendar`, icon: 'event' },
+      { text: 'Messages', path: `${prefix}/messages`, icon: 'message' },
     ];
 
     var navItems = navItemData.map(data => {
@@ -49,4 +51,4 @@ var styles = {
   }
 }
 
-module.exports = NavigationList;
+module.exports = MuiContextified(NavigationList);
