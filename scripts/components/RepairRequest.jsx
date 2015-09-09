@@ -40,11 +40,11 @@ var RepairRequest = React.createClass({
 
     var rows = repairRequests.map(request => {
       return (
-        <tr key={request.date}>
+        <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
-          <td>{request.subject}</td>
           <td>{request.request}</td>
           <td><img src={request.photo} /></td>
+          <td>{request.status}</td>
         </tr>
       );
     });
@@ -54,9 +54,9 @@ var RepairRequest = React.createClass({
         <table>
           <tr>
             <th>Date</th>
-            <th>Subject</th>
             <th>Description</th>
             <th>Image</th>
+            <th>Status</th>
           </tr>
           {rows}
         </table>

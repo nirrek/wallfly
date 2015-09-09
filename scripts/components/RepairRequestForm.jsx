@@ -11,7 +11,6 @@ var Paper = mui.Paper;
 var RepairRequestForm = React.createClass({
   getInitialState() {
     return {
-      subject: '', // User entered subject
       description: '', // User entered description
       image: '', // user entered image
     }
@@ -34,8 +33,6 @@ var RepairRequestForm = React.createClass({
     // API call to add repair request
     Api.addRepairRequest({
       data: {
-        date: this.refs.DatePicker.getDate(),
-        subject: this.state.subject,
         description: this.state.description,
         image: this.state.image
       },
@@ -45,7 +42,6 @@ var RepairRequestForm = React.createClass({
         }
         // Clear the form
         this.setState({
-          subject: "",
           description: "",
           image: ""
         });
@@ -56,26 +52,14 @@ var RepairRequestForm = React.createClass({
   },
 
   render() {
-    var { subject, description, image } = this.state;
+    var { description, image } = this.state;
     var errorMessage;
-    var currentDate = new Date();
     return (
       <div style={style.formContainer}>
         <h2 style={style.heading}>Add a Repair Request</h2>
         <Paper zDepth={1}>
           <form style={style.form} onSubmit={this.onSubmit}>
             <div style={style.error}> { errorMessage } </div>
-            <DatePicker
-              name="Date"
-              ref="DatePicker"
-              //TODO: set default date, changing date with selected date
-              onChange={this._handleChange}
-              floatingLabelText="Date"/>
-            <TextField
-              value={subject}
-              name="Subject"
-              onChange={this.onChange.bind(this, 'subject')}
-              floatingLabelText="Subject" />
             <TextField
               value={description}
               name="Description"
