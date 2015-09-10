@@ -26,6 +26,11 @@ var PropertyNav = require('./components/PropertyNav.jsx');
 var OwnerNav = require('./components/OwnerNav.jsx');
 var User = require('./utils/User.js');
 var PropertyList = require('./components/PropertyList.jsx');
+var OwnerPropertyDetails = require('./components/OwnerPropertyDetails.jsx');
+var OwnerPayments = require('./components/OwnerPayments.jsx');
+var OwnerRepairRequests = require('./components/OwnerRepairRequests.jsx');
+var OwnerInspectionReports = require('./components/OwnerInspectionReports.jsx');
+var OwnerCalendar = require('./components/OwnerCalendar.jsx');
 
 require('../styles/main.scss');
 
@@ -81,11 +86,11 @@ React.render((
         </Route>
         {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}
         <Route path="owner/property/:propertyId" components={{ main: Page, sidebar: PropertyNav }}>
-          <Route path="propertyDetails" component={Stub} />
-          <Route path="payments" component={Stub} />
-          <Route path="repairRequests" component={Stub} />
-          <Route path="inspectionReports" component={Stub} />
-          <Route path="calendar" component={Stub} />
+          <Route path="propertyDetails" component={OwnerPropertyDetails} />
+          <Route path="payments" component={OwnerPayments} />
+          <Route path="repairRequests" component={OwnerRepairRequests} />
+          <Route path="inspectionReports" component={OwnerInspectionReports} />
+          <Route path="calendar" component={OwnerCalendar} />
         </Route>
 
         <Route path="tenant" components={{ main: Page, sidebar: NavigationList }}>
