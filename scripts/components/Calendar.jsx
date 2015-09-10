@@ -2,6 +2,7 @@ var React = require('react');
 var moment = require('moment');
 var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
+var WallflyCalendar = require('./WallflyCalendar.jsx');
 
 require('../../styles/DayPicker.scss');
 
@@ -34,35 +35,10 @@ var Calendar = React.createClass({
     })
   },
 
-  renderDay(day) {
-    var events = this.getEventsForDay(day);
-    var eventsEntries = events.map(event => {
-      return (
-        <div key={day.getTime()}>
-          {event.event}
-        </div>
-      );
-    });
-
-    return (
-      <div className="day">
-        { day.getDate() }
-        { eventsEntries }
-      </div>
-    );
-  },
-
-  getEventsForDay(day) {
-    day = moment(day);
-    return this.state.events.filter((event) => event.date.isSame(day, 'day'));
-  },
-
   render() {
     return (
       <div style={style.page}>
-        <DayPicker enableOutsideDays={true}
-                   renderDay={this.renderDay}
-                   modifiers={modifiers} />
+        <WallflyCalendar events={this.state.events} />
       </div>
     );
   }
@@ -79,11 +55,6 @@ var style = {
     flexDirection: 'column',
     padding: '20px',
   },
-  table: {
-    td: {
-      padding: '.5em',
-    }
-  }
 };
 
 module.exports = Calendar;
