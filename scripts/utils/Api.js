@@ -154,7 +154,7 @@ let Api = {
   },
 
   // Fetch information for a given tenants property
-  getPropertyDetails({ callback=()=>{} }) {
+  getUserPropertyDetails({ callback=()=>{} }) {
     axios.get(`${host}/users/${userId}/property`, {
         withCredentials: true, // send cookies for cross-site requests
       })
@@ -163,7 +163,7 @@ let Api = {
       })
       .catch((response) => {
         let error = response.data.errorMessage;
-        console.log(`Error in Api.getPropertyDetails(): ${error}`);
+        console.log(`Error in Api.getUserPropertyDetails(): ${error}`);
         callback(new Error(error), response);
       });
   },
@@ -171,6 +171,7 @@ let Api = {
 
   // ---------------------------------------------------------------------------
   // Owner / Agent endpoints
+  // TODO. Delegate the tenant api calls to these ones.
   // ---------------------------------------------------------------------------
   getPropertyList({ callback=()=>{} }) {
     userId = User.getUserId();
@@ -188,6 +189,78 @@ let Api = {
       .catch((response) => {
         let error = response.data.errorMessage;
         console.log(`Error in Api.getPropertyList(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  // Fetch property details for the specified property
+  getPropertyDetails({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/details`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyDetails(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  // Fetches payments for a particular property
+  getPropertyPayments({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/payments`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyPayments(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  getPropertyRepairRequests({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/repairRequests`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyRepairRequests(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  getPropertyInspectionReports({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/inspectionReports`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyInspectionReports(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  getPropertyCalendarEvents({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/calendarEvents`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyCalendarEvents(): ${error}`);
         callback(new Error(error), response);
       });
   },
