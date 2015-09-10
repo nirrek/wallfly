@@ -14,10 +14,7 @@ var PropertyList = React.createClass({
 
   getInitialState() {
     return {
-      properties: [
-        { street: '14 chermside street' },
-        { street: '16 chermside street' },
-      ], // list of properties
+      properties: [],
     };
   },
 
@@ -25,8 +22,6 @@ var PropertyList = React.createClass({
     Api.getPropertyList({
       callback: (err, res) => {
         if (err) return;
-
-        console.log('data', res.data);
 
         this.setState({ properties: res.data });
       }
@@ -37,14 +32,11 @@ var PropertyList = React.createClass({
     event.preventDefault();
     event.stopPropagation();
 
-    this.transitionTo(`/owner/property/${propertyId}`);
+    this.transitionTo(`/owner/property/${propertyId}/propertyDetails`);
   },
 
   render() {
     var { properties } = this.state;
-
-    // JUst quick hack for adding extra properties
-    for (let i = 0; i < 10; i++) properties.push(properties[0]);
 
     var propertyCards = properties.map((property, idx) => {
       var { id, photo, street, suburb, postcode } = property;
