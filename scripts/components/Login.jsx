@@ -47,8 +47,11 @@ var Login = React.createClass({
 
         User.setUser(response.data);
 
-        // Transition to the propertyDetails view on successful login.
-        this.transitionTo('propertyDetails');
+        // Transition to the give userType's dashboard.
+        var { type: userType } = response.data;
+        if      (userType === 'owner') this.transitionTo('owner/propertyList');
+        else if (userType === 'agent') this.transitionTo('agent/dashboard');
+        else if (userType === 'tenant') this.transitionTo('tenant/propertyDetails');
       }
     });
   },

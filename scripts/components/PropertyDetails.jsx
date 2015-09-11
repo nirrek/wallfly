@@ -28,7 +28,7 @@ var PropertyDetails = React.createClass({
   },
 
   componentWillMount() {
-    Api.getPropertyDetails({
+    Api.getUserPropertyDetails({
       callback: (err, response) => {
         if (err) {
           // TODO

@@ -7,11 +7,10 @@ var WallflyCalendar = require('./WallflyCalendar.jsx');
 require('../../styles/DayPicker.scss');
 
 /**
- * Calendar component.
- * The calendar component provides a calendar view that contains
- * important events for the user.
+ * Owner Calendar
+ * This is route endpoint component for the owner calendar view.
  */
-var Calendar = React.createClass({
+var OwnerCalendar = React.createClass({
   getInitialState() {
     return {
       events: [], // list of calendar events
@@ -19,7 +18,10 @@ var Calendar = React.createClass({
   },
 
   componentWillMount() {
-    Api.getEvents({
+    var { propertyId } = this.props.params;
+
+    Api.getPropertyCalendarEvents({
+      propertyId: propertyId,
       callback: (err, response) => {
         if (err) {
           // TODO
@@ -37,24 +39,11 @@ var Calendar = React.createClass({
 
   render() {
     return (
-      <div style={style.page}>
+      <div>
         <WallflyCalendar events={this.state.events} />
       </div>
     );
   }
 });
 
-// Modifiers specify what <DayPicker> inteprets particular days as.
-var modifiers = {
-  "firstOfMonth": (day) => day.getDate() === 1,
-}
-
-var style = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-  },
-};
-
-module.exports = Calendar;
+module.exports = OwnerCalendar;
