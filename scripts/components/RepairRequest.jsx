@@ -13,6 +13,7 @@ var RepairRequest = React.createClass({
   getInitialState() {
     return {
       repairRequests: [], // list of repair requests
+      isFormDisplayed: false,
     };
   },
 
@@ -31,19 +32,27 @@ var RepairRequest = React.createClass({
     });
   },
 
+  onButtonClick() {
+    this.setState({ isFormDisplayed: true });
+  },
+
   componentWillMount() {
     this.getRepairRequests()
   },
 
   render() {
-    var { repairRequests } = this.state;
+    var { repairRequests, isFormDisplayed } = this.state;
 
     var rows = repairRequests.map(request => {
       return (
         <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.request}</td>
-          <td><img src={request.photo} /></td>
+          <td>
+            {request.photo ?
+              ( <img src={request.photo} /> ) :
+              ( <i>No image added</i> )}
+          </td>
           <td>{request.status}</td>
         </tr>
       );
@@ -60,7 +69,15 @@ var RepairRequest = React.createClass({
           </tr>
           {rows}
         </table>
-        <RepairRequestForm newDataAdded={this.getRepairRequests}/>
+        <div style={style.formContainer}>
+          { isFormDisplayed ? (
+            <RepairRequestForm repairRequestAdded={this.getRepairRequests}/>
+          ) : (
+            <RaisedButton label="Lodge a New Repair Request"
+                          primary={true}
+                          onClick={this.onButtonClick} />
+          )}
+        </div>
       </div>
     );
   }
@@ -73,7 +90,7 @@ var style = {
     padding: '20px',
   },
   formContainer: {
-    width: '325px',
+    marginTop: '1em'
   },
   form: {
     display: 'flex',
