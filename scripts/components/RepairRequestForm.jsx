@@ -17,7 +17,7 @@ var RepairRequestForm = React.createClass({
   },
 
   propTypes: {
-        newDataAdded:   React.PropTypes.func,
+    repairRequestAdded: React.PropTypes.func,
   },
 
   // Capture the input field state after each keypress.
@@ -46,7 +46,7 @@ var RepairRequestForm = React.createClass({
           image: ""
         });
         // Refetch repair requests via props
-        this.props.newDataAdded();
+        this.props.repairRequestAdded();
       }
     });
   },
@@ -56,12 +56,13 @@ var RepairRequestForm = React.createClass({
     var errorMessage;
     return (
       <div style={style.formContainer}>
-        <h2 style={style.heading}>Add a Repair Request</h2>
         <Paper zDepth={1}>
           <form style={style.form} onSubmit={this.onSubmit}>
+            <h3 style={style.heading}>Lodge a New Repair Request</h3>
             <div style={style.error}> { errorMessage } </div>
             <TextField
               value={description}
+              multiLine={true}
               name="Description"
               onChange={this.onChange.bind(this, 'description')}
               floatingLabelText="Description" />
@@ -72,7 +73,7 @@ var RepairRequestForm = React.createClass({
               floatingLabelText="Image" />
             <RaisedButton
               type="submit"
-              label="Submit"
+              label="Lodge Repair Request"
               primary={true}
               backgroundColor="#2ECC71"
               style={style.button} />
@@ -98,6 +99,9 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
+  heading: {
+    margin: 0
+  }
 };
 
 module.exports = MuiContextified(RepairRequestForm);
