@@ -32,6 +32,9 @@ var OwnerRepairRequests = require('./components/OwnerRepairRequests.jsx');
 var OwnerInspectionReports = require('./components/OwnerInspectionReports.jsx');
 var OwnerCalendar = require('./components/OwnerCalendar.jsx');
 
+var AgentNav = require('./components/AgentNav.jsx');
+
+
 require('../styles/main.scss');
 
 var App = React.createClass({
@@ -86,6 +89,19 @@ React.render((
         </Route>
         {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}
         <Route path="owner/property/:propertyId" components={{ main: Page, sidebar: PropertyNav }}>
+          <Route path="propertyDetails" component={OwnerPropertyDetails} />
+          <Route path="payments" component={OwnerPayments} />
+          <Route path="repairRequests" component={OwnerRepairRequests} />
+          <Route path="inspectionReports" component={OwnerInspectionReports} />
+          <Route path="calendar" component={OwnerCalendar} />
+        </Route>
+
+        <Route path="agent" components={{ main: Page, sidebar: AgentNav }}>
+          <Route path="propertyList" component={PropertyList} />
+          <Route path="messages" component={Stub} />
+        </Route>
+        {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}
+        <Route path="agent/property/:propertyId" components={{ main: Page, sidebar: PropertyNav }}>
           <Route path="propertyDetails" component={OwnerPropertyDetails} />
           <Route path="payments" component={OwnerPayments} />
           <Route path="repairRequests" component={OwnerRepairRequests} />
