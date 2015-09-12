@@ -1,13 +1,6 @@
 var React = require('react');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
-var MuiContextified = require('./MuiContextified.jsx');
-var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
-var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
-var PaymentForm = require('./PaymentForm.jsx');
 
 var Payments = React.createClass({
   getInitialState() {
@@ -16,7 +9,7 @@ var Payments = React.createClass({
     };
   },
 
-  getPayments() {
+  componentWillMount() {
     Api.getPayments({
       callback: (err, response) => {
         if (err) {
@@ -31,14 +24,7 @@ var Payments = React.createClass({
     })
   },
 
-  componentWillMount() {
-    this.getPayments()
-  },
-
   render() {
-
-    var { payments } = this.state;
-
     var rows = this.state.payments.map(payment => {
       return (
         <tr key={payment.date}>
@@ -59,15 +45,7 @@ var Payments = React.createClass({
             <th>Amount</th>
           </tr>
           {rows}
-        </table>   
-      </div>
-      <div style={style.page}>
-        <RaisedButton
-              label="Pay"
-              primary={true}
-              backgroundColor="#2ECC71"
-              style={style.button} />
-        <PaymentForm newDataAdded={this.getPayments}/>
+        </table>
       </div>
     );
   }
@@ -78,10 +56,7 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-  },
-  button: {
-       maxWidth: '10em',
   }
 };
 
-module.exports = MuiContextified(Payments);
+module.exports = Payments;

@@ -138,22 +138,6 @@ let Api = {
       });
   },
 
-  //Add a new payment
-  addPayment({ data={}, callback=()=>{} }) {
-    data.sender = userId;
-    axios.post(`${host}/users/${userId}/payments`, data, {
-      withCredentials: true
-    })
-    .then((response) => {
-      callback(null, response);
-    })
-    .catch((response) => {
-      let error = response.data.errorMessage;
-      console.log(`Error in Api.addPayment(): ${error}`);
-      callback(new Error(error), response);
-    });
-  },
-
   // Fetch list of repair requests
   getRepairRequests({ callback=()=>{} }) {
     axios.get(`${host}/users/${userId}/repairs`, {
