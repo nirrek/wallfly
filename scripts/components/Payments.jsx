@@ -59,8 +59,14 @@ var Payments = React.createClass({
             <th>Amount</th>
           </tr>
           {rows}
-        </table>
-
+        </table>   
+      </div>
+      <div style={style.page}>
+        <RaisedButton
+              label="Pay"
+              primary={true}
+              backgroundColor="#2ECC71"
+              style={style.button} />
         <PaymentForm newDataAdded={this.getPayments}/>
       </div>
     );
@@ -72,6 +78,9 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
+  },
+  button: {
+       maxWidth: '10em',
   }
 };
 

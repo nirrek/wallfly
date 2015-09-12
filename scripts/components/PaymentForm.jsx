@@ -11,8 +11,10 @@ var Paper = mui.Paper;
 var PaymentForm = React.createClass({
   getInitialState() {
     return {
-      date: '', // user entered date
-      property: '', // user entered property address
+      fullName: '', // user entered full name on credit card
+      cardNumber: '', // user entered credit card number
+      expiryDate: '', // user entered expiry date
+      ccv: '', // user entered ccv number
       amount: '', // user entered amount
     }
   },
@@ -56,7 +58,7 @@ var PaymentForm = React.createClass({
   },
 
   render() {
-    var { date, property, amount } = this.state;
+    var { fullName, cardNumber, ccv, amount } = this.state;
     var errorMessage;
     var currentDate = new Date();
     return (
@@ -64,16 +66,27 @@ var PaymentForm = React.createClass({
         <h2 style={style.heading}>Make a Payment </h2>
         <Paper zDepth={1}>
           <form style={style.form} onSubmit={this.onSubmit}>
-            <DatePicker
-              name="Date"
-              ref="DatePicker"
-              onChange={this._handleChange}
-              floatingLabelText="Date"/>
             <TextField
-              value={property}
-              name="Property"
-              onChange={this.onChange.bind(this, 'property')}
-              floatingLabelText="Property" />
+              value={fullName}
+              name="Full Name on Credit Card"
+              onChange={this.onChange.bind(this, 'fullName')}
+              floatingLabelText="Full Name on Credit Card" />
+            <TextField
+              value={cardNumber}
+              name="Card Number"
+              onChange={this.onChange.bind(this, 'cardNumber')}
+              floatingLabelText="Card Number" />
+            <DatePicker
+              name="expiryDate"
+              ref="DatePicker"
+              //TODO: set default date, changing date with selected date
+              onChange={this._handleChange}
+              floatingLabelText="Expiry Date"/>
+            <TextField
+              value={ccv}
+              name="Ccv"
+              onChange={this.onChange.bind(this, 'ccv')}
+              floatingLabelText="CCV" />
             <TextField
               value={amount}
               name="Amount"
