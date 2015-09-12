@@ -3,13 +3,13 @@ var MuiContextified = require('./MuiContextified.jsx');
 var NavList = require('./NavList.jsx');
 
 // Navigation items data.
-var prefix = '/owner';
+var prefix = '/agent';
 var navItemData = [
   { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
   { text: 'Agent Chat', path: `${prefix}/messages`, icon: 'message' },
 ];
 
-var OwnerNav = React.createClass({
+var AgentNav = React.createClass({
   render() {
     return (
       <div style={styles.navContainer}>
@@ -30,4 +30,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(OwnerNav);
+module.exports = MuiContextified(AgentNav);
