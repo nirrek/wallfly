@@ -8,6 +8,8 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var cookie = require('react-cookie');
 var User = require('../utils/User.js');
+var ReactRouter = require('react-router');
+var Link = ReactRouter.Link;
 
 /**
  * Login View
@@ -50,15 +52,10 @@ var Login = React.createClass({
         // Transition to the give userType's dashboard.
         var { type: userType } = response.data;
         if      (userType === 'owner') this.transitionTo('owner/propertyList');
-        else if (userType === 'agent') this.transitionTo('agent/dashboard');
+        else if (userType === 'agent') this.transitionTo('agent/propertyList');
         else if (userType === 'tenant') this.transitionTo('tenant/propertyDetails');
       }
     });
-  },
-
-  onRegister(event) {
-    event.preventDefault();
-    this.transitionTo('createAccount');
   },
 
   render() {
@@ -86,7 +83,7 @@ var Login = React.createClass({
           </form>
         </Paper>
         <div style={style.registerContainer}>
-          Don't have an account? <a href="#" onClick={this.onRegister}>Register Now</a>
+          Don't have an account? <Link to="createAccount">Register Now</Link>
         </div>
       </div>
     );
