@@ -9,23 +9,29 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 
 var RepairRequestForm = React.createClass({
-  getInitialState() {
-    return {
-      description: '', // User entered description
-      image: '', // user entered image
-    }
-  },
-
   propTypes: {
     repairRequestAdded: React.PropTypes.func,
   },
 
-  // Capture the input field state after each keypress.
+  getInitialState() {
+    return {
+      description: '', // User entered description
+      dataUri: '', // base64 encoding of the user selected image.
+    }
+  },
+
+  /**
+   * Event handler for capturing in the input field state on each keypress.
+   * @param  {String} field The identifier for the input field.
+   */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
   },
 
-  // Handle the form submission event when the user adds new repair request.
+  /**
+   * Form submission event handler. Sends a request to the server to add the
+   * repair request, and updates the repair requests if successful.
+   */
   onSubmit(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -34,25 +40,38 @@ var RepairRequestForm = React.createClass({
     Api.addRepairRequest({
       data: {
         description: this.state.description,
-        image: this.state.image
+        dataUri: this.state.dataUri,
       },
       callback: (err, response) => {
         if (err) {
           return;
         }
+
         // Clear the form
         this.setState({
-          description: "",
-          image: ""
+          description: '',
+          dataUri: '',
         });
-        // Refetch repair requests via props
+
         this.props.repairRequestAdded();
       }
     });
   },
 
+  /**
+   * Callback for a user selecting a file for upload. Reads the file as a base64
+   * encoded data URI and stores this in component state.
+   */
+  onFileSelected(event) {
+    var reader = new FileReader(); // File API
+    var file = event.target.files[0];
+
+    reader.onload = upload => this.setState({ dataUri: upload.target.result });
+    reader.readAsDataURL(file);
+  },
+
   render() {
-    var { description, image } = this.state;
+    var { description, dataUri } = this.state;
     var errorMessage;
     return (
       <div style={style.formContainer}>
@@ -66,11 +85,12 @@ var RepairRequestForm = React.createClass({
               name="Description"
               onChange={this.onChange.bind(this, 'description')}
               floatingLabelText="Description" />
-            <TextField
-              value={image}
-              name="Image"
-              onChange={this.onChange.bind(this, 'image')}
-              floatingLabelText="Image" />
+            <div style={style.inputContainer}>
+              {dataUri ?
+                (<img style={style.img} src={this.state.dataUri} />) :
+                (null)}
+              <input type="file" name="file" onChange={this.onFileSelected} />
+            </div>
             <RaisedButton
               type="submit"
               label="Lodge Repair Request"
@@ -98,6 +118,12 @@ var style = {
     padding: '2em',
     flexDirection: 'column',
     maxWidth: '20em',
+  },
+  inputContainer: {
+    margin: '40px 0'
+  },
+  img: {
+    maxWidth: 200,
   },
   heading: {
     margin: 0
