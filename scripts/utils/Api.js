@@ -209,6 +209,22 @@ let Api = {
       });
   },
 
+  // Add a new property
+  addNewProperty({ data={}, callback=()=>{} }) {
+    data.sender = userId;
+    axios.post(`${host}/properties/addProperty`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addNewProperty(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   // Fetch property details for the specified property
   getPropertyDetails({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/details`, {
