@@ -28,11 +28,35 @@ var PropertyList = React.createClass({
     });
   },
 
+<<<<<<< HEAD
   onPropertyClick(propertyId, event) {
     event.preventDefault();
     event.stopPropagation();
 
     this.transitionTo(`/owner/property/${propertyId}/propertyDetails`);
+=======
+  /**
+   * Gets the current userType as determined by the URL.
+   * @return {String} The current user type.
+   */
+  getUserType() {
+    // Note that there is an important bug this implementation takes into
+    // account. If the page is refreshed the split path will be
+    // ['', 'owner', ...] if the path is navigated to via push API, the split
+    // path will be ['owner', ...].
+    var { pathname } = this.props.location;
+    var split = pathname.split('/');
+    if      (split.indexOf('owner') != -1) return 'owner';
+    else if (split.indexOf('agent') != -1) return 'agent';
+    return '';
+  },
+
+  onPropertyClick(propertyId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var userType = this.getUserType();
+    this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
+>>>>>>> master
   },
 
   render() {

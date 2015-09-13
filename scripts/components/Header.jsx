@@ -45,8 +45,9 @@ var Header = React.createClass({
         <div style={styles.header}>
           {menuIcon}
           <div style={styles.logo}>WallFly</div>
+          {/* TODO add notifications and settings
           <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton>
-          <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>
+          <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton> */}
         </div>
       );
     }

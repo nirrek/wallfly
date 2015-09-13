@@ -1,4 +1,5 @@
 var React = require('react');
+<<<<<<< HEAD
 var Navigation = require('react-router').Navigation;
 var MaterialUi = require('material-ui');
 var List = MaterialUi.List;
@@ -34,12 +35,36 @@ var OwnerNav = React.createClass({
         <List style={{width: '15em'}}>
           {navItems}
         </List>
+=======
+var MuiContextified = require('./MuiContextified.jsx');
+var NavList = require('./NavList.jsx');
+
+// Navigation items data.
+var prefix = '/owner';
+var navItemData = [
+  { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
+  { text: 'Agent Chat', path: `${prefix}/messages`, icon: 'message' },
+];
+
+var OwnerNav = React.createClass({
+  render() {
+    return (
+      <div style={styles.navContainer}>
+        <div style={styles.spacer} />
+        <NavList items={navItemData} />
+>>>>>>> master
       </div>
     );
   }
 });
 
 var styles = {
+<<<<<<< HEAD
+=======
+  navContainer: {
+    width: '15em',
+  },
+>>>>>>> master
   spacer: {
     backgroundColor: '#2ECC71',
     height: 50,
