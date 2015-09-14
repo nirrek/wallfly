@@ -184,22 +184,6 @@ let Api = {
       });
   },
 
-    // Add a new property
-  addNewProperty({ data={}, callback=()=>{} }) {
-    data.sender = userId;
-    axios.post(`${host}/users/${userId}/addProperty`, data, {
-      withCredentials: true
-    })
-    .then((response) => {
-      callback(null, response);
-    })
-    .catch((response) => {
-      let error = response.data.errorMessage;
-      console.log(`Error in Api.addNewProperty(): ${error}`);
-      callback(new Error(error), response);
-    });
-  },
-
   // ---------------------------------------------------------------------------
   // Owner / Agent endpoints
   // TODO. Delegate the tenant api calls to these ones.
@@ -222,6 +206,26 @@ let Api = {
         console.log(`Error in Api.getPropertyList(): ${error}`);
         callback(new Error(error), response);
       });
+  },
+
+  // Add a new property
+  addNewProperty({ data={}, callback=()=>{} }) {
+    userId = User.getUserId();
+
+    axios.post(`${host}/properties`, data, {
+      params: {
+        userId: userId,
+      },
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addNewProperty(): ${error}`);
+      callback(new Error(error), response);
+    });
   },
 
   // Fetch property details for the specified property

@@ -9,7 +9,7 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 
 var NewPropertyForm = React.createClass({
-getInitialState() {
+  getInitialState() {
     return {
       streetAddress: '', // User entered street address
       suburb: '', // User entered suburb
@@ -118,7 +118,6 @@ getInitialState() {
             type="submit"
             label="Add New Property"
             primary={true}
-            backgroundColor="#2ECC71"
             style={style.button} />
         </form>
       </div>
