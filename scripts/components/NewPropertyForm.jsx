@@ -9,17 +9,14 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 
 var NewPropertyForm = React.createClass({
-  propTypes: {
-    newPropertyAdded: React.PropTypes.func,
-  },
-
-  getInitialState() {
+getInitialState() {
     return {
       streetAddress: '', // User entered street address
       suburb: '', // User entered suburb
       postCode: '', // User entered post code
       ownerEmail: '', // User entered owner email
-      dataUri: '', // base64 encoding of the user selected image.
+      tenantEmail: '', // User entered tenant email
+      dataUrl: '', // base64 encoding of the user selected image.
     }
   },
 
@@ -46,7 +43,8 @@ var NewPropertyForm = React.createClass({
         suburb: this.state.suburb,
         postCode: this.state.postCode,
         ownerEmail: this.state.ownerEmail,
-        dataUri: this.state.dataUri,
+        tenantEmail: this.state.tenantEmail,
+        dataUrl: this.state.dataUrl,
       },
       callback: (err, response) => {
         if (err) {
@@ -59,10 +57,9 @@ var NewPropertyForm = React.createClass({
           suburb: '',
           postCode: '',
           ownerEmail: '',
-          dataUri: '',
+          tenantEmail: '',
+          dataUrl: '',
         });
-
-        this.props.newPropertyAdded();
       }
     });
   },
@@ -80,7 +77,7 @@ var NewPropertyForm = React.createClass({
   },
 
   render() {
-    var { streetAddress, suburb, postCode, ownerEmail, dataUri } = this.state;
+    var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl } = this.state;
     var errorMessage;
     return (
       <div>
@@ -90,33 +87,33 @@ var NewPropertyForm = React.createClass({
           <TextField
             value={streetAddress}
             multiLine={true}
-            name="Street Address"
             onChange={this.onChange.bind(this, 'streetAddress')}
             floatingLabelText="Street Address" />
           <TextField
             value={suburb}
             multiLine={true}
-            name="Suburb"
             onChange={this.onChange.bind(this, 'suburb')}
             floatingLabelText="Suburb" />
           <TextField
             value={postCode}
             multiLine={true}
-            name="Post Code"
             onChange={this.onChange.bind(this, 'postCode')}
             floatingLabelText="Post Code" />
           <TextField
             value={ownerEmail}
             multiLine={true}
-            name="Owner Email"
             onChange={this.onChange.bind(this, 'ownerEmail')}
             floatingLabelText="Owner Email" />
-          <div style={style.inputContainer}>
-            {dataUri ?
-              (<img style={style.img} src={this.state.dataUri} />) :
-              (null)}
-            <input type="file" name="file" onChange={this.onFileSelected} />
-          </div>
+          <TextField
+            value={tenantEmail}
+            multiLine={true}
+            onChange={this.onChange.bind(this, 'tenantEmail')}
+            floatingLabelText="Tenant Email" />
+          <TextField
+            value={dataUrl}
+            multiLine={true}
+            onChange={this.onChange.bind(this, 'dataUrl')}
+            floatingLabelText="Image Url" />
           <RaisedButton
             type="submit"
             label="Add New Property"
