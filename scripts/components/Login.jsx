@@ -6,6 +6,7 @@ var mui = require('material-ui');
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
+var Snackbar = mui.Snackbar;
 var cookie = require('react-cookie');
 var User = require('../utils/User.js');
 var ReactRouter = require('react-router');
@@ -23,6 +24,12 @@ var Login = React.createClass({
       username: '', // user entered username
       password: '', // user entered password
       authFailure: false, // did the authentication request fail
+    }
+  },
+
+  componentDidMount() {
+    if (this.refs.snackbar) {
+      setTimeout(() => this.refs.snackbar.show(), 400);
     }
   },
 
@@ -60,10 +67,18 @@ var Login = React.createClass({
 
   render() {
     var { username, password, authFailure } = this.state;
+    var { accountCreated } = this.props.location.query;
     var authFailMessage = authFailure ? 'Username or password invalid' : null;
 
     return (
       <div style={style.page}>
+        {accountCreated ? (
+          <Snackbar
+            ref="snackbar"
+            message="Account successfully created. You can now login."
+            autoHideDuration={3000} />
+        ) : null}
+
         <Paper zDepth={1} style={style.loginContainer}>
           <h1 style={style.heading}>Login</h1>
           <form style={style.form} onSubmit={this.onSubmit}>
