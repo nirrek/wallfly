@@ -15,7 +15,7 @@ var NewProperty = React.createClass({
       <div style={style.page}>
         <div style={style.row}>
           <div style={style.col}>
-            <NewPropertyForm newPropertyAdded={this.getRepairRequests}/>
+            <NewPropertyForm newPropertyAdded={console.log('Replace With Transition')}/>
           </div>
         </div>
       </div>
