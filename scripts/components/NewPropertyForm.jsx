@@ -7,6 +7,7 @@ var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
+var Snackbar = mui.Snackbar;
 
 var NewPropertyForm = React.createClass({
   getInitialState() {
@@ -60,6 +61,8 @@ var NewPropertyForm = React.createClass({
           tenantEmail: '',
           dataUrl: '',
         });
+
+        this.refs.snackbar.show();
       }
     });
   },
@@ -72,18 +75,21 @@ var NewPropertyForm = React.createClass({
     var reader = new FileReader(); // File API
     var file = event.target.files[0];
 
-    reader.onload = upload => this.setState({ dataUri: upload.target.result });
+    reader.onload = upload => this.setState({ dataUrl: upload.target.result });
     reader.readAsDataURL(file);
   },
 
+
   render() {
     var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl } = this.state;
-    var errorMessage;
     return (
       <div>
+        <Snackbar
+          ref="snackbar"
+          message="New property successfully added"
+          autoHideDuration={3000} />
         <form style={style.form} onSubmit={this.onSubmit}>
           <h2>Add New Property</h2>
-          <div style={style.error}> { errorMessage } </div>
           <TextField
             value={streetAddress}
             multiLine={true}
@@ -108,12 +114,14 @@ var NewPropertyForm = React.createClass({
             value={tenantEmail}
             multiLine={true}
             onChange={this.onChange.bind(this, 'tenantEmail')}
-            floatingLabelText="Tenant Email" />
-          <TextField
-            value={dataUrl}
-            multiLine={true}
-            onChange={this.onChange.bind(this, 'dataUrl')}
-            floatingLabelText="Image Url" />
+            floatingLabelText="Tenant Email (optional)" />
+          <div style={style.label}>Property Photo</div>
+          <div style={style.photoSelectorContainer}>
+            {dataUrl ?
+              (<img style={style.img} src={dataUrl} />) :
+              (null)}
+            <input type="file" onChange={this.onFileSelected} />
+          </div>
           <RaisedButton
             type="submit"
             label="Add New Property"
@@ -126,28 +134,21 @@ var NewPropertyForm = React.createClass({
 });
 
 var style = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-  },
-  formContainer: {
-    width: '325px',
-  },
   form: {
     display: 'flex',
     padding: '2em',
     flexDirection: 'column',
     maxWidth: '20em',
   },
-  inputContainer: {
-    margin: '40px 0'
-  },
   img: {
     maxWidth: 200,
   },
-  heading: {
-    margin: 0
+  label: {
+    marginTop: '1em',
+    fontSize: 15,
+  },
+  photoSelectorContainer: {
+    marginBottom: '2em'
   }
 };
 
