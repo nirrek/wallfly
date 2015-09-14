@@ -37,9 +37,9 @@ var CreateAccount = React.createClass({
   },
 
   // Update select menu on change.
-  onSelectChange(event) {
-    var { name } = event.target.value; // mui selects have an object value
-    this.setState({ 'userType': name });
+  onSelectChange(event, selectedUserTypeIndex) {
+    var userType = userTypes[selectedUserTypeIndex].name;
+    this.setState({ userType: userType });
   },
 
   // Handle the form submission event when the user tries to log in.
@@ -59,8 +59,6 @@ var CreateAccount = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
-          console.log(err);
-          console.log(response);
           this.setState({
             registrationFail: true,
             failureResponse: response.data,
@@ -68,8 +66,7 @@ var CreateAccount = React.createClass({
           return;
         }
 
-        // TODO: pass data to the route to display some type of success msg.
-        this.transitionTo('/');
+        this.transitionTo('/?accountCreated=true');
       }
     });
   },
@@ -95,6 +92,7 @@ var CreateAccount = React.createClass({
             <div style={style.error}> { regoFailMsg } </div>
             <SelectField
               value={userType}
+              valueMember="name"
               floatingLabelText="Account Type"
               onChange={this.onSelectChange}
               menuItems={userTypes} />
@@ -129,7 +127,7 @@ var CreateAccount = React.createClass({
               name="password"
               onChange={this.onChange.bind(this, 'password')}
               floatingLabelText="Password" />
-            <RaisedButton type="submit" label="Create Account" primary={true} backgroundColor="#2ECC71" style={style.button} />
+            <RaisedButton type="submit" label="Create Account" primary={true} style={style.button} />
           </form>
         </Paper>
       </div>
