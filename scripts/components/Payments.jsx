@@ -32,10 +32,8 @@ var Payments = React.createClass({
     })
   },
 
-  onButtonClick(){
-      this.setState({
-          isFormDisplayed: true
-      });
+  onButtonClick() {
+    this.setState({ isFormDisplayed: true });
   },
 
    componentWillMount() {
@@ -48,7 +46,8 @@ var Payments = React.createClass({
 
     var rows = payments.map(payment => {
       return (
-        <tr key={payment.id}>
+        // TODO
+        <tr key={payment.date}> 
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
           <td>{payment.amount}</td>

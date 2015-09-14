@@ -47,11 +47,11 @@ var PaymentForm = React.createClass({
         }
         // Clear the form
         this.setState({
-          fullName: "",
-          cardNumber: "",
-          expiryDate: "",
-          ccv: "",
-          amount: ""
+          fullName: '',
+          cardNumber: '',
+          expiryDate: '',
+          ccv: '',
+          amount: ''
 
         });
         // Refetch repair requests via props
@@ -71,35 +71,28 @@ var PaymentForm = React.createClass({
             <div style={style.error}> { errorMessage } </div>
               <TextField
               value={fullName}
-              name="Full Name on Credit Card"
               onChange={this.onChange.bind(this, 'fullName')}
               floatingLabelText="Full Name on Credit Card" />
               <TextField
               value={cardNumber}
-              name="Card Number"
               onChange={this.onChange.bind(this, 'cardNumber')}
               floatingLabelText="Card Number" />
             <DatePicker
               name="expiryDate"
-              ref="DatePicker"
               onChange={this._handleChange}
               floatingLabelText="Expiry Date"/>
             <TextField
               value={ccv}
-              name="Ccv"
               onChange={this.onChange.bind(this, 'ccv')}
               floatingLabelText="CCV" />
             <TextField
               value={amount}
-              name="Amount"
               onChange={this.onChange.bind(this, 'amount')}
               floatingLabelText="Amount" />
-
             <RaisedButton
               type="submit"
               label="Pay"
               primary={true}
-              backgroundColor="#2ECC71"
               style={style.button} />
           </form>
         </Paper>
