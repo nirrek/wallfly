@@ -65,7 +65,7 @@ var PropertyDetails = React.createClass({
     return (
       <div style={style.page}>
         <Card style={{maxWidth: 400}}>
-          <CardMedia overlay={<CardTitle title="22 Payne St" subtitle="Auchenflower"/>}>
+          <CardMedia overlay={<CardTitle title={this.state.street} subtitle={this.state.suburb}/>}>
             <img width="400" src={this.state.photo} />
           </CardMedia>
         </Card>
