@@ -33,6 +33,7 @@ var OwnerInspectionReports = require('./components/OwnerInspectionReports.jsx');
 var OwnerCalendar = require('./components/OwnerCalendar.jsx');
 
 var AgentNav = require('./components/AgentNav.jsx');
+var NewProperty = require('./components/NewProperty.jsx');
 
 
 
@@ -99,6 +100,7 @@ React.render((
 
         <Route path="agent" components={{ main: Page, sidebar: AgentNav }}>
           <Route path="propertyList" component={PropertyList} />
+          <Route path="newProperty" component={NewProperty} />
           <Route path="messages" component={Stub} />
         </Route>
         {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}

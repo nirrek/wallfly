@@ -67,7 +67,9 @@ var Login = React.createClass({
 
   render() {
     var { username, password, authFailure } = this.state;
-    var { accountCreated } = this.props.location.query;
+    if (this.props.location.query) {
+      var accountCreated = this.props.location.query.accountCreated;
+    }
     var authFailMessage = authFailure ? 'Username or password invalid' : null;
 
     return (

@@ -6,6 +6,7 @@ var NavList = require('./NavList.jsx');
 var prefix = '/agent';
 var navItemData = [
   { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
+  { text: 'New Property', path: `${prefix}/newProperty`, icon: 'add_box' },
   { text: 'Agent Chat', path: `${prefix}/messages`, icon: 'message' },
 ];
 
