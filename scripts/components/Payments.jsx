@@ -48,7 +48,7 @@ var Payments = React.createClass({
 
     var rows = payments.map(payment => {
       return (
-        <tr key={payment.date}>
+        <tr key={payment.id}>
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
           <td>{payment.amount}</td>

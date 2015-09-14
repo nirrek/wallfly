@@ -35,10 +35,10 @@ var PaymentForm = React.createClass({
     // API call to add payment
     Api.addPayment({
       data: {
-        fullName: this.state.fullName,
-        cardNumber: this.state.cardNumber,
-        expiryDate: this.state.expiryDate,
-        ccv: this.state.ccv,
+        // fullName: this.state.fullName,
+        // cardNumber: this.state.cardNumber,
+        // expiryDate: this.state.expiryDate,
+        // ccv: this.state.ccv,
         amount: this.state.amount
       },
       callback: (err, response) => {

@@ -1,32 +1,13 @@
 var React = require('react');
-<<<<<<< HEAD
-var Navigation = require('react-router').Navigation;
-var MaterialUi = require('material-ui');
-var List = MaterialUi.List;
-var ListItem = MaterialUi.ListItem;
-var FontIcon = MaterialUi.FontIcon;
-var MuiContextified = require('./MuiContextified.jsx');
-=======
 var MuiContextified = require('./MuiContextified.jsx');
 var NavList = require('./NavList.jsx');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
 var Navigation = ReactRouter.Navigation;
->>>>>>> master
 
 var PropertyNav = React.createClass({
   mixins: [ Navigation ],
 
-<<<<<<< HEAD
-  render() {
-    var {propertyId} = this.props.params;
-    var prefix = `/owner/property/${propertyId}`;
-
-    var navItemData = [
-      // { text: 'Payments', path: `${prefix}/payments`, icon: 'attach_money' },
-      // { text: 'Repair Requests', path: `${prefix}/repairRequests`, icon: 'attach_money' },
-
-=======
   /**
    * On clicking 'Return to Properties List', user returned to property list.
    */
@@ -55,33 +36,12 @@ var PropertyNav = React.createClass({
     var prefix = `/${userType}/property/${propertyId}`;
 
     return [
->>>>>>> master
       { text: 'Property Details', path: `${prefix}/propertyDetails`, icon: 'location_city' },
       { text: 'Payments', path: `${prefix}/payments`, icon: 'attach_money' },
       { text: 'Repair Requests', path: `${prefix}/repairRequests`, icon: 'report_problem' },
       { text: 'Inspection Reports', path: `${prefix}/inspectionReports`, icon: 'visibility' },
       { text: 'Calendar', path: `${prefix}/calendar`, icon: 'event' },
     ];
-<<<<<<< HEAD
-
-    var navItems = navItemData.map(data => {
-      var icon = <FontIcon className='material-icons'>{data.icon}</FontIcon>
-      return (
-        <ListItem key={data.text}
-                  primaryText={data.text}
-                  leftIcon={icon}
-                  onClick={() => this.transitionTo(data.path)}
-                  />
-      );
-    });
-
-    return (
-      <div>
-        <div style={styles.spacer} />
-        <List style={{width: '15em'}}>
-          {navItems}
-        </List>
-=======
   },
 
   render() {
@@ -95,18 +55,12 @@ var PropertyNav = React.createClass({
           &larr; Return to Properties List
         </Link>
         <NavList items={navItemData} />
->>>>>>> master
       </div>
     );
   }
 });
 
 var styles = {
-<<<<<<< HEAD
-  spacer: {
-    backgroundColor: '#2ECC71',
-    height: 50,
-=======
   navContainer: {
     width: '15em',
   },
@@ -118,7 +72,6 @@ var styles = {
     display: 'block',
     textAlign: 'center',
     marginTop: '1em',
->>>>>>> master
   }
 }
 

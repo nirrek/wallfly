@@ -28,13 +28,6 @@ var PropertyList = React.createClass({
     });
   },
 
-<<<<<<< HEAD
-  onPropertyClick(propertyId, event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.transitionTo(`/owner/property/${propertyId}/propertyDetails`);
-=======
   /**
    * Gets the current userType as determined by the URL.
    * @return {String} The current user type.
@@ -56,7 +49,6 @@ var PropertyList = React.createClass({
     event.stopPropagation();
     var userType = this.getUserType();
     this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
->>>>>>> master
   },
 
   render() {
