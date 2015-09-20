@@ -9,6 +9,9 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var cookie = require('react-cookie');
 var User = require('../utils/User.js');
+var ImageSelector = require('./ImageSelector.jsx');
+var Label = require('./Label.jsx');
+var ErrorMessage = require('./ErrorMessage.jsx');
 
 /**
  * Create Account View
@@ -26,8 +29,10 @@ var CreateAccount = React.createClass({
       email: '',
       phone: '',
       password: '',
+      avatar: '', // base64 encoding of the profile picture
       registrationFail: false, // did the registration request fail
       failureResponse: {}, // failure response from the server
+      fileSizeError: '', // file size error message
     }
   },
 
@@ -44,6 +49,8 @@ var CreateAccount = React.createClass({
 
   // Handle the form submission event when the user tries to log in.
   onSubmit(event) {
+    console.log(this.state);
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -56,6 +63,7 @@ var CreateAccount = React.createClass({
         email: this.state.email,
         phone: this.state.phone,
         password: this.state.password,
+        avatar: this.state.avatar,
       },
       callback: (err, response) => {
         if (err) {
@@ -78,11 +86,25 @@ var CreateAccount = React.createClass({
     }
   },
 
+  onImageSelected(payload) {
+    this.setState({ avatar: payload.dataURL });
+  },
+
+  onImageSizeError(error) {
+    var file = error.file;
+    var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
+    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: error });
+  },
+
   render() {
     var { userType, username, firstName, lastName, email, phone, password,
-          registrationFail, failureResponse } = this.state;
+          registrationFail, failureResponse, fileSizeError } = this.state;
     var regoFailMsg = registrationFail ? this.getFailureMessage(failureResponse)
                                        : null;
+    var sizeError = fileSizeError ? (
+      <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
+    ) : null;
 
     return (
       <div style={style.page}>
@@ -90,6 +112,7 @@ var CreateAccount = React.createClass({
           <h1 style={style.heading}>Register</h1>
           <form style={style.form} onSubmit={this.onSubmit}>
             <div style={style.error}> { regoFailMsg } </div>
+
             <SelectField
               value={userType}
               valueMember="name"
@@ -127,6 +150,13 @@ var CreateAccount = React.createClass({
               name="password"
               onChange={this.onChange.bind(this, 'password')}
               floatingLabelText="Password" />
+            <div style={style.selectorContainer}>
+              <Label>Profile Picture</Label>
+              {sizeError}
+              <ImageSelector maxSize={200000}
+                             onImageSelected={this.onImageSelected}
+                             onImageSizeError={this.onImageSizeError} />
+            </div>
             <RaisedButton type="submit" label="Create Account" primary={true} style={style.button} />
           </form>
         </Paper>
@@ -166,6 +196,9 @@ var style = {
   },
   button: {
     marginTop: '2em',
+  },
+  selectorContainer: {
+    width: '100%'
   }
 };
 
