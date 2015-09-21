@@ -6,7 +6,7 @@ var mui = require('material-ui');
 var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
+var Dialog = mui.Dialog;
 
 var PaymentForm = React.createClass({
   getInitialState() {
@@ -18,8 +18,13 @@ var PaymentForm = React.createClass({
       amount: '', // user entered amount
     }
   },
+
   propTypes: {
     paymentAdded: React.PropTypes.func,
+  },
+
+  onButtonClick() {
+    this.refs.dialog.show();
   },
 
   // Capture the input field state after each keypress.
@@ -29,8 +34,6 @@ var PaymentForm = React.createClass({
 
   // Handle the form submission event when the user adds new repair request.
   onSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
 
     // API call to add payment
     Api.addPayment({
@@ -54,8 +57,8 @@ var PaymentForm = React.createClass({
           amount: ''
 
         });
-        // Refetch repair requests via props
         this.props.paymentAdded();
+        this.refs.dialog.dismiss();
       }
     });
   },
@@ -63,39 +66,43 @@ var PaymentForm = React.createClass({
   render() {
     var { fullName, cardNumber, expiryDate, ccv, amount } = this.state;
     var errorMessage;
+    var standardActions = [
+      { text: 'Cancel' },
+      { text: 'Submit', onTouchTap: this.onSubmit, ref: 'submit' }
+    ];
     return (
       <div style={style.formContainer}>
-        <h2 style={style.heading}>Make a Payment </h2>
-        <Paper zDepth={1}>
-          <form style={style.form} onSubmit={this.onSubmit}>
-            <div style={style.error}> { errorMessage } </div>
-              <TextField
-              value={fullName}
-              onChange={this.onChange.bind(this, 'fullName')}
-              floatingLabelText="Full Name on Credit Card" />
-              <TextField
-              value={cardNumber}
-              onChange={this.onChange.bind(this, 'cardNumber')}
-              floatingLabelText="Card Number" />
-            <DatePicker
-              name="expiryDate"
-              onChange={this._handleChange}
-              floatingLabelText="Expiry Date"/>
-            <TextField
-              value={ccv}
-              onChange={this.onChange.bind(this, 'ccv')}
-              floatingLabelText="CCV" />
-            <TextField
-              value={amount}
-              onChange={this.onChange.bind(this, 'amount')}
-              floatingLabelText="Amount" />
-            <RaisedButton
-              type="submit"
-              label="Pay"
-              primary={true}
-              style={style.button} />
-          </form>
-        </Paper>
+        <RaisedButton label="Make a new Payment"
+                      primary={true}
+                      onClick={this.onButtonClick} />
+        <Dialog
+          title="Make a Payment"
+          actions={standardActions}
+          actionFocus="submit"
+          modal={this.state.modal}
+          ref="dialog">
+          <div style={style.error}> { errorMessage } </div>
+          <TextField
+            value={fullName}
+            onChange={this.onChange.bind(this, 'fullName')}
+            floatingLabelText="Full Name on Credit Card" />
+          <TextField
+            value={cardNumber}
+            onChange={this.onChange.bind(this, 'cardNumber')}
+            floatingLabelText="Card Number" />
+          <DatePicker
+            name="expiryDate"
+            onChange={this._handleChange}
+            floatingLabelText="Expiry Date"/>
+          <TextField
+            value={ccv}
+            onChange={this.onChange.bind(this, 'ccv')}
+            floatingLabelText="CCV" />
+          <TextField
+            value={amount}
+            onChange={this.onChange.bind(this, 'amount')}
+            floatingLabelText="Amount" />
+        </Dialog>
       </div>
     );
   }

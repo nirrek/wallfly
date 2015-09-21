@@ -7,6 +7,7 @@ var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
+var Dialog = mui.Dialog;
 
 var RepairRequestForm = React.createClass({
   propTypes: {
@@ -18,6 +19,10 @@ var RepairRequestForm = React.createClass({
       description: '', // User entered description
       dataUri: '', // base64 encoding of the user selected image.
     }
+  },
+
+  onButtonClick() {
+    this.refs.dialog.show();
   },
 
   /**
@@ -33,8 +38,6 @@ var RepairRequestForm = React.createClass({
    * repair request, and updates the repair requests if successful.
    */
   onSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
 
     // API call to add repair request
     Api.addRepairRequest({
@@ -54,6 +57,7 @@ var RepairRequestForm = React.createClass({
         });
 
         this.props.repairRequestAdded();
+        this.refs.dialog.dismiss();
       }
     });
   },
@@ -73,32 +77,35 @@ var RepairRequestForm = React.createClass({
   render() {
     var { description, dataUri } = this.state;
     var errorMessage;
+    var standardActions = [
+      { text: 'Cancel' },
+      { text: 'Submit', onTouchTap: this.onSubmit, ref: 'submit' }
+    ];
     return (
       <div style={style.formContainer}>
-        <Paper zDepth={1}>
-          <form style={style.form} onSubmit={this.onSubmit}>
-            <h3 style={style.heading}>Lodge a New Repair Request</h3>
-            <div style={style.error}> { errorMessage } </div>
-            <TextField
-              value={description}
-              multiLine={true}
-              name="Description"
-              onChange={this.onChange.bind(this, 'description')}
-              floatingLabelText="Description" />
-            <div style={style.inputContainer}>
-              {dataUri ?
-                (<img style={style.img} src={this.state.dataUri} />) :
-                (null)}
-              <input type="file" name="file" onChange={this.onFileSelected} />
-            </div>
-            <RaisedButton
-              type="submit"
-              label="Lodge Repair Request"
-              primary={true}
-              backgroundColor="#2ECC71"
-              style={style.button} />
-          </form>
-        </Paper>
+        <RaisedButton label="Lodge a New Repair Request"
+                      primary={true}
+                      onClick={this.onButtonClick} />
+        <Dialog
+          title="Lodge a New Repair Request"
+          actions={standardActions}
+          actionFocus="submit"
+          modal={this.state.modal}
+          ref="dialog">
+          <div style={style.error}> { errorMessage } </div>
+          <TextField
+            value={description}
+            multiLine={true}
+            name="Description"
+            onChange={this.onChange.bind(this, 'description')}
+            floatingLabelText="Description" />
+          <div style={style.inputContainer}>
+            {dataUri ?
+              (<img style={style.img} src={this.state.dataUri} />) :
+              (null)}
+            <input type="file" name="file" onChange={this.onFileSelected} />
+          </div>
+        </Dialog>
       </div>
     );
   }

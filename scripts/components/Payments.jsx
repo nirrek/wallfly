@@ -13,7 +13,6 @@ var Payments = React.createClass({
   getInitialState() {
     return {
       payments: [], // list of recent payments
-      isFormDisplayed: false,
     };
   },
 
@@ -32,22 +31,18 @@ var Payments = React.createClass({
     })
   },
 
-  onButtonClick() {
-    this.setState({ isFormDisplayed: true });
-  },
-
    componentWillMount() {
     this.getPayments()
   },
 
   render() {
 
-    var { payments, isFormDisplayed } = this.state;
+    var { payments } = this.state;
 
     var rows = payments.map(payment => {
       return (
         // TODO
-        <tr key={payment.id}> 
+        <tr key={payment.id}>
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
           <td>{payment.amount}</td>
@@ -68,12 +63,7 @@ var Payments = React.createClass({
         </table>
 
         <div style={style.formContainer}>
-          { isFormDisplayed ? (
-            <PaymentForm paymentAdded={this.getPayments}/>
-          ) : (
-            <RaisedButton label="Make a new Payment" primary={true}
-                      onClick={this.onButtonClick} />
-          )}
+          <PaymentForm paymentAdded={this.getPayments}/>
         </div>
       </div>
     );

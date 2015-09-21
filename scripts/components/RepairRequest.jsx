@@ -13,7 +13,6 @@ var RepairRequest = React.createClass({
   getInitialState() {
     return {
       repairRequests: [], // list of repair requests
-      isFormDisplayed: false,
     };
   },
 
@@ -31,17 +30,12 @@ var RepairRequest = React.createClass({
       }
     });
   },
-
-  onButtonClick() {
-    this.setState({ isFormDisplayed: true });
-  },
-
   componentWillMount() {
     this.getRepairRequests()
   },
 
   render() {
-    var { repairRequests, isFormDisplayed } = this.state;
+    var { repairRequests } = this.state;
 
     var rows = repairRequests.map(request => {
       return (
@@ -70,13 +64,7 @@ var RepairRequest = React.createClass({
           {rows}
         </table>
         <div style={style.formContainer}>
-          { isFormDisplayed ? (
-            <RepairRequestForm repairRequestAdded={this.getRepairRequests}/>
-          ) : (
-            <RaisedButton label="Lodge a New Repair Request"
-                          primary={true}
-                          onClick={this.onButtonClick} />
-          )}
+          <RepairRequestForm repairRequestAdded={this.getRepairRequests} />
         </div>
       </div>
     );
