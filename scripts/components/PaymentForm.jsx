@@ -7,13 +7,15 @@ var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
+var Label = require('./Label.jsx');
 
 var PaymentForm = React.createClass({
   getInitialState() {
     return {
       fullName: '', // user entered full name on credit card
       cardNumber: '', // user entered credit card number
-      expiryDate: '', // user entered expiry date
+      expMonth: '',
+      expYear: '',
       ccv: '', // user entered ccv number
       amount: '', // user entered amount
     }
@@ -52,9 +54,10 @@ var PaymentForm = React.createClass({
         this.setState({
           fullName: '',
           cardNumber: '',
-          expiryDate: '',
           ccv: '',
-          amount: ''
+          amount: '',
+          expMonth: '',
+          expYear: ''
 
         });
         this.props.paymentAdded();
@@ -64,7 +67,7 @@ var PaymentForm = React.createClass({
   },
 
   render() {
-    var { fullName, cardNumber, expiryDate, ccv, amount } = this.state;
+    var { fullName, cardNumber, expMonth, expYear, ccv, amount } = this.state;
     var errorMessage;
     var standardActions = [
       { text: 'Cancel' },
@@ -90,10 +93,17 @@ var PaymentForm = React.createClass({
             value={cardNumber}
             onChange={this.onChange.bind(this, 'cardNumber')}
             floatingLabelText="Card Number" />
-          <DatePicker
-            name="expiryDate"
-            onChange={this._handleChange}
-            floatingLabelText="Expiry Date"/>
+          <Label>Expiry Date</Label>
+          <TextField
+            value={expMonth}
+            onChange={this.onChange.bind(this, 'expMonth')}
+            floatingLabelText="mm"
+            maxLength="2" />
+          <TextField
+            value={expYear}
+            onChange={this.onChange.bind(this, 'expYear')}
+            floatingLabelText="yy"
+            maxLength="2" />
           <TextField
             value={ccv}
             onChange={this.onChange.bind(this, 'ccv')}

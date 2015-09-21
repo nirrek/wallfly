@@ -102,7 +102,10 @@ var RepairRequestForm = React.createClass({
             multiLine={true}
             name="Description"
             onChange={this.onChange.bind(this, 'description')}
-            floatingLabelText="Description" />
+            floatingLabelText="Describe the Issue"
+            hintText="Describe what needs repairing, how urgent it is,
+            and how the damage occurred."
+            fullWidth />
           <div style={style.selectorContainer}>
             <Label>Image</Label>
             {sizeError}
