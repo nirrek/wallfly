@@ -68,7 +68,7 @@ var PaymentForm = React.createClass({
     var errorMessage;
     var standardActions = [
       { text: 'Cancel' },
-      { text: 'Submit', onTouchTap: this.onSubmit, ref: 'submit' }
+      { text: 'Make Payment', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
     return (
       <div style={style.formContainer}>

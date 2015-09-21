@@ -3,11 +3,12 @@ var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
 var Dialog = mui.Dialog;
+var ImageSelector = require('./ImageSelector.jsx');
+var Label = require('./Label.jsx');
+var ErrorMessage = require('./ErrorMessage.jsx');
 
 var RepairRequestForm = React.createClass({
   propTypes: {
@@ -17,7 +18,8 @@ var RepairRequestForm = React.createClass({
   getInitialState() {
     return {
       description: '', // User entered description
-      dataUri: '', // base64 encoding of the user selected image.
+      image: '', //base64 encoding of repair request image
+      fileSizeError: '', // file size error message
     }
   },
 
@@ -43,7 +45,7 @@ var RepairRequestForm = React.createClass({
     Api.addRepairRequest({
       data: {
         description: this.state.description,
-        dataUri: this.state.dataUri,
+        image: this.state.image,
       },
       callback: (err, response) => {
         if (err) {
@@ -53,7 +55,7 @@ var RepairRequestForm = React.createClass({
         // Clear the form
         this.setState({
           description: '',
-          dataUri: '',
+          image: '',
         });
 
         this.props.repairRequestAdded();
@@ -62,24 +64,26 @@ var RepairRequestForm = React.createClass({
     });
   },
 
-  /**
-   * Callback for a user selecting a file for upload. Reads the file as a base64
-   * encoded data URI and stores this in component state.
-   */
-  onFileSelected(event) {
-    var reader = new FileReader(); // File API
-    var file = event.target.files[0];
+  onImageSelected(payload) {
+    this.setState({ image: payload.dataURL });
+  },
 
-    reader.onload = upload => this.setState({ dataUri: upload.target.result });
-    reader.readAsDataURL(file);
+  onImageSizeError(error) {
+    var file = error.file;
+    var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
+    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: error });
   },
 
   render() {
-    var { description, dataUri } = this.state;
+    var { description, fileSizeError } = this.state;
+    var sizeError = fileSizeError ? (
+      <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
+    ) : null;
     var errorMessage;
     var standardActions = [
       { text: 'Cancel' },
-      { text: 'Submit', onTouchTap: this.onSubmit, ref: 'submit' }
+      { text: 'Lodge Repair Request', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
     return (
       <div style={style.formContainer}>
@@ -99,11 +103,12 @@ var RepairRequestForm = React.createClass({
             name="Description"
             onChange={this.onChange.bind(this, 'description')}
             floatingLabelText="Description" />
-          <div style={style.inputContainer}>
-            {dataUri ?
-              (<img style={style.img} src={this.state.dataUri} />) :
-              (null)}
-            <input type="file" name="file" onChange={this.onFileSelected} />
+          <div style={style.selectorContainer}>
+            <Label>Image</Label>
+            {sizeError}
+            <ImageSelector maxSize={200000}
+                           onImageSelected={this.onImageSelected}
+                           onImageSizeError={this.onImageSizeError} />
           </div>
         </Dialog>
       </div>
@@ -126,8 +131,8 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
-  inputContainer: {
-    margin: '40px 0'
+  selectorContainer: {
+    width: '100%'
   },
   img: {
     maxWidth: 200,
