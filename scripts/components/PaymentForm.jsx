@@ -84,34 +84,42 @@ var PaymentForm = React.createClass({
           actionFocus="submit"
           modal={this.state.modal}
           ref="dialog">
-          <div style={style.error}> { errorMessage } </div>
-          <TextField
-            value={fullName}
-            onChange={this.onChange.bind(this, 'fullName')}
-            floatingLabelText="Full Name on Credit Card" />
-          <TextField
-            value={cardNumber}
-            onChange={this.onChange.bind(this, 'cardNumber')}
-            floatingLabelText="Card Number" />
-          <Label>Expiry Date</Label>
-          <TextField
-            value={expMonth}
-            onChange={this.onChange.bind(this, 'expMonth')}
-            floatingLabelText="mm"
-            maxLength="2" />
-          <TextField
-            value={expYear}
-            onChange={this.onChange.bind(this, 'expYear')}
-            floatingLabelText="yy"
-            maxLength="2" />
-          <TextField
-            value={ccv}
-            onChange={this.onChange.bind(this, 'ccv')}
-            floatingLabelText="CCV" />
-          <TextField
-            value={amount}
-            onChange={this.onChange.bind(this, 'amount')}
-            floatingLabelText="Amount" />
+          <div style={style.form}>
+            <div style={style.error}> { errorMessage } </div>
+            <TextField
+              value={fullName}
+              onChange={this.onChange.bind(this, 'fullName')}
+              floatingLabelText="Full Name on Credit Card" />
+            <TextField
+              value={cardNumber}
+              onChange={this.onChange.bind(this, 'cardNumber')}
+              floatingLabelText="Card Number" />
+            <div>
+              <Label>Expiry Date</Label>
+              <TextField
+                style={style.date}
+                value={expMonth}
+                onChange={this.onChange.bind(this, 'expMonth')}
+                floatingLabelText="mm"
+                maxLength="2" />
+              <span style={style.separator}>/</span>
+              <TextField
+                style={style.date}
+                value={expYear}
+                onChange={this.onChange.bind(this, 'expYear')}
+                floatingLabelText="yy"
+                maxLength="2" />
+            </div>
+            <TextField
+              style={style.ccv}
+              value={ccv}
+              onChange={this.onChange.bind(this, 'ccv')}
+              floatingLabelText="CCV" />
+            <TextField
+              value={amount}
+              onChange={this.onChange.bind(this, 'amount')}
+              floatingLabelText="Amount" />
+          </div>
         </Dialog>
       </div>
     );
@@ -129,10 +137,18 @@ var style = {
   },
   form: {
     display: 'flex',
-    padding: '2em',
     flexDirection: 'column',
     maxWidth: '20em',
   },
+  date: {
+    width: '2em',
+  },
+  separator: {
+    margin: '0 .5em',
+  },
+  ccv: {
+    width: '3em',
+  }
 };
 
 module.exports = MuiContextified(PaymentForm);
