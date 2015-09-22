@@ -6,20 +6,27 @@ var mui = require('material-ui');
 var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
+var Dialog = mui.Dialog;
+var Label = require('./Label.jsx');
 
 var PaymentForm = React.createClass({
   getInitialState() {
     return {
       fullName: '', // user entered full name on credit card
       cardNumber: '', // user entered credit card number
-      expiryDate: '', // user entered expiry date
+      expMonth: '',
+      expYear: '',
       ccv: '', // user entered ccv number
       amount: '', // user entered amount
     }
   },
+
   propTypes: {
     paymentAdded: React.PropTypes.func,
+  },
+
+  onButtonClick() {
+    this.refs.dialog.show();
   },
 
   // Capture the input field state after each keypress.
@@ -29,8 +36,6 @@ var PaymentForm = React.createClass({
 
   // Handle the form submission event when the user adds new repair request.
   onSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
 
     // API call to add payment
     Api.addPayment({
@@ -49,39 +54,64 @@ var PaymentForm = React.createClass({
         this.setState({
           fullName: '',
           cardNumber: '',
-          expiryDate: '',
           ccv: '',
-          amount: ''
+          amount: '',
+          expMonth: '',
+          expYear: ''
 
         });
-        // Refetch repair requests via props
         this.props.paymentAdded();
+        this.refs.dialog.dismiss();
       }
     });
   },
 
   render() {
-    var { fullName, cardNumber, expiryDate, ccv, amount } = this.state;
+    var { fullName, cardNumber, expMonth, expYear, ccv, amount } = this.state;
     var errorMessage;
+    var standardActions = [
+      { text: 'Cancel' },
+      { text: 'Make Payment', onTouchTap: this.onSubmit, ref: 'submit' }
+    ];
     return (
       <div style={style.formContainer}>
-        <h2 style={style.heading}>Make a Payment </h2>
-        <Paper zDepth={1}>
-          <form style={style.form} onSubmit={this.onSubmit}>
+        <RaisedButton label="Make a new Payment"
+                      primary={true}
+                      onClick={this.onButtonClick} />
+        <Dialog
+          title="Make a Payment"
+          actions={standardActions}
+          actionFocus="submit"
+          modal={this.state.modal}
+          ref="dialog">
+          <div style={style.form}>
             <div style={style.error}> { errorMessage } </div>
-              <TextField
+            <TextField
               value={fullName}
               onChange={this.onChange.bind(this, 'fullName')}
               floatingLabelText="Full Name on Credit Card" />
-              <TextField
+            <TextField
               value={cardNumber}
               onChange={this.onChange.bind(this, 'cardNumber')}
               floatingLabelText="Card Number" />
-            <DatePicker
-              name="expiryDate"
-              onChange={this._handleChange}
-              floatingLabelText="Expiry Date"/>
+            <div>
+              <Label>Expiry Date</Label>
+              <TextField
+                style={style.date}
+                value={expMonth}
+                onChange={this.onChange.bind(this, 'expMonth')}
+                floatingLabelText="mm"
+                maxLength="2" />
+              <span style={style.separator}>/</span>
+              <TextField
+                style={style.date}
+                value={expYear}
+                onChange={this.onChange.bind(this, 'expYear')}
+                floatingLabelText="yy"
+                maxLength="2" />
+            </div>
             <TextField
+              style={style.ccv}
               value={ccv}
               onChange={this.onChange.bind(this, 'ccv')}
               floatingLabelText="CCV" />
@@ -89,13 +119,8 @@ var PaymentForm = React.createClass({
               value={amount}
               onChange={this.onChange.bind(this, 'amount')}
               floatingLabelText="Amount" />
-            <RaisedButton
-              type="submit"
-              label="Pay"
-              primary={true}
-              style={style.button} />
-          </form>
-        </Paper>
+          </div>
+        </Dialog>
       </div>
     );
   }
@@ -112,10 +137,18 @@ var style = {
   },
   form: {
     display: 'flex',
-    padding: '2em',
     flexDirection: 'column',
     maxWidth: '20em',
   },
+  date: {
+    width: '2em',
+  },
+  separator: {
+    margin: '0 .5em',
+  },
+  ccv: {
+    width: '3em',
+  }
 };
 
 module.exports = MuiContextified(PaymentForm);
