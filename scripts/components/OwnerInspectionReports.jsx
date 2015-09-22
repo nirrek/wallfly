@@ -10,6 +10,7 @@ var TableHeaderColumn = MaterialUi.TableHeaderColumn;
 var TableRowColumn = MaterialUi.TableRowColumn;
 var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
+var InspectionReportForm = require('./InspectionReportForm.jsx');
 
 
 var OwnerInspectionReports = React.createClass({
@@ -19,9 +20,8 @@ var OwnerInspectionReports = React.createClass({
     }
   },
 
-  componentWillMount() {
+  getInspectionReports() {
     var { propertyId } = this.props.params;
-
     Api.getPropertyInspectionReports({
       propertyId,
       callback: (err, response) => {
@@ -30,6 +30,10 @@ var OwnerInspectionReports = React.createClass({
         this.setState({ inspections: response.data });
       }
     });
+  },
+
+  componentWillMount() {
+    this.getInspectionReports();
   },
 
   render() {
@@ -49,7 +53,9 @@ var OwnerInspectionReports = React.createClass({
 
     return (
       <div style={style.container}>
-
+        <InspectionReportForm
+          inspectionReportAdded={this.getInspectionReports}
+          propertyID={this.props.params.propertyId} />
         <Table>
           <TableHeader
             adjustForCheckbox={false}
@@ -74,7 +80,7 @@ var OwnerInspectionReports = React.createClass({
 
 var style = {
   container: {
-    display: 'flex',
+    //display: 'flex',
   },
   header: {
     fontSize: 18,
@@ -83,7 +89,7 @@ var style = {
   },
   dateCol: {
     width: 125
-  }
+  },
 }
 
 module.exports = MuiContextified(OwnerInspectionReports);

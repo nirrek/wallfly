@@ -305,6 +305,20 @@ let Api = {
       });
   },
 
+  addPropertyInspectionReports({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/properties/${data.propertyId}/inspectionReports`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addPropertyInspectionReports(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   getPropertyCalendarEvents({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/calendarEvents`, {
         withCredentials: true, // send cookies for cross-site requests
