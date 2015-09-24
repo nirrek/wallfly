@@ -3,6 +3,7 @@ var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
 var Paper = MaterialUi.Paper;
 var MuiContextified = require('./MuiContextified.jsx');
+var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 
 var OwnerPropertyDetails = React.createClass({
   getInitialState() {
@@ -38,6 +39,9 @@ var OwnerPropertyDetails = React.createClass({
           <div style={style.address}>
             <div>{street} {suburb}, {postcode}</div>
           </div>
+          <UpdatePropertyForm 
+            propertyDetailsUpdated={this.getPropertyDetails}
+            propertyID={this.props.params.propertyId} />
         </Paper>
       </div>
     );
@@ -46,6 +50,7 @@ var OwnerPropertyDetails = React.createClass({
 
 var style = {
   container: {
+    clear: 'both',
     display: 'flex',
   },
   address: {

@@ -262,6 +262,21 @@ let Api = {
       });
   },
 
+  // Update details for the specified property
+  updatePropertyDetails({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/properties/${data.propertyId}/details`, data, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyDetails(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
   // Fetches payments for a particular property
   getPropertyPayments({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/payments`, {
