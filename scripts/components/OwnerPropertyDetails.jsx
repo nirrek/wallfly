@@ -39,9 +39,11 @@ var OwnerPropertyDetails = React.createClass({
           <div style={style.address}>
             <div>{street} {suburb}, {postcode}</div>
           </div>
-          <UpdatePropertyForm 
-            propertyDetailsUpdated={this.getPropertyDetails}
-            propertyID={this.props.params.propertyId} />
+          <div style={style.address}>
+            <UpdatePropertyForm 
+                propertyDetailsUpdated={this.getPropertyDetails} 
+                propertyID={this.props.params.propertyId} />
+          </div>
         </Paper>
       </div>
     );

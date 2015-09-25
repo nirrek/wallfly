@@ -86,15 +86,15 @@ var UpdatePropertyForm = React.createClass({
     var errorMessage;
     var standardActions = [
       { text: 'Cancel' },
-      { text: 'Update the Property Details', onTouchTap: this.onSubmit, ref: 'submit' }
+      { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
     return (
-      <div style={style.formContainer}>
-        <RaisedButton label="Update the Property Details"
+      <div>
+        <RaisedButton label="Update Details"
                       primary={true}
                       onClick={this.onButtonClick} />
         <Dialog
-          title="Update the Property Details"
+          title="Update Details"
           actions={standardActions}
           actionFocus="submit"
           modal={this.state.modal}
@@ -125,9 +125,6 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-  },
-  formContainer: {
-    width: '325px',
   },
   form: {
     display: 'flex',
