@@ -49,8 +49,6 @@ var CreateAccount = React.createClass({
 
   // Handle the form submission event when the user tries to log in.
   onSubmit(event) {
-    console.log(this.state);
-
     event.preventDefault();
     event.stopPropagation();
 
