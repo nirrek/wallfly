@@ -16,14 +16,17 @@ var OwnerPropertyDetails = React.createClass({
   },
 
   componentWillMount() {
+    this.getPropertyDetails();
+  },
+
+  // Fetches the details for the property
+  getPropertyDetails() {
     var { propertyId } = this.props.params;
-    console.log(propertyId);
 
     Api.getPropertyDetails({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
-        console.log(response.data);
         this.setState(response.data);
       }
     });
@@ -40,8 +43,8 @@ var OwnerPropertyDetails = React.createClass({
             <div>{street} {suburb}, {postcode}</div>
           </div>
           <div style={style.address}>
-            <UpdatePropertyForm 
-                propertyDetailsUpdated={this.getPropertyDetails} 
+            <UpdatePropertyForm
+                propertyDetailsUpdated={this.getPropertyDetails}
                 propertyID={this.props.params.propertyId} />
           </div>
         </Paper>
