@@ -52,6 +52,7 @@ var UpdatePropertyForm = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
+          console.log(err);
           return;
         }
 
@@ -61,7 +62,7 @@ var UpdatePropertyForm = React.createClass({
           image: '',
         });
 
-        this.props.inspectionReportAdded();
+        this.props.propertyDetailsUpdated();
         this.refs.dialog.dismiss();
       }
     });
