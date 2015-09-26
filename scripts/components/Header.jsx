@@ -74,7 +74,7 @@ var Header = React.createClass({
       var logoutIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">exit_to_app</IconButton>;
 
       return (
-        <div ref="something" style={styles.header}>
+        <div style={styles.header}>
           {menuIcon}
           <div style={styles.logo}>WallFly</div>
           {/* TODO add notifications
