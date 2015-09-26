@@ -3,12 +3,20 @@ var materialUi = require('material-ui');
 var FontIcon = materialUi.FontIcon;
 var IconButton = materialUi.IconButton;
 var NavigationMenu = materialUi.NavigationMenu;
+var Dialog = materialUi.Dialog;
+var IconMenu = materialUi.IconMenu;
+var MenuItem = require('material-ui/lib/menus/menu-item');
+var Api = require('../utils/Api.js');
+var User = require('../utils/User.js');
+var Navigation = require('react-router').Navigation;
 
 /**
  * Header Component.
  * The header component is the main site header at the top of the view.
  */
 var Header = React.createClass({
+  mixins: [ Navigation ],
+
   propTypes: {
     // Callback when the the menu icon is toggled by the user.
     onMenuClick: React.PropTypes.func.isRequired,
@@ -20,10 +28,30 @@ var Header = React.createClass({
     isBasic: false
   },
 
-  render() {
-    let { onMenuClick, isMenuDocked, isBasic } = this.props;
+  onProfileClick() {
+    this.refs.userProfile.show();
+  },
 
-    let menuIcon = null;
+  onLogoutClick() {
+    Api.logout({
+      callback: (err, res) => {
+        if (err) {
+          // TODO add a UI notification
+          console.log('Error logging out');
+          return;
+        }
+
+        // Remove local user model and redirect.
+        User.deleteUser();
+        this.transitionTo('/');
+      }
+    });
+  },
+
+  render() {
+    var { onMenuClick, isMenuDocked, isBasic } = this.props;
+
+    var menuIcon = null;
     if (!isMenuDocked) {
       menuIcon = (
         <IconButton onClick={onMenuClick}
@@ -41,13 +69,24 @@ var Header = React.createClass({
         </div>
       );
     } else {
+      var settingsIcon = <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>;
+      var profileIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">account_circle</IconButton>;
+      var logoutIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">exit_to_app</IconButton>;
+
       return (
-        <div style={styles.header}>
+        <div ref="something" style={styles.header}>
           {menuIcon}
           <div style={styles.logo}>WallFly</div>
-          {/* TODO add notifications and settings
-          <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton>
-          <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton> */}
+          {/* TODO add notifications
+          <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton> */}
+          <IconMenu iconButtonElement={settingsIcon}>
+            <MenuItem onClick={this.onProfileClick} leftIcon={profileIcon} primaryText="View Your Profile" />
+            <MenuItem onClick={this.onLogoutClick} leftIcon={logoutIcon} primaryText="Logout" />
+          </IconMenu>
+
+          <Dialog ref="userProfile" title="Dialog With Standard Actions">
+            {/* TODO add a <UserProfile> component */}
+          </Dialog>
         </div>
       );
     }
@@ -75,6 +114,9 @@ var styles = {
   icon: {
     color: '#fff',
     textShadow: '0 1px 1px rgba(0,0,0, .2)',
+  },
+  darkIcon: {
+    color: '#333',
   }
 }
 
