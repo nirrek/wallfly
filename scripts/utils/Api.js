@@ -44,6 +44,21 @@ let Api = {
     });
   },
 
+  // Logout a user
+  logout({ callback=()=>{} }) {
+    axios.get(`${host}/logout`, {
+      withCredentials: true
+    })
+    .then((response) => { // 2xx response
+      callback(null, response);
+    })
+    .catch((response) => { // Non 2xx response received.
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.logout(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   // Fetches a user model for the current user
   getUser({ callback = () => {} } = {}) {
     axios.get(`${host}/users/${userId}`, {
