@@ -5,6 +5,7 @@ var ImageSelector = React.createClass({
     maxSize: React.PropTypes.number, // max size of image in bytes
     onImageSizeError: React.PropTypes.func,
     onImageSelected: React.PropTypes.func,
+    image: React.PropTypes.string, // externally specify image preview
   },
 
   getDefaultProps() {
@@ -43,7 +44,8 @@ var ImageSelector = React.createClass({
   },
 
   render() {
-    var src = this.state.src;
+    // Externally provided image has higher precedence
+    var src = this.props.image || this.state.src;
     var preview = src ? <img style={style.img} src={src} />
                       : null;
 

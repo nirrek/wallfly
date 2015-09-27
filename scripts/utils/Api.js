@@ -75,6 +75,21 @@ let Api = {
     });
   },
 
+  // Update the user model
+  updateUser({ data={}, callback = () => {} } = {}) {
+    axios.put(`${host}/users/${userId}`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateUser(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   // Fetch calendar events for the current user.
   getEvents({ callback = () => {} } = {}) {
     axios.get(`${host}/users/${userId}/events`, {

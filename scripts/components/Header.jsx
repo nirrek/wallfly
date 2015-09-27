@@ -9,6 +9,8 @@ var MenuItem = require('material-ui/lib/menus/menu-item');
 var Api = require('../utils/Api.js');
 var User = require('../utils/User.js');
 var Navigation = require('react-router').Navigation;
+var UserProfile = require('./UserProfile.js');
+var User = require('../utils/User.js');
 
 /**
  * Header Component.
@@ -25,12 +27,16 @@ var Header = React.createClass({
   },
 
   getDefaultProps() {
-    isBasic: false
+    return { isBasic: false };
   },
 
-  onProfileClick() {
-    this.refs.userProfile.show();
+  getInitialState() {
+    return { isProfileOpen: false, };
   },
+
+  onProfileClick() { this.setState({ isProfileOpen: true }); },
+
+  onProfileClose() { this.setState({ isProfileOpen: false }); },
 
   onLogoutClick() {
     Api.logout({
@@ -84,9 +90,8 @@ var Header = React.createClass({
             <MenuItem onClick={this.onLogoutClick} leftIcon={logoutIcon} primaryText="Logout" />
           </IconMenu>
 
-          <Dialog ref="userProfile" title="Dialog With Standard Actions">
-            {/* TODO add a <UserProfile> component */}
-          </Dialog>
+          <UserProfile isOpen={this.state.isProfileOpen}
+                       onClose={this.onProfileClose}/>
         </div>
       );
     }
