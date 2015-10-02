@@ -13,10 +13,11 @@ var OwnerRepairRequestStatus = React.createClass({
       repairStatus: '',
     }
   },
-
   propTypes: {
-    changeStatus: React.propTypes.func, 
-  }
+    statusChanged: React.PropTypes.func,
+    propertyId: React.PropTypes.number,
+    requestId: React.PropTypes.number,
+  },
 
   onButtonClick() {
     this.refs.dialog.show();
@@ -24,25 +25,33 @@ var OwnerRepairRequestStatus = React.createClass({
 
   // Update select menu on change.
   onSelectChange(event, selectedUserTypeIndex) {
-    var repairStatus = stats[selectedUserTypeIndex].name;
-    this.setState({ repairStatus: repairStatus });
+    var repairStatus = status[selectedUserTypeIndex].name;
+    this.setState({ 
+      repairStatus: repairStatus,
+    });
   },
 
   // Handle the form submission event when the user adds new repair request.
   onSubmit(event) {
 
+    // API call to update repair request status
+    var propertyId = this.props.propertyId;
+    var requestId = this.props.requestId;
     Api.updateRepairRequestStatus({
       data: {
-        status: this.state.status,
+        repairStatus: this.state.repairStatus,
+        requestId: this.state.requestId,
+        propertyId: this.props.propertyId,
       },
-      callback: (err, res) => {
+      callback: (err, response) => {
         if (err) {
           return;
         }
+        // Clear 
         this.setState({
           repairStatus: '',
         });
-
+        this.props.statusChanged();
         this.refs.dialog.dismiss();
       }
     });
@@ -72,9 +81,9 @@ var OwnerRepairRequestStatus = React.createClass({
             <SelectField
               value={repairStatus}
               valueMember="name"
-              floatingLabelText="OwnerRepairRequestStatus"
+              floatingLabelText="Repair Request Status"
               onChange={this.onSelectChange}
-              menuItems={stats} />
+              menuItems={status} />
             </div>
           </div>
         </Dialog>
@@ -83,8 +92,8 @@ var OwnerRepairRequestStatus = React.createClass({
   }
 });
 
-// User types
-var stats = [
+// request status types
+var status = [
   {name: 'Submitted', text: 'Submitted'},
   {name: 'Pending', text: 'Pending'},
   {name: 'Approved', text: 'Approved'},

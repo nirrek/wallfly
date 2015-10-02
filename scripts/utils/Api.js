@@ -218,22 +218,6 @@ let Api = {
     });
   },
 
-
-  // Update the repair request status 
-  updateRepairRequestStatus({ data={}, callback = () => {} } = {}) {
-    axios.put(`${host}/users/${userId}/repairs`, data, {
-      withCredentials: true
-    })
-    .then((response) => {
-      callback(null, response);
-    })
-    .catch((response) => {
-      let error = response.data.errorMessage;
-      console.log(`Error in Api.updateUser(): ${error}`);
-      callback(new Error(error), response);
-    });
-  },
-
   // Fetch information for a given tenants property
   getUserPropertyDetails({ callback=()=>{} }) {
     axios.get(`${host}/users/${userId}/property`, {
@@ -337,6 +321,19 @@ let Api = {
       });
   },
 
+  updateRepairRequestStatus({ data={}, callback=()=>{} }) {
+    axios.put(`${host}/properties/${data.propertyId}/repairRequests`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateRepairRequestStatus(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
 
   getPropertyInspectionReports({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/inspectionReports`, {

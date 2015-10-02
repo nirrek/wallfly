@@ -41,7 +41,9 @@ var OwnerRepairRequests = React.createClass({
           <TableRowColumn>{request.request}</TableRowColumn>
           <TableRowColumn><img src={request.photo} /> </TableRowColumn>
           <TableRowColumn>{request.status}</TableRowColumn>
-          <TableRowColumn><OwnerRepairRequestStatus /></TableRowColumn>
+          <TableRowColumn>
+          <OwnerRepairRequestStatus requestId={request.id} propertyId={this.props.params.propertyId} />
+          </TableRowColumn>
         </TableRow>
       );
     });
