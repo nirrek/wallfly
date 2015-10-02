@@ -5,6 +5,7 @@ var MaterialUi = require('material-ui');
 var RaisedButton = MaterialUi.RaisedButton;
 var Paper = MaterialUi.Paper;
 var Navigation = require('react-router').Navigation;
+var User = require('../utils/User.js');
 
 /**
  * PropertyList component.
@@ -22,8 +23,12 @@ var PropertyList = React.createClass({
     Api.getPropertyList({
       callback: (err, res) => {
         if (err) return;
-
         this.setState({ properties: res.data });
+
+        // Set the managing agent so we can consume it in Chat.
+        if (this.getUserType() === 'owner') {
+          User.set('managingAgent', res.data[0].agentId);
+        }
       }
     });
   },
