@@ -8,6 +8,7 @@ var CardTitle = MaterialUi.CardTitle;
 var Paper = MaterialUi.Paper;
 var Avatar = MaterialUi.Avatar;
 var MuiContextified = require('./MuiContextified.jsx');
+var Property = require('../utils/Property.js');
 
 var PropertyDetails = React.createClass({
   getInitialState() {
@@ -30,14 +31,12 @@ var PropertyDetails = React.createClass({
   componentWillMount() {
     Api.getUserPropertyDetails({
       callback: (err, response) => {
-        if (err) {
-          // TODO
-          return console.log(err);
-        }
+        if (err) return console.log(err);
 
         // Having the state object coupled to the response object shape
         // might be annoying to reason about. Explitness may be preferable.
         this.setState(response.data);
+        Property.setProperty(response.data);
       }
     });
   },
