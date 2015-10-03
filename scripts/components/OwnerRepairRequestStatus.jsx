@@ -41,7 +41,7 @@ var OwnerRepairRequestStatus = React.createClass({
     Api.updateRepairRequest({
       data: {
         repairStatus: this.state.repairStatus,
-        requestId: this.state.requestId,
+        requestId: this.props.requestId,
         propertyId: this.props.propertyId,
       },
       callback: (err, response) => {
