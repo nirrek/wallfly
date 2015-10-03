@@ -13,6 +13,7 @@ var OwnerRepairRequestStatus = React.createClass({
       repairStatus: '',
     }
   },
+  
   propTypes: {
     statusChanged: React.PropTypes.func,
     propertyId: React.PropTypes.number,
@@ -37,7 +38,7 @@ var OwnerRepairRequestStatus = React.createClass({
     // API call to update repair request status
     var propertyId = this.props.propertyId;
     var requestId = this.props.requestId;
-    Api.updateRepairRequestStatus({
+    Api.updateRepairRequest({
       data: {
         repairStatus: this.state.repairStatus,
         requestId: this.state.requestId,

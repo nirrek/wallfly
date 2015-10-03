@@ -321,7 +321,7 @@ let Api = {
       });
   },
 
-  updateRepairRequestStatus({ data={}, callback=()=>{} }) {
+  updateRepairRequest({ data={}, callback=()=>{} }) {
     axios.put(`${host}/properties/${data.propertyId}/repairRequests`, data, {
       withCredentials: true
     })
@@ -330,7 +330,7 @@ let Api = {
     })
     .catch((response) => {
       let error = response.data.errorMessage;
-      console.log(`Error in Api.updateRepairRequestStatus(): ${error}`);
+      console.log(`Error in Api.updateRepairRequest(): ${error}`);
       callback(new Error(error), response);
     });
   },
