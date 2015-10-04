@@ -49,9 +49,9 @@ var OwnerRepairRequestStatus = React.createClass({
           this.setState({ updateError: true });
           return;
         }
-        // Clear 
+        // reset the error state 
         this.setState({
-          repairStatus: '',
+          updateError:false,
         });
         this.props.statusChanged();
         this.refs.dialog.dismiss();
