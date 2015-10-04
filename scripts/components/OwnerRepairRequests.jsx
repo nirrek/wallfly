@@ -49,7 +49,7 @@ var OwnerRepairRequests = React.createClass({
               requestId={request.id}
               propertyId={this.props.params.propertyId} 
               statusChanged={this.getPropertyRepairRequests}
-              children={request.status}
+              status={request.status}
           />
           </TableRowColumn>
         </TableRow>
@@ -58,7 +58,6 @@ var OwnerRepairRequests = React.createClass({
 
     return (
       <div style={style.container}>
-
         <Table>
           <TableHeader
             adjustForCheckbox={false}

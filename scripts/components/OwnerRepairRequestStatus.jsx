@@ -5,18 +5,21 @@ var mui = require('material-ui');
 var SelectField = mui.SelectField;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
+var ErrorMessage = require('./ErrorMessage.jsx');
 
 var OwnerRepairRequestStatus = React.createClass({
   getInitialState() {
     return {
-      repairStatus: this.props.children,
+      repairStatus: this.props.status,
+      updateError: false,
     }
   },
-  
+
   propTypes: {
     statusChanged: React.PropTypes.func,
     propertyId: React.PropTypes.number,
     requestId: React.PropTypes.number,
+    status: React.PropTypes.string, //current status
   },
 
   onButtonClick() {
@@ -25,7 +28,7 @@ var OwnerRepairRequestStatus = React.createClass({
 
   // Update select menu on change.
   onSelectChange(event, selectedUserTypeIndex) {
-    var repairStatus = status[selectedUserTypeIndex].name;
+    var repairStatus = statusTypes[selectedUserTypeIndex].name;
     this.setState({ 
       repairStatus: repairStatus,
     });
@@ -43,6 +46,7 @@ var OwnerRepairRequestStatus = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
+          this.setState({ updateError: true });
           return;
         }
         // Clear 
@@ -56,8 +60,13 @@ var OwnerRepairRequestStatus = React.createClass({
   },
 
   render() {
-    var { repairStatus } = this.state;
-    var errorMessage;
+    var { repairStatus, updateError } = this.state;
+
+    //Error message during update.
+    var updateError = updateError ? (
+      <ErrorMessage>Error during update. Please try again</ErrorMessage>
+    ) : null;
+
     var standardActions = [
       { text: 'Cancel' },
       { text: 'Change Status', onTouchTap: this.onSubmit, ref: 'submit' }
@@ -73,14 +82,14 @@ var OwnerRepairRequestStatus = React.createClass({
           actionFocus="submit"
           ref="dialog">
           <div style={style.form}>
-          <div>{errorMessage}</div>
+          <div>{updateError}</div>
             <div>
             <SelectField
               value={repairStatus}
               valueMember="name"
               floatingLabelText="Repair Request Status"
               onChange={this.onSelectChange}
-              menuItems={status} />
+              menuItems={statusTypes} />
             </div>
           </div>
         </Dialog>
@@ -90,7 +99,7 @@ var OwnerRepairRequestStatus = React.createClass({
 });
 
 // request status types
-var status = [
+var statusTypes = [
   {name: 'Submitted', text: 'Submitted'},
   {name: 'Pending', text: 'Pending'},
   {name: 'Approved', text: 'Approved'},
