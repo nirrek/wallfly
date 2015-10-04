@@ -11,6 +11,10 @@ var cookie = require('react-cookie');
 var User = require('../utils/User.js');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
+var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 /**
  * Login View
@@ -23,7 +27,8 @@ var Login = React.createClass({
     return {
       username: '', // user entered username
       password: '', // user entered password
-      authFailure: false, // did the authentication request fail
+      authFailure: '', // server auth failure message
+      validationError: false, // clientside validation failure
     }
   },
 
@@ -43,6 +48,18 @@ var Login = React.createClass({
     event.preventDefault();
     event.stopPropagation();
 
+    // Clear prior error states.
+    this.setState({
+      validationError: false,
+      authFailure: ''
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
+
     Api.login({
       data: {
         username: this.state.username,
@@ -50,30 +67,57 @@ var Login = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
-          this.setState({ authFailure: true });
+          var msg = (response.status === 0)
+            ? 'Connection timed-out. Please try again.'
+            : response.data;
+          this.setState({ authFailure: msg });
           return;
         }
 
         User.setUser(response.data);
 
-        // Transition to the give userType's dashboard.
+        // Transition to the given userType's dashboard.
         var { type: userType } = response.data;
-        if      (userType === 'owner') this.transitionTo('owner/propertyList');
-        else if (userType === 'agent') this.transitionTo('agent/propertyList');
-        else if (userType === 'tenant') this.transitionTo('tenant/propertyDetails');
+        if      (userType === 'owner')  this.transitionTo('owner/propertyList');
+        else if (userType === 'agent')  this.transitionTo('agent/propertyList');
+        else if (userType === 'tenant') {
+          // Initialize local property state for the tenant.
+          Api.getUserPropertyDetails({
+            callback: (err, response) => {
+              if (err) return console.log(err);
+              Property.setProperty(response.data);
+            }
+          });
+          this.transitionTo('tenant/propertyDetails');
+        }
       }
     });
   },
 
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      username: this.state.username,
+      password: this.state.password,
+    }, schema);
+  },
+
   render() {
-    var { username, password, authFailure } = this.state;
+    var { username, password, authFailure, validationError } = this.state;
     if (this.props.location.query) {
       var accountCreated = this.props.location.query.accountCreated;
     }
-    var authFailMessage = authFailure ? 'Username or password invalid' : null;
+    var authFailMessage = authFailure ? (
+      <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
+    ) : null;
+
+    // Form validation error
+    var validationError = (validationError) ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
 
     return (
-      <div style={style.page}>
+      <div style={styles.page}>
         {accountCreated ? (
           <Snackbar
             ref="snackbar"
@@ -81,10 +125,11 @@ var Login = React.createClass({
             autoHideDuration={3000} />
         ) : null}
 
-        <Paper zDepth={1} style={style.loginContainer}>
-          <h1 style={style.heading}>Login</h1>
-          <form style={style.form} onSubmit={this.onSubmit}>
-            <div style={style.error}> { authFailMessage } </div>
+        <Paper zDepth={1} style={styles.loginContainer}>
+          <h1 style={styles.heading}>Login</h1>
+          <form style={styles.form} onSubmit={this.onSubmit}>
+            {validationError}
+            {authFailMessage}
             <TextField
               value={username}
               name="username"
@@ -96,10 +141,10 @@ var Login = React.createClass({
               type="password"
               onChange={this.onChange.bind(this, 'password')}
               floatingLabelText="Password" />
-            <RaisedButton type="submit" label="Login" primary={true} backgroundColor="#2ECC71" style={style.button} />
+            <RaisedButton type="submit" label="Login" primary={true} style={styles.button} />
           </form>
         </Paper>
-        <div style={style.registerContainer}>
+        <div style={styles.registerContainer}>
           Don't have an account? <Link to="createAccount">Register Now</Link>
         </div>
       </div>
@@ -107,7 +152,13 @@ var Login = React.createClass({
   }
 });
 
-var style = {
+// Validation schema for user profile form data.
+var schema = Joi.object().keys({
+  username: Joi.string().alphanum().min(3).max(30),
+  password: Joi.string().regex(/[a-zA-Z0-9]{5,100}/),
+});
+
+var styles = {
   page: {
     display: 'flex',
     flexDirection: 'column',
@@ -118,9 +169,6 @@ var style = {
   },
   loginContainer: {
     padding: '2em',
-    // display: 'flex',
-    // flexDirection: 'row',
-    // 'justifyContent': 'center',
   },
   heading: {
     textAlign: 'center',
@@ -130,7 +178,8 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: '20em',
+    minWidth: 260,
+    maxWidth: 500,
   },
   button: {
     marginTop: '2em',
@@ -141,4 +190,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Login);
+module.exports = Radium(MuiContextified(Login));

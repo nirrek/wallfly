@@ -31,7 +31,8 @@ let Api = {
   // Log a user in
   login({ data={}, callback=()=>{} }) {
     axios.post(`${host}/login`, data, {
-      withCredentials: true
+      withCredentials: true,
+      timeout: 4000,
     })
     .then((response) => { // 2xx response
       userId = response.data.id;
