@@ -21,8 +21,8 @@ var Header = React.createClass({
 
   propTypes: {
     // Callback when the the menu icon is toggled by the user.
-    onMenuClick: React.PropTypes.func.isRequired,
-    isMenuDocked: React.PropTypes.bool.isRequired,
+    onMenuClick: React.PropTypes.func,
+    isMenuDocked: React.PropTypes.bool,
     isBasic: React.PropTypes.bool, // basic lacks app-like controls.
   },
 
