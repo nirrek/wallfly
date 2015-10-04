@@ -46,9 +46,10 @@ var OwnerRepairRequests = React.createClass({
           <TableRowColumn>{request.status}</TableRowColumn>
           <TableRowColumn>
           <OwnerRepairRequestStatus 
-              requestId={request.id} 
+              requestId={request.id}
               propertyId={this.props.params.propertyId} 
               statusChanged={this.getPropertyRepairRequests}
+              children={request.status}
           />
           </TableRowColumn>
         </TableRow>

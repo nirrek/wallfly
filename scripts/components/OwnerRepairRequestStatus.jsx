@@ -1,5 +1,4 @@
 var React = require('react');
-var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
@@ -10,7 +9,7 @@ var Dialog = mui.Dialog;
 var OwnerRepairRequestStatus = React.createClass({
   getInitialState() {
     return {
-      repairStatus: '',
+      repairStatus: this.props.children,
     }
   },
   
@@ -36,8 +35,6 @@ var OwnerRepairRequestStatus = React.createClass({
   onSubmit(event) {
 
     // API call to update repair request status
-    var propertyId = this.props.propertyId;
-    var requestId = this.props.requestId;
     Api.updateRepairRequest({
       data: {
         repairStatus: this.state.repairStatus,
@@ -74,10 +71,9 @@ var OwnerRepairRequestStatus = React.createClass({
           title="Change Status"
           actions={standardActions}
           actionFocus="submit"
-          modal={this.state.modal}
           ref="dialog">
           <div style={style.form}>
-            <div style={style.error}> { errorMessage } </div>
+          <div>{errorMessage}</div>
             <div>
             <SelectField
               value={repairStatus}
@@ -102,18 +98,13 @@ var status = [
 ];
 
 var style = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-  },
   formContainer: {
     width: '325px',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    minHeight: '10em',
+    minHeight: '11em',
     maxWidth: '20em',
   }
 };
