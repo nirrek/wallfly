@@ -376,6 +376,69 @@ let Api = {
         callback(new Error(error), response);
       });
   },
+
+  getPropertyContacts({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/contacts`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyContacts(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+
+  // ---------------------------------------------------------------------------
+  // Messages Resource Endpoints
+  // TODO Update tenant message API calls to use these.
+  // ---------------------------------------------------------------------------
+
+  // Returns the 20 most recent messages sent to the authenticated user from
+  // the specified senderId.
+  // Parameters:
+  //  - senderId: the senderId of the messages to fetch.
+  //  - count(optional): number of messages to fetch
+  //  - offset(optional): offset in the message history (allow for paging)
+  fetchMessages({ params={}, callback = ()=>{} } = {}) {
+    axios.get(`${host}/messages`, {
+      params: params,
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.fetchMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // Sends a new message to the specified user from the authenticated user.
+  // Parameters:
+  //   - partnerId: the id of recipient of the message.
+  //   - message: Message to send
+  newMessage({ params={}, callback=()=>{} }) {
+    axios.post(`${host}/messages`, params, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.postMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
 };
+
+
+
 
 module.exports = Api;

@@ -31,6 +31,12 @@ module.exports = {
     cookie.save('userId', user.id);
   },
 
+  // Adds a new property to the user object.
+  set(key, value) {
+    if (!user) return;
+    user[key] = value;
+  },
+
   // Deletes the current user model, including associated cookie data.
   deleteUser() {
     user = undefined;
