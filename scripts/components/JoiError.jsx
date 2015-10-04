@@ -13,21 +13,28 @@ var JoiError = React.createClass({
       error: React.PropTypes.instanceOf(Error),
       value: React.PropTypes.object,
     }).isRequired,
+    fillBackground: React.PropTypes.bool,
   },
 
   render() {
     var { error } = this.props;
 
     return (
-      <ErrorMessage>
+      <ErrorMessage fillBackground={this.props.fillBackground}>
         Validation Errors: <br />
-        <ul>
-          { error.details.map(error =>
-            <li key={error.context.key}>{error.message}</li>) }
+        <ul style={styles.list}>
+          { error.details.map((error, idx) =>
+            <li key={error.context.key + idx}>{error.message}</li>) }
         </ul>
       </ErrorMessage>
     );
   }
 });
+
+var styles = {
+  list: {
+    marginTop: 0,
+  }
+};
 
 module.exports = JoiError;
