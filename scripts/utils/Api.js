@@ -322,6 +322,20 @@ let Api = {
       });
   },
 
+  updateRepairRequest({ data={}, callback=()=>{} }) {
+    axios.put(`${host}/properties/${data.propertyId}/repairRequests`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateRepairRequest(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   getPropertyInspectionReports({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/inspectionReports`, {
         withCredentials: true, // send cookies for cross-site requests

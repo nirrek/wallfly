@@ -10,6 +10,7 @@ var TableHeaderColumn = MaterialUi.TableHeaderColumn;
 var TableRowColumn = MaterialUi.TableRowColumn;
 var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
+var OwnerRepairRequestStatus = require('./OwnerRepairRequestStatus.jsx');
 
 
 var OwnerRepairRequests = React.createClass({
@@ -18,18 +19,21 @@ var OwnerRepairRequests = React.createClass({
       requests: []
     }
   },
-
-  componentWillMount() {
+  
+  getPropertyRepairRequests(){
     var { propertyId } = this.props.params;
-
-    Api.getPropertyRepairRequests({
+     Api.getPropertyRepairRequests({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
         console.log(response.data);
         this.setState({ requests: response.data });
       }
-    });
+    })
+  },
+
+  componentWillMount() {
+    this.getPropertyRepairRequests()
   },
 
   render() {
@@ -38,8 +42,15 @@ var OwnerRepairRequests = React.createClass({
         <TableRow key={request.id}>
           <TableRowColumn style={style.dateCol}>{moment(request.date).format('Do MMM YYYY')}</TableRowColumn>
           <TableRowColumn>{request.request}</TableRowColumn>
+          <TableRowColumn><img src={request.photo} /> </TableRowColumn>
+          <TableRowColumn>{request.status}</TableRowColumn>
           <TableRowColumn>
-            <img src={request.photo} />
+          <OwnerRepairRequestStatus 
+              requestId={request.id}
+              propertyId={this.props.params.propertyId} 
+              statusChanged={this.getPropertyRepairRequests}
+              status={request.status}
+          />
           </TableRowColumn>
         </TableRow>
       );
@@ -47,7 +58,6 @@ var OwnerRepairRequests = React.createClass({
 
     return (
       <div style={style.container}>
-
         <Table>
           <TableHeader
             adjustForCheckbox={false}
@@ -56,6 +66,8 @@ var OwnerRepairRequests = React.createClass({
               <TableHeaderColumn style={{...style.header, ...style.dateCol}}>Date</TableHeaderColumn>
               <TableHeaderColumn style={style.header}>Request</TableHeaderColumn>
               <TableHeaderColumn style={style.header}>Photo</TableHeaderColumn>
+              <TableHeaderColumn style={style.header}>Status</TableHeaderColumn>
+              <TableHeaderColumn style={style.header}></TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
