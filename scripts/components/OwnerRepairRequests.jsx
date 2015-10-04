@@ -19,18 +19,21 @@ var OwnerRepairRequests = React.createClass({
       requests: []
     }
   },
-
-  componentWillMount() {
+  
+  getPropertyRepairRequests(){
     var { propertyId } = this.props.params;
-
-    Api.getPropertyRepairRequests({
+     Api.getPropertyRepairRequests({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
         console.log(response.data);
         this.setState({ requests: response.data });
       }
-    });
+    })
+  },
+
+  componentWillMount() {
+    this.getPropertyRepairRequests()
   },
 
   render() {
@@ -42,7 +45,11 @@ var OwnerRepairRequests = React.createClass({
           <TableRowColumn><img src={request.photo} /> </TableRowColumn>
           <TableRowColumn>{request.status}</TableRowColumn>
           <TableRowColumn>
-          <OwnerRepairRequestStatus requestId={request.id} propertyId={this.props.params.propertyId} />
+          <OwnerRepairRequestStatus 
+              requestId={request.id} 
+              propertyId={this.props.params.propertyId} 
+              statusChanged={this.getPropertyRepairRequests}
+          />
           </TableRowColumn>
         </TableRow>
       );

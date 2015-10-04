@@ -32,7 +32,7 @@ var OwnerRepairRequestStatus = React.createClass({
     });
   },
 
-  // Handle the form submission event when the user adds new repair request.
+  // Handle the form submission event when the user updates repair request.
   onSubmit(event) {
 
     // API call to update repair request status
@@ -113,16 +113,8 @@ var style = {
   form: {
     display: 'flex',
     flexDirection: 'column',
+    minHeight: '10em',
     maxWidth: '20em',
-  },
-  date: {
-    width: '2em',
-  },
-  separator: {
-    margin: '0 .5em',
-  },
-  ccv: {
-    width: '3em',
   }
 };
 
