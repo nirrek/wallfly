@@ -29,16 +29,18 @@ var PropertyDetails = React.createClass({
   },
 
   componentWillMount() {
-    Api.getUserPropertyDetails({
-      callback: (err, response) => {
-        if (err) return console.log(err);
+    if (!Property.getProperty()) {
+      Api.getUserPropertyDetails({
+        callback: (err, response) => {
+          if (err) return console.log(err);
+          this.setState(response.data);
+          Property.setProperty(response.data);
+        }
+      });
+      return;
+    }
 
-        // Having the state object coupled to the response object shape
-        // might be annoying to reason about. Explitness may be preferable.
-        this.setState(response.data);
-        Property.setProperty(response.data);
-      }
-    });
+    this.setState(Property.getProperty());
   },
 
   render() {
