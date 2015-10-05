@@ -49,9 +49,6 @@ var UpdatePropertyForm = React.createClass({
   },
 
   onButtonClick() {
-    this.setState({
-      validationError: false
-    });
     this.refs.dialog.show();
   },
 
@@ -131,7 +128,7 @@ var UpdatePropertyForm = React.createClass({
   },
 
   render() {
-    var { street, suburb, postcode, ownerEmail, tenantEmail, photo, fileSizeError, validationError } = this.state;
+    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, validationError } = this.state;
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
@@ -192,7 +189,6 @@ var UpdatePropertyForm = React.createClass({
             fullWidth />
           <div style={style.selectorContainer}>
             <Label>Image (Not Required)</Label>
-            <img width={300} src={photo} />
             {sizeError}
             <ImageSelector maxSize={200000}
                            onImageSelected={this.onImageSelected}
