@@ -31,7 +31,8 @@ let Api = {
   // Log a user in
   login({ data={}, callback=()=>{} }) {
     axios.post(`${host}/login`, data, {
-      withCredentials: true
+      withCredentials: true,
+      timeout: 4000,
     })
     .then((response) => { // 2xx response
       userId = response.data.id;
@@ -40,6 +41,21 @@ let Api = {
     .catch((response) => { // Non 2xx response received.
       let error = response.data.errorMessage;
       console.log(`Error in Api.login(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // Logout a user
+  logout({ callback=()=>{} }) {
+    axios.get(`${host}/logout`, {
+      withCredentials: true
+    })
+    .then((response) => { // 2xx response
+      callback(null, response);
+    })
+    .catch((response) => { // Non 2xx response received.
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.logout(): ${error}`);
       callback(new Error(error), response);
     });
   },
@@ -56,6 +72,21 @@ let Api = {
       let error = response.data.errorMessage;
       console.log(`Error in Api.getUser(): ${error}`);
 
+      callback(new Error(error), response);
+    });
+  },
+
+  // Update the user model
+  updateUser({ data={}, callback = () => {} } = {}) {
+    axios.put(`${host}/users/${userId}`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateUser(): ${error}`);
       callback(new Error(error), response);
     });
   },
@@ -306,6 +337,20 @@ let Api = {
       });
   },
 
+  updateRepairRequest({ data={}, callback=()=>{} }) {
+    axios.put(`${host}/properties/${data.propertyId}/repairRequests`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateRepairRequest(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   getPropertyInspectionReports({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/inspectionReports`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -347,6 +392,69 @@ let Api = {
         callback(new Error(error), response);
       });
   },
+
+  getPropertyContacts({ propertyId, callback=()=>{} }) {
+    axios.get(`${host}/properties/${propertyId}/contacts`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.getPropertyContacts(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+
+  // ---------------------------------------------------------------------------
+  // Messages Resource Endpoints
+  // TODO Update tenant message API calls to use these.
+  // ---------------------------------------------------------------------------
+
+  // Returns the 20 most recent messages sent to the authenticated user from
+  // the specified senderId.
+  // Parameters:
+  //  - senderId: the senderId of the messages to fetch.
+  //  - count(optional): number of messages to fetch
+  //  - offset(optional): offset in the message history (allow for paging)
+  fetchMessages({ params={}, callback = ()=>{} } = {}) {
+    axios.get(`${host}/messages`, {
+      params: params,
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.fetchMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // Sends a new message to the specified user from the authenticated user.
+  // Parameters:
+  //   - partnerId: the id of recipient of the message.
+  //   - message: Message to send
+  newMessage({ params={}, callback=()=>{} }) {
+    axios.post(`${host}/messages`, params, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.postMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
 };
+
+
+
 
 module.exports = Api;

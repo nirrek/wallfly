@@ -43,5 +43,12 @@ module.exports = {
           ]
       }
     ]
-  }
+  },
+  // Joi depends on node core modules from a newer version of node.
+  // This stubs them out during the webpack build.
+  // See here https://webpack.github.io/docs/configuration.html#node
+  node: {
+    net: "empty",
+    dns: "empty",
+  },
 };

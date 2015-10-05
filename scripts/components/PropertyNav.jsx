@@ -35,13 +35,20 @@ var PropertyNav = React.createClass({
     var userType = this.getUserType();
     var prefix = `/${userType}/property/${propertyId}`;
 
-    return [
+    var navItems = [
       { text: 'Property Details', path: `${prefix}/propertyDetails`, icon: 'location_city' },
       { text: 'Payments', path: `${prefix}/payments`, icon: 'attach_money' },
       { text: 'Repair Requests', path: `${prefix}/repairRequests`, icon: 'report_problem' },
       { text: 'Inspection Reports', path: `${prefix}/inspectionReports`, icon: 'visibility' },
       { text: 'Calendar', path: `${prefix}/calendar`, icon: 'event' },
     ];
+
+    // Agents need to be a property specific chat
+    if (userType == 'agent') {
+      navItems.push({ text: 'Messages', path: `${prefix}/messages`, icon: 'message' });
+    }
+
+    return navItems;
   },
 
   render() {
