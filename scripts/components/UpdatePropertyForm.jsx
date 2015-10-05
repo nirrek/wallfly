@@ -9,6 +9,8 @@ var Dialog = mui.Dialog;
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
 
 var UpdatePropertyForm = React.createClass({
   propTypes: {
@@ -25,6 +27,7 @@ var UpdatePropertyForm = React.createClass({
       tenantEmail: '', // User entered tenant email
       photo: '', // base64 encoding of the user selected image.
       fileSizeError: '', // file size error message
+      validationError: false, // clientside validation failure
     }
   },
 
@@ -62,6 +65,16 @@ var UpdatePropertyForm = React.createClass({
    * repair request, and updates the repair requests if successful.
    */
   onSubmit(event) {
+    // Clear prior error states.
+    this.setState({
+      validationError: false
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
 
     // API call to update property details
     var propertyId = parseInt(this.props.propertyID);
@@ -91,6 +104,18 @@ var UpdatePropertyForm = React.createClass({
     });
   },
 
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      tenantEmail: this.state.tenantEmail,
+      ownerEmail: this.state.ownerEmail,
+      street: this.state.street,
+      suburb: this.state.suburb,
+      postcode: this.state.postcode,
+      photo: this.state.photo,
+    }, schema);
+  },
+
   onImageSelected(payload) {
     this.setState({ photo: payload.dataURL });
   },
@@ -103,7 +128,7 @@ var UpdatePropertyForm = React.createClass({
   },
 
   render() {
-    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError } = this.state;
+    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, validationError } = this.state;
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
@@ -112,6 +137,12 @@ var UpdatePropertyForm = React.createClass({
       { text: 'Cancel' },
       { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
+
+    // Form validation error
+    var validationError = (validationError) ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
+
     return (
       <div>
         <RaisedButton label="Update Details"
@@ -124,6 +155,7 @@ var UpdatePropertyForm = React.createClass({
           modal={this.state.modal}
           ref="dialog">
           <div style={style.error}> { errorMessage } </div>
+          <div style={style.error}> {validationError} </div>
           <TextField
             value={street}
             multiLine={true}
@@ -166,6 +198,16 @@ var UpdatePropertyForm = React.createClass({
       </div>
     );
   }
+});
+
+// Validation schema for update property form data.
+var schema = Joi.object().keys({
+  tenantEmail: Joi.string().email().max(255).allow(''),
+  ownerEmail: Joi.string().email().max(255),
+  street: Joi.string().min(1).max(500),
+  suburb: Joi.string().min(1).max(500),
+  postcode: Joi.string().min(4).max(4),
+  photo: Joi.string().max(60000),
 });
 
 var style = {
