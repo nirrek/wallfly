@@ -32,10 +32,6 @@ var UpdatePropertyForm = React.createClass({
     }
   },
 
-  componentWillMount() {
-    this.getPropertyDetails();
-  },
-
   // Fetches the details for the property
   getPropertyDetails() {
     var propertyId = parseInt(this.props.propertyID);
@@ -50,11 +46,16 @@ var UpdatePropertyForm = React.createClass({
   },
 
   onButtonClick() {
+    // Clear prior error states.
     this.setState({
       validationError: false,
       authFailure: '',
       fileSizeError: ''
     });
+
+    // Request values to fill the form
+    this.getPropertyDetails();
+
     this.refs.dialog.show();
   },
 
