@@ -220,7 +220,7 @@ var UpdatePropertyForm = React.createClass({
 
 // Validation schema for update property form data.
 var schema = Joi.object().keys({
-  tenantEmail: Joi.string().email().max(255).allow(''),
+  tenantEmail: Joi.string().email().max(255).allow(['', null]),
   ownerEmail: Joi.string().email().max(255),
   street: Joi.string().min(1).max(500),
   suburb: Joi.string().min(1).max(500),
