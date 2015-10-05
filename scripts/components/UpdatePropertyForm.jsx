@@ -52,7 +52,8 @@ var UpdatePropertyForm = React.createClass({
   onButtonClick() {
     this.setState({
       validationError: false,
-      authFailure: ''
+      authFailure: '',
+      fileSizeError: ''
     });
     this.refs.dialog.show();
   },
@@ -72,7 +73,9 @@ var UpdatePropertyForm = React.createClass({
   onSubmit(event) {
     // Clear prior error states.
     this.setState({
-      validationError: false
+      validationError: false,
+      authFailure: '',
+      fileSizeError: ''
     });
 
     var validation = this.validate();
@@ -149,7 +152,6 @@ var UpdatePropertyForm = React.createClass({
     var authFailMessage = authFailure ? (
       <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
     ) : null;
-
 
     // Form validation error
     var validationError = (validationError) ? (
