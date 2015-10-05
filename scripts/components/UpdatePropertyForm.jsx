@@ -27,6 +27,7 @@ var UpdatePropertyForm = React.createClass({
       tenantEmail: '', // User entered tenant email
       photo: '', // base64 encoding of the user selected image.
       fileSizeError: '', // file size error message
+      authFailure: '', // server auth failure message
       validationError: false, // clientside validation failure
     }
   },
@@ -50,7 +51,8 @@ var UpdatePropertyForm = React.createClass({
 
   onButtonClick() {
     this.setState({
-      validationError: false
+      validationError: false,
+      authFailure: ''
     });
     this.refs.dialog.show();
   },
@@ -94,7 +96,10 @@ var UpdatePropertyForm = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
-          console.log(err);
+          var msg = (response.status === 0)
+            ? 'Connection timed-out. Please try again.'
+            : response.data;
+          this.setState({ authFailure: msg });
           return;
         }
 
@@ -131,7 +136,7 @@ var UpdatePropertyForm = React.createClass({
   },
 
   render() {
-    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, validationError } = this.state;
+    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, photo, authFailure, validationError } = this.state;
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
@@ -140,6 +145,11 @@ var UpdatePropertyForm = React.createClass({
       { text: 'Cancel' },
       { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
+
+    var authFailMessage = authFailure ? (
+      <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
+    ) : null;
+
 
     // Form validation error
     var validationError = (validationError) ? (
@@ -159,6 +169,7 @@ var UpdatePropertyForm = React.createClass({
           ref="dialog">
           <div style={style.error}> { errorMessage } </div>
           <div style={style.error}> {validationError} </div>
+          <div style={style.error}> {authFailMessage} </div>
           <TextField
             value={street}
             multiLine={true}
