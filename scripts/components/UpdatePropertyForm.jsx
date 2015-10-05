@@ -207,7 +207,7 @@ var schema = Joi.object().keys({
   street: Joi.string().min(1).max(500),
   suburb: Joi.string().min(1).max(500),
   postcode: Joi.string().min(4).max(4),
-  photo: Joi.string().max(60000),
+  photo: Joi.string(),
 });
 
 var style = {
