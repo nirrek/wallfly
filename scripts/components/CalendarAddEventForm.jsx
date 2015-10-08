@@ -127,9 +127,9 @@ var CalendarAddEventForm = React.createClass({
           <TextField
             value={eventdesc}
             multiLine={true}
-            name="Comments"
+            name="Event Description"
             onChange={this.onChange.bind(this, 'eventdesc')}
-            floatingLabelText="Description"
+            floatingLabelText="Event Description"
             hintText="Describe what will be happening at this event"
             fullWidth />
           <Label>Starts</Label>
