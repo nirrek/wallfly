@@ -189,7 +189,7 @@ var styles = {
   }
 };
 
-module.exports = MuiContextified(Radium(Chat));
+module.exports = Radium(MuiContextified(Chat));
 
 
 

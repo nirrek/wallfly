@@ -1,4 +1,5 @@
 var React = require('react');
+var Radium = require('radium');
 
 /**
  * Icon Component
@@ -54,4 +55,4 @@ var Icon = React.createClass({
   }
 });
 
-module.exports = Icon;
+module.exports = Radium(Icon);

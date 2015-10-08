@@ -11,6 +11,7 @@ var User = require('../utils/User.js');
 var Navigation = require('react-router').Navigation;
 var UserProfile = require('./UserProfile.js');
 var User = require('../utils/User.js');
+var Radium = require('radium');
 
 /**
  * Header Component.
@@ -125,4 +126,4 @@ var styles = {
   }
 }
 
-module.exports = Header;
+module.exports = Radium(Header);

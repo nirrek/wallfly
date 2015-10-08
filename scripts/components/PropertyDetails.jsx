@@ -9,6 +9,7 @@ var Paper = MaterialUi.Paper;
 var Avatar = MaterialUi.Avatar;
 var MuiContextified = require('./MuiContextified.jsx');
 var Property = require('../utils/Property.js');
+var Radium = require('radium');
 
 var PropertyDetails = React.createClass({
   getInitialState() {
@@ -104,4 +105,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(PropertyDetails);
+module.exports = Radium(MuiContextified(PropertyDetails));

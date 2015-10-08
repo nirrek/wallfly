@@ -6,6 +6,7 @@ var CardText = mui.CardText;
 var CardTitle = mui.CardTitle;
 var FlatButton = mui.FlatButton;
 var MuiContextified = require('./MuiContextified.jsx');
+var Radium = require('radium');
 
 var RtaForm = React.createClass({
   render() {
@@ -87,4 +88,4 @@ var style = {
   },
 };
 
-module.exports = MuiContextified(RtaForm);
+module.exports = Radium(MuiContextified(RtaForm));

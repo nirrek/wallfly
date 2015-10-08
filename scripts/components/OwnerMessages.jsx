@@ -3,6 +3,7 @@ var Property = require('../utils/Property.js');
 var Api = require('../utils/Api.js');
 var Chat = require('./Chat.jsx');
 var User = require('../utils/User.js');
+var Radium = require('radium');
 
 var Messages = React.createClass({
   render() {
@@ -25,4 +26,4 @@ var style = {
   }
 };
 
-module.exports = Messages;
+module.exports = Radium(Messages);

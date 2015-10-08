@@ -12,6 +12,7 @@ var User = require('../utils/User.js');
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 /**
  * Create Account View
@@ -200,4 +201,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(CreateAccount);
+module.exports = Radium(MuiContextified(CreateAccount));

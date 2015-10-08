@@ -9,6 +9,7 @@ var Dialog = mui.Dialog;
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 var InspectionReportForm = React.createClass({
   propTypes: {
@@ -147,4 +148,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(InspectionReportForm);
+module.exports = Radium(MuiContextified(InspectionReportForm));

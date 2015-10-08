@@ -2,6 +2,7 @@ var React = require('react');
 var Property = require('../utils/Property.js');
 var Api = require('../utils/Api.js');
 var Chat = require('./Chat.jsx');
+var Radium = require('radium');
 
 var Messages = React.createClass({
   getInitialState() {
@@ -44,4 +45,4 @@ var style = {
   }
 };
 
-module.exports = Messages;
+module.exports = Radium(Messages);

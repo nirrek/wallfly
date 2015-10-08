@@ -15,6 +15,7 @@ var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var DialogEnhanced = require('./DialogEnhanced.jsx');
 var JoiError = require('./JoiError.jsx');
+var Radium = require('radium');
 
 /*
  * UserProfile Component.
@@ -203,4 +204,4 @@ var styles = {
   },
 };
 
-module.exports = MuiContextified(UserProfile);
+module.exports = Radium(MuiContextified(UserProfile));
