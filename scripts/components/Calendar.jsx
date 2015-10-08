@@ -3,6 +3,7 @@ var moment = require('moment');
 var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
 var WallflyCalendar = require('./WallflyCalendar.jsx');
+var Radium = require('radium');
 
 require('../../styles/DayPicker.scss');
 
@@ -57,4 +58,4 @@ var style = {
   },
 };
 
-module.exports = Calendar;
+module.exports = Radium(Calendar);

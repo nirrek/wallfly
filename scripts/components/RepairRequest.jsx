@@ -8,6 +8,7 @@ var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var RepairRequestForm = require('./RepairRequestForm.jsx');
+var Radium = require('radium');
 
 var RepairRequest = React.createClass({
   getInitialState() {
@@ -88,4 +89,4 @@ var style = {
   },
 };
 
-module.exports = MuiContextified(RepairRequest);
+module.exports = Radium(MuiContextified(RepairRequest));

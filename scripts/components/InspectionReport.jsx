@@ -1,6 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
+var Radium = require('radium');
 
 var InspectionReport = React.createClass({
   getInitialState() {
@@ -58,4 +59,4 @@ var style = {
   }
 };
 
-module.exports = InspectionReport;
+module.exports = Radium(InspectionReport);

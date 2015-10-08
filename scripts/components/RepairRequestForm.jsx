@@ -9,6 +9,7 @@ var Dialog = mui.Dialog;
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 var RepairRequestForm = React.createClass({
   propTypes: {
@@ -145,4 +146,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(RepairRequestForm);
+module.exports = Radium(MuiContextified(RepairRequestForm));

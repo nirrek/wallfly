@@ -11,7 +11,7 @@ var TableRowColumn = MaterialUi.TableRowColumn;
 var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
 var OwnerRepairRequestStatus = require('./OwnerRepairRequestStatus.jsx');
-
+var Radium = require('radium');
 
 var OwnerRepairRequests = React.createClass({
   getInitialState() {
@@ -19,7 +19,7 @@ var OwnerRepairRequests = React.createClass({
       requests: []
     }
   },
-  
+
   getPropertyRepairRequests(){
     var { propertyId } = this.props.params;
      Api.getPropertyRepairRequests({
@@ -45,9 +45,9 @@ var OwnerRepairRequests = React.createClass({
           <TableRowColumn><img src={request.photo} /> </TableRowColumn>
           <TableRowColumn>{request.status}</TableRowColumn>
           <TableRowColumn>
-          <OwnerRepairRequestStatus 
+          <OwnerRepairRequestStatus
               requestId={request.id}
-              propertyId={this.props.params.propertyId} 
+              propertyId={this.props.params.propertyId}
               statusChanged={this.getPropertyRepairRequests}
               status={request.status}
           />
@@ -96,4 +96,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(OwnerRepairRequests);
+module.exports = Radium(MuiContextified(OwnerRepairRequests));

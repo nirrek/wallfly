@@ -11,6 +11,7 @@ var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
+var Radium = require('radium');
 
 var UpdatePropertyForm = React.createClass({
   propTypes: {
@@ -251,4 +252,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(UpdatePropertyForm);
+module.exports = Radium(MuiContextified(UpdatePropertyForm));

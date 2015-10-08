@@ -1,4 +1,5 @@
 var React = require('react');
+var Radium = require('radium');
 
 var ImageSelector = React.createClass({
   propTypes: {
@@ -70,4 +71,4 @@ var style = {
   }
 };
 
-module.exports = ImageSelector;
+module.exports = Radium(ImageSelector);

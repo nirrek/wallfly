@@ -8,6 +8,7 @@ var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var Snackbar = mui.Snackbar;
+var Radium = require('radium');
 
 var NewPropertyForm = React.createClass({
   getInitialState() {
@@ -152,4 +153,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(NewPropertyForm);
+module.exports = Radium(MuiContextified(NewPropertyForm));

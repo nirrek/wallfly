@@ -1,5 +1,6 @@
 var React = require('react');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 /**
  * JoiError component consumes a Joi validation object, and pretty
@@ -37,4 +38,4 @@ var styles = {
   }
 };
 
-module.exports = JoiError;
+module.exports = Radium(JoiError);

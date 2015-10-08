@@ -1,6 +1,7 @@
 var React = require('react');
 var MuiContextified = require('./MuiContextified.jsx');
 var NavList = require('./NavList.jsx');
+var Radium = require('radium');
 
 // Navigation items data.
 var prefix = '/owner';
@@ -30,4 +31,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(OwnerNav);
+module.exports = Radium(MuiContextified(OwnerNav));
