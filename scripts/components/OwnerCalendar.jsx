@@ -3,6 +3,7 @@ var moment = require('moment');
 var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
 var WallflyCalendar = require('./WallflyCalendar.jsx');
+var CalendarAddEventForm = require('./CalendarAddEventForm.jsx');
 
 require('../../styles/DayPicker.scss');
 
@@ -18,8 +19,12 @@ var OwnerCalendar = React.createClass({
   },
 
   componentWillMount() {
-    var { propertyId } = this.props.params;
+    this.getCalendarEvents();
 
+  },
+
+  getCalendarEvents() {
+    var { propertyId } = this.props.params;
     Api.getPropertyCalendarEvents({
       propertyId: propertyId,
       callback: (err, response) => {
@@ -40,6 +45,9 @@ var OwnerCalendar = React.createClass({
   render() {
     return (
       <div>
+        <CalendarAddEventForm
+          EventAdded={this.getCalendarEvents}
+          propertyID={this.props.params.propertyId} />
         <WallflyCalendar events={this.state.events} />
       </div>
     );
