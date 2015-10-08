@@ -6,6 +6,7 @@ var Label = require('./Label.jsx');
 var mui = require('material-ui');
 var SelectField = mui.SelectField;
 var MuiContextified = require('./MuiContextified.jsx');
+var Radium = require('radium');
 
 var Messages = React.createClass({
   getInitialState() {
@@ -84,4 +85,4 @@ var styles = {
   },
 };
 
-module.exports = MuiContextified(Messages);
+module.exports = MuiContextified(Radium(Messages));

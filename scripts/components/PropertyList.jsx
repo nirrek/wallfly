@@ -6,6 +6,7 @@ var RaisedButton = MaterialUi.RaisedButton;
 var Paper = MaterialUi.Paper;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
+var Radium = require('radium');
 
 /**
  * PropertyList component.
@@ -115,4 +116,4 @@ var style = {
   },
 }
 
-module.exports = MuiContextified(PropertyList);
+module.exports = MuiContextified(Radium(PropertyList));

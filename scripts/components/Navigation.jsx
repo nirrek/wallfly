@@ -5,6 +5,7 @@ var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
 var MuiContextified = require('./MuiContextified.jsx');
+var Radium = require('radium');
 
 var NavigationList = React.createClass({
   mixins: [ Navigation ],
@@ -51,4 +52,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(NavigationList);
+module.exports = MuiContextified(Radium(NavigationList));

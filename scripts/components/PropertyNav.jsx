@@ -4,6 +4,7 @@ var NavList = require('./NavList.jsx');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
 var Navigation = ReactRouter.Navigation;
+var Radium = require('radium');
 
 var PropertyNav = React.createClass({
   mixins: [ Navigation ],
@@ -82,4 +83,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(PropertyNav);
+module.exports = MuiContextified(Radium(PropertyNav));

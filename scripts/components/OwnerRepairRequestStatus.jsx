@@ -6,6 +6,7 @@ var SelectField = mui.SelectField;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Radium = require('radium');
 
 var OwnerRepairRequestStatus = React.createClass({
   getInitialState() {
@@ -29,7 +30,7 @@ var OwnerRepairRequestStatus = React.createClass({
   // Update select menu on change.
   onSelectChange(event, selectedUserTypeIndex) {
     var repairStatus = statusTypes[selectedUserTypeIndex].name;
-    this.setState({ 
+    this.setState({
       repairStatus: repairStatus,
     });
   },
@@ -49,7 +50,7 @@ var OwnerRepairRequestStatus = React.createClass({
           this.setState({ updateError: true });
           return;
         }
-        // reset the error state 
+        // reset the error state
         this.setState({
           updateError:false,
         });
@@ -118,4 +119,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(OwnerRepairRequestStatus);
+module.exports = MuiContextified(Radium(OwnerRepairRequestStatus));

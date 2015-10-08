@@ -1,5 +1,6 @@
 var React = require('react');
 var MuiContextified = require('./MuiContextified.jsx');
+var Radium = require('radium');
 
 /**
  * Page component.
@@ -18,4 +19,4 @@ var style = {
   padding: '1em'
 };
 
-module.exports = MuiContextified(Page);
+module.exports = MuiContextified(Radium(Page));

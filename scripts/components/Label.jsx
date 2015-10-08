@@ -1,4 +1,5 @@
 var React = require('react');
+var Radium = require('radium');
 
 var Label = React.createClass({
   render() {
@@ -19,4 +20,4 @@ var style = {
   }
 };
 
-module.exports = Label;
+module.exports = Radium(Label);

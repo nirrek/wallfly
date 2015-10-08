@@ -8,6 +8,7 @@ var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var PaymentForm = require('./PaymentForm.jsx');
+var Radium = require('radium');
 
 var Payments = React.createClass({
   getInitialState() {
@@ -87,4 +88,4 @@ var style = {
   },
 };
 
-module.exports = MuiContextified(Payments);
+module.exports = MuiContextified(Radium(Payments));

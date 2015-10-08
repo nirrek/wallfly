@@ -1,4 +1,5 @@
 var React = require('react');
+var Radium = require('radium');
 
 var ErrorMessage = React.createClass({
   propTypes: {
@@ -33,4 +34,4 @@ var style = {
   }
 }
 
-module.exports = ErrorMessage;
+module.exports = Radium(ErrorMessage);

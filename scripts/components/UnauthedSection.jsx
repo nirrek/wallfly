@@ -3,6 +3,7 @@ var Sidebar = require('react-sidebar');
 var MuiContextified = require('./MuiContextified.jsx');
 var NavigationList = require('./Navigation.jsx');
 var Header = require('./Header.jsx');
+var Radium = require('radium');
 
 /**
  * Component view for the unauthenticated section of the front-end.
@@ -30,4 +31,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(UnauthedSection);
+module.exports = MuiContextified(Radium(UnauthedSection));

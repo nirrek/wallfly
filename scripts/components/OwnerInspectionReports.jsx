@@ -11,7 +11,7 @@ var TableRowColumn = MaterialUi.TableRowColumn;
 var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
 var InspectionReportForm = require('./InspectionReportForm.jsx');
-
+var Radium = require('radium');
 
 var OwnerInspectionReports = React.createClass({
   getInitialState() {
@@ -92,4 +92,4 @@ var style = {
   },
 }
 
-module.exports = MuiContextified(OwnerInspectionReports);
+module.exports = MuiContextified(Radium(OwnerInspectionReports));

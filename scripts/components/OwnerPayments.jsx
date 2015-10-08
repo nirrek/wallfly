@@ -10,7 +10,7 @@ var TableHeaderColumn = MaterialUi.TableHeaderColumn;
 var TableRowColumn = MaterialUi.TableRowColumn;
 var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
-
+var Radium = require('radium');
 
 var OwnerPayments = React.createClass({
   getInitialState() {
@@ -81,4 +81,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(OwnerPayments);
+module.exports = MuiContextified(Radium(OwnerPayments));

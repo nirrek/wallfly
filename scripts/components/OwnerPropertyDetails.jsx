@@ -4,6 +4,7 @@ var MaterialUi = require('material-ui');
 var Paper = MaterialUi.Paper;
 var MuiContextified = require('./MuiContextified.jsx');
 var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
+var Radium = require('radium');
 
 var OwnerPropertyDetails = React.createClass({
   getInitialState() {
@@ -66,4 +67,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(OwnerPropertyDetails);
+module.exports = MuiContextified(Radium(OwnerPropertyDetails));
