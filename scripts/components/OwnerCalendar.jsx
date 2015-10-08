@@ -34,7 +34,7 @@ var OwnerCalendar = React.createClass({
         }
 
         var massagedEvents = response.data.map(event => {
-          event.date = moment(event.date);
+          event.startdate = moment(event.startdate);
           return event;
         })
         this.setState({ events: massagedEvents });

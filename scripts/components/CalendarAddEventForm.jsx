@@ -50,6 +50,18 @@ var CalendarAddEventForm = React.createClass({
     this.setState({startDateTime: updated});
   },
 
+  onEndDateChange(nill, dateobj) {
+    var updated = new Date(dateobj.toDateString()
+                    +" "+this.state.endDateTime.toTimeString());
+    this.setState({endDateTime: updated});
+  },
+
+  onEndTimeChange(nill, dateobj) {
+    var updated = new Date(this.state.endDateTime.toDateString()
+                    +" "+dateobj.toTimeString());
+    this.setState({endDateTime: updated});
+  },
+
   /**
    * Form submission event handler. Sends a request to the server to add the
    * repair request, and updates the repair requests if successful.
@@ -58,7 +70,6 @@ var CalendarAddEventForm = React.createClass({
 
     // API call to add repair request
     var propertyId = this.props.propertyID;
-
     Api.addPropertyCalendarEvents({
       data: {
         eventdesc: this.state.eventdesc,
@@ -132,15 +143,17 @@ var CalendarAddEventForm = React.createClass({
             format="ampm"
             onChange={this.onStartTimeChange}
             ref="starttime" />
-          //TODO: Fix up the following date/time pickers
           <Label>Ends</Label>
           <DatePicker
+            value={this.state.endDateTime}
             hintText="Date"
             mode="landscape"
+            onChange={this.onEndDateChange}
             ref="enddate" />
           <TimePicker
             hintText="Time"
             format="ampm"
+            onChange={this.onEndTimeChange}
             ref="endtime" />
         </Dialog>
       </div>

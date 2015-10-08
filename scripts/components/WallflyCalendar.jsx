@@ -34,7 +34,7 @@ var WallflyCalendar = React.createClass({
 
   getEventsForDay(day) {
     day = moment(day);
-    return this.props.events.filter((event) => event.date.isSame(day, 'day'));
+    return this.props.events.filter((event) => event.startdate.isSame(day, 'day'));
   },
 
   render() {
