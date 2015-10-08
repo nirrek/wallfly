@@ -9,7 +9,7 @@ var NavList = React.createClass({
   mixins: [ Navigation ],
 
   propTypes: {
-    items: React.PropTypes.object.isRequired,
+    items: React.PropTypes.array.isRequired,
   },
 
   render() {
