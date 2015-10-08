@@ -11,6 +11,7 @@ var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
+var Radium = require('radium');
 
 var CalendarAddEventForm = React.createClass({
   propTypes: {
@@ -187,4 +188,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(CalendarAddEventForm);
+module.exports = Radium(MuiContextified(CalendarAddEventForm));
