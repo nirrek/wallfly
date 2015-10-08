@@ -119,4 +119,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(OwnerRepairRequestStatus));
+module.exports = Radium(MuiContextified(OwnerRepairRequestStatus));

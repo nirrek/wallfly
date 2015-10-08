@@ -83,4 +83,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(Radium(PropertyNav));
+module.exports = Radium(MuiContextified(PropertyNav));

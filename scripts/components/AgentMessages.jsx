@@ -85,4 +85,4 @@ var styles = {
   },
 };
 
-module.exports = MuiContextified(Radium(Messages));
+module.exports = Radium(MuiContextified(Messages));

@@ -153,4 +153,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(NewPropertyForm));
+module.exports = Radium(MuiContextified(NewPropertyForm));

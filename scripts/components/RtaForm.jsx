@@ -88,4 +88,4 @@ var style = {
   },
 };
 
-module.exports = MuiContextified(Radium(RtaForm));
+module.exports = Radium(MuiContextified(RtaForm));

@@ -81,4 +81,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(Radium(OwnerPayments));
+module.exports = Radium(MuiContextified(OwnerPayments));

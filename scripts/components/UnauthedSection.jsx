@@ -31,4 +31,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(Radium(UnauthedSection));
+module.exports = Radium(MuiContextified(UnauthedSection));

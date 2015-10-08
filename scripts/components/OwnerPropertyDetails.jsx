@@ -67,4 +67,4 @@ var style = {
   }
 }
 
-module.exports = MuiContextified(Radium(OwnerPropertyDetails));
+module.exports = Radium(MuiContextified(OwnerPropertyDetails));

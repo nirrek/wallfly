@@ -152,4 +152,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(PaymentForm));
+module.exports = Radium(MuiContextified(PaymentForm));

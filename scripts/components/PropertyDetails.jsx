@@ -105,4 +105,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(PropertyDetails));
+module.exports = Radium(MuiContextified(PropertyDetails));

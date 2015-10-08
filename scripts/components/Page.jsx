@@ -19,4 +19,4 @@ var style = {
   padding: '1em'
 };
 
-module.exports = MuiContextified(Radium(Page));
+module.exports = Radium(MuiContextified(Page));

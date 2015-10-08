@@ -204,4 +204,4 @@ var styles = {
   },
 };
 
-module.exports = MuiContextified(Radium(UserProfile));
+module.exports = Radium(MuiContextified(UserProfile));

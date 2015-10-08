@@ -148,4 +148,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(InspectionReportForm));
+module.exports = Radium(MuiContextified(InspectionReportForm));

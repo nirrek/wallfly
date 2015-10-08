@@ -252,4 +252,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(UpdatePropertyForm));
+module.exports = Radium(MuiContextified(UpdatePropertyForm));

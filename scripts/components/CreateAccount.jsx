@@ -201,4 +201,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(CreateAccount));
+module.exports = Radium(MuiContextified(CreateAccount));

@@ -32,4 +32,4 @@ var styles = {
   }
 }
 
-module.exports = MuiContextified(Radium(AgentNav));
+module.exports = Radium(MuiContextified(AgentNav));

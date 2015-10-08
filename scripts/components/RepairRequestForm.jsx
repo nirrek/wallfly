@@ -146,4 +146,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(RepairRequestForm));
+module.exports = Radium(MuiContextified(RepairRequestForm));
