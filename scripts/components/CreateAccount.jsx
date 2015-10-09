@@ -7,11 +7,11 @@ var TextField = mui.TextField;
 var SelectField = mui.SelectField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
-var cookie = require('react-cookie');
-var User = require('../utils/User.js');
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
 
 /**
@@ -34,7 +34,8 @@ var CreateAccount = React.createClass({
       registrationFail: false, // did the registration request fail
       failureResponse: {}, // failure response from the server
       fileSizeError: '', // file size error message
-    }
+      validationError: null, // clientside validation error object
+    };
   },
 
   // Capture the input field state after each keypress.
@@ -53,6 +54,19 @@ var CreateAccount = React.createClass({
     event.preventDefault();
     event.stopPropagation();
 
+    // Clear any prior error state.
+    this.setState({
+      registrationFail: false,
+      failureResponse: undefined,
+      validationError: undefined,
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
+
     Api.createAccount({
       data: {
         userType: this.state.userType,
@@ -66,9 +80,13 @@ var CreateAccount = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
+          var msg = (response.status === 0)
+            ? 'Connection timed-out. Please try again.'
+            : response.data;
+
           this.setState({
             registrationFail: true,
-            failureResponse: response.data,
+            failureResponse: msg,
           });
           return;
         }
@@ -78,11 +96,17 @@ var CreateAccount = React.createClass({
     });
   },
 
-  // Produces a user friendly failure message given a failureResponse object.
+  // Consumes a failureResponse from the server, and produces an appropriate
+  // component for displaying the error the user.
   getFailureMessage(failureResponse) {
     if (failureResponse.errorType === 'ER_DUP_ENTRY') {
-      return `Username is already registered.`;
+      return (
+        <ErrorMessage fillBackground={true}>
+          Email is already registered.
+        </ErrorMessage>
+      );
     }
+    return <ErrorMessage fillBackground={true}>{failureResponse}</ErrorMessage>;
   },
 
   onImageSelected(payload) {
@@ -92,15 +116,36 @@ var CreateAccount = React.createClass({
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
-    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
-    this.setState({ fileSizeError: error });
+    var errorMsg = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: errorMsg });
+  },
+
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      userType: this.state.userType,
+      username: this.state.username,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone,
+      password: this.state.password,
+      avatar: this.state.avatar,
+    }, schema);
   },
 
   render() {
     var { userType, username, firstName, lastName, email, phone, password,
-          registrationFail, failureResponse, fileSizeError } = this.state;
+          registrationFail, failureResponse, fileSizeError,
+          validationError } = this.state;
+
+    var validationErrorMsg = validationError ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
+
     var regoFailMsg = registrationFail ? this.getFailureMessage(failureResponse)
                                        : null;
+
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
@@ -110,7 +155,8 @@ var CreateAccount = React.createClass({
         <Paper zDepth={1} style={style.loginContainer}>
           <h1 style={style.heading}>Register</h1>
           <form style={style.form} onSubmit={this.onSubmit}>
-            <div style={style.error}> { regoFailMsg } </div>
+            {regoFailMsg}
+            {validationErrorMsg}
 
             <SelectField
               value={userType}
@@ -156,7 +202,10 @@ var CreateAccount = React.createClass({
                              onImageSelected={this.onImageSelected}
                              onImageSizeError={this.onImageSizeError} />
             </div>
-            <RaisedButton type="submit" label="Create Account" primary={true} style={style.button} />
+            <RaisedButton type="submit"
+                          label="Create Account"
+                          primary={true}
+                          style={style.button} />
           </form>
         </Paper>
       </div>
@@ -191,7 +240,8 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: '20em',
+    minWidth: 260,
+    maxWidth: 500,
   },
   button: {
     marginTop: '2em',
@@ -200,5 +250,17 @@ var style = {
     width: '100%'
   }
 };
+
+// Validation schema for user profile form data.
+var schema = Joi.object().keys({
+  username: Joi.string().alphanum().min(3).max(30),
+  password: Joi.string().regex(/[a-zA-Z0-9]{5,100}/),
+  firstName: Joi.string().alphanum().max(100),
+  lastName: Joi.string().alphanum().max(100),
+  phone: Joi.string().alphanum().min(8).max(10),
+  email: Joi.string().email(),
+  userType: Joi.string().valid(['tenant', 'agent', 'owner']),
+  avatar: Joi.string(),
+});
 
 module.exports = Radium(MuiContextified(CreateAccount));
