@@ -15,7 +15,8 @@ let Api = {
 
   createAccount({ data={}, callback=()=>{} }) {
     axios.post(`${host}/users`, data, {
-      withCredentials: true
+      withCredentials: true,
+      timeout: 4000,
     })
     .then((response) => { // 2xx response
       callback(null, response);
