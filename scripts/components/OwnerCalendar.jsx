@@ -34,7 +34,7 @@ var OwnerCalendar = React.createClass({
         }
 
         var massagedEvents = response.data.map(event => {
-          event.startdate = moment(event.startdate);
+          event.date = moment(event.date);
           return event;
         })
         this.setState({ events: massagedEvents });
@@ -46,8 +46,8 @@ var OwnerCalendar = React.createClass({
     return (
       <div>
         <CalendarAddEventForm
-          EventAdded={this.getCalendarEvents}
-          propertyID={this.props.params.propertyId} />
+          eventAdded={this.getCalendarEvents}
+          propertyId={this.props.params.propertyId} />
         <WallflyCalendar events={this.state.events} />
       </div>
     );
