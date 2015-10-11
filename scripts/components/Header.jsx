@@ -101,11 +101,11 @@ var Header = React.createClass({
 
 var styles = {
   header: {
-    // backgroundImage: 'linear-gradient(45deg, #5FCF93, #2ECC71)',
     backgroundColor: '#2ECC71',
     height: 50,
     display: 'flex',
     alignItems: 'center',
+    flexShrink: 0,
   },
   logo: {
     flex: 1, // expand to fill available space
