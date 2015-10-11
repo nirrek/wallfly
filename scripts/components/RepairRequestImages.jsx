@@ -3,6 +3,7 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var Radium = require('radium');
+var RepairRequestAddImage = require('./RepairRequestAddImage.jsx');
 
 var RepairRequestImages = React.createClass({
   getInitialState() {
@@ -25,6 +26,7 @@ var RepairRequestImages = React.createClass({
           // TODO
           return console.log(err);
         }
+
         this.setState({
           repairRequestImages: response.data
         });
@@ -55,7 +57,12 @@ var RepairRequestImages = React.createClass({
         <table>
           {rows}
         </table>
-
+        <div>
+          <RepairRequestAddImage 
+          repairRequestImageAdded= {this.getRepairRequestImages}
+          requestId={this.props.requestId} 
+          />
+        </div>
       </div>
     );
   }

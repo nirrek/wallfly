@@ -2,12 +2,13 @@ var React = require('react');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var InspectionReport = React.createClass({
   getInitialState() {
     return {
       inspections: [], // list of repair requests
-    }
+    };
   },
 
   componentWillMount() {
@@ -36,15 +37,29 @@ var InspectionReport = React.createClass({
       );
     });
 
+    // No inspections
+    if (rows.length === 0) {
+      rows = (
+        <tr>
+          <td colSpan="3" style={style.center}>No inspection reports yet</td>
+        </tr>
+      );
+    }
+
     return (
       <div style={style.page}>
+        <PageHeading>Inspection Reports</PageHeading>
         <table>
-          <tr>
-            <th>Date</th>
-            <th>Inspector</th>
-            <th>Comments</th>
-          </tr>
-          {rows}
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Inspector</th>
+              <th>Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
         </table>
       </div>
     );
@@ -55,7 +70,9 @@ var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
+  },
+  center: {
+    textAlign: 'center',
   }
 };
 

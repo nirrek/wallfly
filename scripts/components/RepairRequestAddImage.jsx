@@ -31,6 +31,8 @@ var RepairRequestAddImage = React.createClass({
    * repair request, and updates the repair requests if successful.
    */
   onSubmit(event) {
+
+    // API call to add new Image
     Api.addRepairRequestImage({
       data: {
         image: this.state.image,
@@ -50,7 +52,6 @@ var RepairRequestAddImage = React.createClass({
         this.refs.dialog.dismiss();
       }
     });
-
   },
 
   onImageSelected(payload) {

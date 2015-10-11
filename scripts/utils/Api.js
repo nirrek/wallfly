@@ -220,7 +220,7 @@ let Api = {
     });
   },
 
-    // Fetch list of repair request images
+  // Fetch list of repair request images
   getRepairRequestImages({ data={}, callback=()=>{} }) {
     axios.get(`${host}/users/${userId}/repairs/${data.requestId}/images`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -231,6 +231,21 @@ let Api = {
       .catch((response) => {
         let error = response.data.errorMessage;
         console.log(`Error in Api.getRepairRequestImages(): ${error}`);
+        callback(new Error(error), response);
+      });
+  },
+
+  // Add a new repair request image
+  addRepairRequestImage({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/users/${userId}/repairs/${data.requestId}/images`, {
+        withCredentials: true, // send cookies for cross-site requests
+      })
+      .then((response) => {
+        callback(null, response);
+      })
+      .catch((response) => {
+        let error = response.data.errorMessage;
+        console.log(`Error in Api.addRepairRequestImage(): ${error}`);
         callback(new Error(error), response);
       });
   },
