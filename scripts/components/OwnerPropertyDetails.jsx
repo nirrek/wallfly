@@ -5,6 +5,7 @@ var Paper = MaterialUi.Paper;
 var MuiContextified = require('./MuiContextified.jsx');
 var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 var Radium = require('radium');
+var PropertyDetails = require('./PropertyDetails.jsx');
 
 var OwnerPropertyDetails = React.createClass({
   getInitialState() {
@@ -38,6 +39,8 @@ var OwnerPropertyDetails = React.createClass({
 
     return (
       <div style={style.container}>
+        <PropertyDetails />
+        {/*
         <Paper zIndex={1}>
           <img width={300} src={photo} />
           <div style={style.address}>
@@ -49,6 +52,7 @@ var OwnerPropertyDetails = React.createClass({
                 propertyID={this.props.params.propertyId} />
           </div>
         </Paper>
+      */}
       </div>
     );
   }

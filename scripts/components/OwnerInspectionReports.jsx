@@ -1,23 +1,15 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
-var MaterialUi = require('material-ui');
-var Table = MaterialUi.Table;
-var TableHeader = MaterialUi.TableHeader;
-var TableBody = MaterialUi.TableBody;
-var TableFooter = MaterialUi.TableFooter;
-var TableRow = MaterialUi.TableRow;
-var TableHeaderColumn = MaterialUi.TableHeaderColumn;
-var TableRowColumn = MaterialUi.TableRowColumn;
-var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
 var InspectionReportForm = require('./InspectionReportForm.jsx');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var OwnerInspectionReports = React.createClass({
   getInitialState() {
     return {
       inspections: []
-    }
+    };
   },
 
   getInspectionReports() {
@@ -26,7 +18,6 @@ var OwnerInspectionReports = React.createClass({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
-        console.log(response.data);
         this.setState({ inspections: response.data });
       }
     });
@@ -39,57 +30,52 @@ var OwnerInspectionReports = React.createClass({
   render() {
     var rows = this.state.inspections.map(inspection => {
       return (
-        <TableRow key={inspection.id}>
-          <TableRowColumn style={style.dateCol}>{moment(inspection.date).format('Do MMM YYYY')}</TableRowColumn>
-          <TableRowColumn><p>{inspection.comments}</p></TableRowColumn>
-          <TableRowColumn>
+        <tr key={inspection.id}>
+          <td>{moment(inspection.date).format('Do MMM YYYY')}</td>
+          <td><p>{inspection.comments}</p></td>
+          <td>
             {inspection.photo ? (
-              <img src={inspection.photo} />
+              <img style={styles.img} src={inspection.photo} />
             ) : 'No photo added' }
-          </TableRowColumn>
-        </TableRow>
+          </td>
+        </tr>
       );
     });
 
     return (
-      <div style={style.container}>
+      <div style={styles.page}>
+        <PageHeading>Inspection Reports</PageHeading>
+        <table>
+          <thead>
+            <colgroup style={{width: 140}}></colgroup>
+            <tr>
+              <th>Date</th>
+              <th>Request</th>
+              <th>Photo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+        <br />
         <InspectionReportForm
           inspectionReportAdded={this.getInspectionReports}
           propertyID={this.props.params.propertyId} />
-        <Table>
-          <TableHeader
-            adjustForCheckbox={false}
-            displaySelectAll={false}>
-            <TableRow>
-              <TableHeaderColumn style={{...style.header, ...style.dateCol}}>Date</TableHeaderColumn>
-              <TableHeaderColumn style={style.header}>Request</TableHeaderColumn>
-              <TableHeaderColumn style={style.header}>Photo</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            stripedRows={true}>
-            {rows}
-          </TableBody>
-        </Table>
-
       </div>
     );
   }
 });
 
-var style = {
-  container: {
-    //display: 'flex',
+var styles = {
+  page: {
+    display: 'flex',
+    flexFlow: 'column',
   },
-  header: {
-    fontSize: 18,
-    fontWeight: 800,
-    textAlign: 'left',
+  img: {
+    maxWidth: 150,
+    borderRadius: 4,
   },
-  dateCol: {
-    width: 125
-  },
-}
+};
 
-module.exports = Radium(MuiContextified(OwnerInspectionReports));
+module.exports = Radium(OwnerInspectionReports);

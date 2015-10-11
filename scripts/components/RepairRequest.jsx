@@ -2,13 +2,9 @@ var React = require('react');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
-var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
-var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
 var RepairRequestForm = require('./RepairRequestForm.jsx');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var RepairRequest = React.createClass({
   getInitialState() {
@@ -32,7 +28,7 @@ var RepairRequest = React.createClass({
     });
   },
   componentWillMount() {
-    this.getRepairRequests()
+    this.getRepairRequests();
   },
 
   render() {
@@ -45,7 +41,7 @@ var RepairRequest = React.createClass({
           <td>{request.request}</td>
           <td>
             {request.photo ?
-              ( <img src={request.photo} /> ) :
+              ( <img style={style.img} src={request.photo} /> ) :
               ( <i>No image added</i> )}
           </td>
           <td>{request.status}</td>
@@ -53,16 +49,31 @@ var RepairRequest = React.createClass({
       );
     });
 
+    // No repair requests
+    if (rows.length === 0) {
+      rows = (
+        <tr>
+          <td style={style.center} colSpan="4">No repair requests yet</td>
+        </tr>
+      );
+    }
+
     return (
       <div style={style.page}>
+        <PageHeading>Repair Requests</PageHeading>
         <table>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Image</th>
-            <th>Status</th>
-          </tr>
-          {rows}
+          <colgroup style={{width: 140}}></colgroup>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Image</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
         </table>
         <div style={style.formContainer}>
           <RepairRequestForm repairRequestAdded={this.getRepairRequests} />
@@ -76,7 +87,6 @@ var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
   },
   formContainer: {
     marginTop: '1em'
@@ -87,6 +97,13 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
+  img: {
+    maxWidth: 150,
+    borderRadius: 4,
+  },
+  center: {
+    textAlign: 'center',
+  }
 };
 
-module.exports = Radium(MuiContextified(RepairRequest));
+module.exports = MuiContextified(Radium(RepairRequest));
