@@ -9,6 +9,7 @@ var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var RepairRequestForm = require('./RepairRequestForm.jsx');
 var Radium = require('radium');
+var RepairRequestImages = require('./RepairRequestImages.jsx');
 
 var RepairRequest = React.createClass({
   getInitialState() {
@@ -31,6 +32,7 @@ var RepairRequest = React.createClass({
       }
     });
   },
+
   componentWillMount() {
     this.getRepairRequests()
   },
@@ -44,9 +46,7 @@ var RepairRequest = React.createClass({
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.request}</td>
           <td>
-            {request.photo ?
-              ( <img src={request.photo} /> ) :
-              ( <i>No image added</i> )}
+          <RepairRequestImages requestId={request.id}/>
           </td>
           <td>{request.status}</td>
         </tr>
@@ -66,6 +66,7 @@ var RepairRequest = React.createClass({
         </table>
         <div style={style.formContainer}>
           <RepairRequestForm repairRequestAdded={this.getRepairRequests} />
+          
         </div>
       </div>
     );
@@ -86,6 +87,9 @@ var style = {
     padding: '2em',
     flexDirection: 'column',
     maxWidth: '20em',
+  },
+  image: {
+    maxHeight: '7em',
   },
 };
 
