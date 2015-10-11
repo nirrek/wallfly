@@ -227,7 +227,7 @@ var style = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
-    flexGrow: 1,
+    flex: '1 0 auto',
   },
   loginContainer: {
     padding: '2em',
