@@ -1,7 +1,5 @@
 var React = require('react');
-var Sidebar = require('react-sidebar');
 var MuiContextified = require('./MuiContextified.jsx');
-var NavigationList = require('./Navigation.jsx');
 var Header = require('./Header.jsx');
 var Radium = require('radium');
 
@@ -29,6 +27,6 @@ var style = {
     display: 'flex',
     flexDirection: 'column',
   }
-}
+};
 
 module.exports = Radium(MuiContextified(UnauthedSection));
