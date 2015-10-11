@@ -2,13 +2,9 @@ var React = require('react');
 var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
-var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
-var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
 var PaymentForm = require('./PaymentForm.jsx');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var Payments = React.createClass({
   getInitialState() {
@@ -29,38 +25,49 @@ var Payments = React.createClass({
           payments: response.data
         });
       }
-    })
+    });
   },
 
    componentWillMount() {
-    this.getPayments()
+    this.getPayments();
   },
 
   render() {
-
     var { payments } = this.state;
 
     var rows = payments.map(payment => {
       return (
-        // TODO
         <tr key={payment.id}>
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
           <td>{payment.property}</td>
-          <td>{payment.amount}</td>
+          <td>${payment.amount}</td>
         </tr>
       );
     });
 
+    // No payments
+    if (rows.length === 0) {
+      rows = (
+        <tr>
+          <td colSpan="3" style={style.center}>No payments yet</td>
+        </tr>
+      );
+    }
+
     return (
       <div style={style.page}>
-        <h1>Payment History</h1>
+        <PageHeading>Payments</PageHeading>
         <table>
-          <tr>
-            <th>Date</th>
-            <th>Property</th>
-            <th>Amount</th>
-          </tr>
-          {rows}
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Property</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
         </table>
 
         <div style={style.formContainer}>
@@ -75,7 +82,6 @@ var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
   },
   formContainer: {
     marginTop: '1em'
@@ -86,6 +92,9 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
+  center: {
+    textAlign: 'center',
+  }
 };
 
-module.exports = Radium(MuiContextified(Payments));
+module.exports = MuiContextified(Radium(Payments));

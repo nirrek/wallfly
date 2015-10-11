@@ -1,6 +1,5 @@
 var React = require('react');
 var moment = require('moment');
-var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
 var WallflyCalendar = require('./WallflyCalendar.jsx');
 var Radium = require('radium');
@@ -30,10 +29,10 @@ var Calendar = React.createClass({
         var massagedEvents = response.data.map(event => {
           event.date = moment(event.date);
           return event;
-        })
+        });
         this.setState({ events: massagedEvents });
       }
-    })
+    });
   },
 
   render() {
@@ -45,16 +44,10 @@ var Calendar = React.createClass({
   }
 });
 
-// Modifiers specify what <DayPicker> inteprets particular days as.
-var modifiers = {
-  "firstOfMonth": (day) => day.getDate() === 1,
-}
-
 var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
   },
 };
 
