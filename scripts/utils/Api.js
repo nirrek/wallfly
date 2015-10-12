@@ -235,20 +235,21 @@ let Api = {
       });
   },
 
-  // Add a new repair request image
+  // Add a new repair request
   addRepairRequestImage({ data={}, callback=()=>{} }) {
-    axios.post(`${host}/users/${userId}/repairs/${data.requestId}/images`, {
-        withCredentials: true, // send cookies for cross-site requests
-      })
-      .then((response) => {
-        callback(null, response);
-      })
-      .catch((response) => {
-        let error = response.data.errorMessage;
-        console.log(`Error in Api.addRepairRequestImage(): ${error}`);
-        callback(new Error(error), response);
-      });
+    axios.post(`${host}/users/${userId}/repairs/${data.requestId}/images`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addRepairRequest(): ${error}`);
+      callback(new Error(error), response);
+    });
   },
+
 
   // Fetch information for a given tenants property
   getUserPropertyDetails({ callback=()=>{} }) {

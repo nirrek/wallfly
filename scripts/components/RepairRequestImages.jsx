@@ -45,9 +45,10 @@ var RepairRequestImages = React.createClass({
         <tr key={request.id}>
           <td>
             {request.photo ?
-              ( <img style={style.image} src={request.photo} /> ) :
+              ( <img style={style.img} src={request.photo} /> ) :
               ( <i>No image added</i> )}
           </td>
+          <div> {request.id}</div>
         </tr>
       );
     });
@@ -83,9 +84,12 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
-  image: {
-    maxHeight: '7em',
+  img: {
+    maxWidth: 200,
   },
+  heading: {
+    margin: 0
+  }
 };
 
 module.exports = Radium(MuiContextified(RepairRequestImages));

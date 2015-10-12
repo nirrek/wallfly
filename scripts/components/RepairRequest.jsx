@@ -4,11 +4,8 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var RepairRequestForm = require('./RepairRequestForm.jsx');
 var Radium = require('radium');
-<<<<<<< HEAD
 var RepairRequestImages = require('./RepairRequestImages.jsx');
-=======
 var PageHeading = require('./PageHeading.jsx');
->>>>>>> master
 
 var RepairRequest = React.createClass({
   getInitialState() {
@@ -45,13 +42,7 @@ var RepairRequest = React.createClass({
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.request}</td>
           <td>
-<<<<<<< HEAD
-          <RepairRequestImages requestId={request.id}/>
-=======
-            {request.photo ?
-              ( <img style={style.img} src={request.photo} /> ) :
-              ( <i>No image added</i> )}
->>>>>>> master
+            <RepairRequestImages requestId={request.id}/>
           </td>
           <td>{request.status}</td>
         </tr>
@@ -107,11 +98,6 @@ var style = {
     flexDirection: 'column',
     maxWidth: '20em',
   },
-<<<<<<< HEAD
-  image: {
-    maxHeight: '7em',
-  },
-=======
   img: {
     maxWidth: 150,
     borderRadius: 4,
@@ -119,7 +105,6 @@ var style = {
   center: {
     textAlign: 'center',
   }
->>>>>>> master
 };
 
 module.exports = MuiContextified(Radium(RepairRequest));
