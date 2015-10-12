@@ -1,20 +1,15 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
-var MaterialUi = require('material-ui');
-var Paper = MaterialUi.Paper;
-var MuiContextified = require('./MuiContextified.jsx');
-var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 var Radium = require('radium');
 var PropertyDetails = require('./PropertyDetails.jsx');
+var User = require('../utils/User.js');
 
 var OwnerPropertyDetails = React.createClass({
   getInitialState() {
     return {
-      photo: '',
-      street: '',
-      suburb: '',
-      postcode: '',
-    }
+      propertyDetails: undefined, // property details object
+      responseReceived: false, // received API response?
+    };
   },
 
   componentWillMount() {
@@ -29,30 +24,37 @@ var OwnerPropertyDetails = React.createClass({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
-        this.setState(response.data);
+        console.log(response.data);
+        this.setState({
+          responseReceived: true,
+          propertyDetails: response.data,
+        });
       }
     });
   },
 
-  render() {
-    var { photo, street, suburb, postcode } = this.state;
+  renderPropertyDetails() {
+    var { responseReceived, propertyDetails } = this.state;
+    var userType = User.getUser().type;
+
+    // No API response yet received. Don't render anything.
+    if (!responseReceived) return null;
+
+    // Response was empty, so no property details to display.
+    if (!propertyDetails) return <div>No property details</div>
 
     return (
+      <PropertyDetails
+        userType={userType}
+        details={propertyDetails}
+        onPropertyDetailsUpdated={this.getPropertyDetails} />
+    );
+  },
+
+  render() {
+    return (
       <div style={style.container}>
-        <PropertyDetails />
-        {/*
-        <Paper zIndex={1}>
-          <img width={300} src={photo} />
-          <div style={style.address}>
-            <div>{street} {suburb}, {postcode}</div>
-          </div>
-          <div style={style.address}>
-            <UpdatePropertyForm
-                propertyDetailsUpdated={this.getPropertyDetails}
-                propertyID={this.props.params.propertyId} />
-          </div>
-        </Paper>
-      */}
+        { this.renderPropertyDetails() }
       </div>
     );
   }
@@ -63,12 +65,6 @@ var style = {
     clear: 'both',
     display: 'flex',
   },
-  address: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '3em',
-  }
-}
+};
 
-module.exports = Radium(MuiContextified(OwnerPropertyDetails));
+module.exports = Radium(OwnerPropertyDetails);
