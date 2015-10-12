@@ -1,6 +1,5 @@
 var React = require('react');
 var moment = require('moment');
-var DayPicker = require('react-day-picker');
 var Api = require('../utils/Api.js');
 var WallflyCalendar = require('./WallflyCalendar.jsx');
 var CalendarAddEventForm = require('./CalendarAddEventForm.jsx');
@@ -36,10 +35,10 @@ var OwnerCalendar = React.createClass({
         var massagedEvents = response.data.map(event => {
           event.date = moment(event.date);
           return event;
-        })
+        });
         this.setState({ events: massagedEvents });
       }
-    })
+    });
   },
 
   render() {

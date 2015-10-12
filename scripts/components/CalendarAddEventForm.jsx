@@ -5,8 +5,6 @@ var mui = require('material-ui');
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
-var Label = require('./Label.jsx');
-var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
@@ -93,7 +91,7 @@ var CalendarAddEventForm = React.createClass({
       Time: this.state.time,
       Notes: this.state.notes,
     }, schema);
-   },
+  },
 
   render() {
     var { eventDesc, date, time, notes, validationError } = this.state;
@@ -106,7 +104,7 @@ var CalendarAddEventForm = React.createClass({
     ) : null;
 
     return (
-      <div style={style.formContainer}>
+      <div>
         <RaisedButton label="Add Event"
                       primary={true}
                       onClick={this.onButtonClick} />
@@ -151,10 +149,6 @@ var CalendarAddEventForm = React.createClass({
     );
   }
 });
-
-var style = {
-
-};
 
 // Validation schema for user profile form data.
 var schema = Joi.object().keys({

@@ -56,6 +56,6 @@ var style = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   }
-}
+};
 
 module.exports = Radium(MuiContextified(EventItem));

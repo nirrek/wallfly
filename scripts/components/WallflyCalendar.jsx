@@ -43,7 +43,7 @@ var WallflyCalendar = React.createClass({
 
 // Modifiers specify what <DayPicker> inteprets particular days as.
 var modifiers = {
-  "firstOfMonth": (day) => day.getDate() === 1,
+  'firstOfMonth': (day) => day.getDate() === 1,
 };
 
 module.exports = Radium(WallflyCalendar);

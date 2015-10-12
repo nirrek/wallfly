@@ -33,6 +33,6 @@ var style = {
     textAlign: 'left',
     color: '#000',
   }
-}
+};
 
 module.exports = Radium(EventList);
