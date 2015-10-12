@@ -1,17 +1,17 @@
 var React = require('react');
 var mui = require('material-ui');
 var Card = mui.Card;
-var CardHeader = mui.Card;
 var CardText = mui.CardText;
 var CardTitle = mui.CardTitle;
-var FlatButton = mui.FlatButton;
 var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var RtaForm = React.createClass({
   render() {
     return (
       <div style={style.page}>
+        <PageHeading>RTA Form &amp; Information</PageHeading>
         <div style={style.row}>
           <div style={style.col70}>
             <Card style={style.card}>
@@ -69,7 +69,6 @@ var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
   },
   row: {
     display: 'flex',
@@ -88,4 +87,4 @@ var style = {
   },
 };
 
-module.exports = Radium(MuiContextified(RtaForm));
+module.exports = MuiContextified(Radium(RtaForm));
