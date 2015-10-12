@@ -98,11 +98,11 @@ var NewPropertyForm = React.createClass({
   // Validate the form, returns the Joi result of the validation.
   validate() {
     return Joi.validate({
-      tenantEmail: this.state.tenantEmail,
-      ownerEmail: this.state.ownerEmail,
-      street: this.state.street,
+      streetAddress: this.state.streetAddress,
       suburb: this.state.suburb,
-      postcode: this.state.postcode,
+      postCode: this.state.postCode,
+      ownerEmail: this.state.ownerEmail,
+      tenantEmail: this.state.tenantEmail,
       dataUrl: this.state.dataUrl,
     }, schema);
   },
@@ -194,11 +194,11 @@ var NewPropertyForm = React.createClass({
 });
 
 var schema = Joi.object().keys({
-  tenantEmail: Joi.string().email().max(255).allow(['', null]),
-  ownerEmail: Joi.string().email().max(255),
-  street: Joi.string().min(1).max(500),
+  streetAddress: Joi.string().min(1).max(500),
   suburb: Joi.string().min(1).max(500),
-  postcode: Joi.string().min(4).max(4),
+  postCode: Joi.string().min(4).max(4),
+  ownerEmail: Joi.string().email().max(255),
+  tenantEmail: Joi.string().email().max(255).allow(['', null]),
   dataUrl: Joi.string(),
 });
 
