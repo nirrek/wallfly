@@ -3,9 +3,8 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var Radium = require('radium');
-var RepairRequestAddImage = require('./RepairRequestAddImage.jsx');
 
-var RepairRequestImages = React.createClass({
+var OwnerRepairRequestImages = React.createClass({
   getInitialState() {
     return {
       repairRequestImages: [], // list of repair requests
@@ -55,15 +54,9 @@ var RepairRequestImages = React.createClass({
 
     return (
       <div style={style.page}>
-        <table style={style.table}>
+        <table>
           {rows}
         </table>
-        <div>
-          <RepairRequestAddImage 
-          repairRequestImageAdded= {this.getRepairRequestImages}
-          requestId={this.props.requestId} 
-          />
-        </div>
       </div>
     );
   }
@@ -75,13 +68,10 @@ var style = {
     flexDirection: 'column',
     padding: '20px',
   },
-  table: {
-    marginBottom: '10px'
-  },
   img: {
-    maxWidth: 200,
+    maxWidth: 150,
     borderRadius: 4,
   },
 };
 
-module.exports = Radium(MuiContextified(RepairRequestImages));
+module.exports = Radium(MuiContextified(OwnerRepairRequestImages));

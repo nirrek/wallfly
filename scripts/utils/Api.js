@@ -245,7 +245,7 @@ let Api = {
     })
     .catch((response) => {
       let error = response.data.errorMessage;
-      console.log(`Error in Api.addRepairRequest(): ${error}`);
+      console.log(`Error in Api.addRepairRequestImage(): ${error}`);
       callback(new Error(error), response);
     });
   },

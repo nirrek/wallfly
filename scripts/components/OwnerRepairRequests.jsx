@@ -4,6 +4,7 @@ var moment = require('moment');
 var OwnerRepairRequestStatus = require('./OwnerRepairRequestStatus.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
+var OwnerRepairRequestImages = require('./OwnerRepairRequestImages.jsx');
 
 var OwnerRepairRequests = React.createClass({
   getInitialState() {
@@ -33,7 +34,9 @@ var OwnerRepairRequests = React.createClass({
         <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td>{request.request}</td>
-          <td><img style={styles.img} src={request.photo} /></td>
+          <td>
+            <OwnerRepairRequestImages requestId={request.id}/>
+          </td>
           <td>{request.status}</td>
           <td>
             <OwnerRepairRequestStatus
@@ -71,10 +74,6 @@ var styles = {
   container: {
     display: 'flex',
     flexFlow: 'column',
-  },
-  img: {
-    maxWidth: 150,
-    borderRadius: 4,
   },
 };
 

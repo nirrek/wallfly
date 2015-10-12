@@ -102,21 +102,12 @@ var style = {
   formContainer: {
     width: '325px',
   },
-  form: {
-    display: 'flex',
-    padding: '2em',
-    flexDirection: 'column',
-    maxWidth: '20em',
-  },
   selectorContainer: {
     width: '100%'
   },
   img: {
     maxWidth: 200,
   },
-  heading: {
-    margin: 0
-  }
 };
 
 module.exports = MuiContextified(Radium(RepairRequestAddImage));

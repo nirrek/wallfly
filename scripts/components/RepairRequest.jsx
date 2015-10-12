@@ -77,7 +77,6 @@ var RepairRequest = React.createClass({
         </table>
         <div style={style.formContainer}>
           <RepairRequestForm repairRequestAdded={this.getRepairRequests} />
-          
         </div>
       </div>
     );
@@ -91,12 +90,6 @@ var style = {
   },
   formContainer: {
     marginTop: '1em'
-  },
-  form: {
-    display: 'flex',
-    padding: '2em',
-    flexDirection: 'column',
-    maxWidth: '20em',
   },
   img: {
     maxWidth: 150,
