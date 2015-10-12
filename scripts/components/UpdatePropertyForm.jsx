@@ -1,5 +1,4 @@
 var React = require('react');
-var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
@@ -15,35 +14,12 @@ var Radium = require('radium');
 
 var UpdatePropertyForm = React.createClass({
   propTypes: {
-    propertyDetailsUpdated: React.PropTypes.func,
-    propertyID: React.PropTypes.string,
+    details: React.PropTypes.object.isRequired, // property details
+    onPropertyDetailsUpdated: React.PropTypes.func.isRequired,
   },
 
   getInitialState() {
-    return {
-      street: '', // Property street address
-      suburb: '', // Property suburb
-      postcode: '', // Property post code
-      ownerEmail: '', // User entered owner email
-      tenantEmail: '', // User entered tenant email
-      photo: '', // base64 encoding of the user selected image.
-      fileSizeError: '', // file size error message
-      authFailure: '', // server auth failure message
-      validationError: false, // clientside validation failure
-    }
-  },
-
-  // Fetches the details for the property
-  getPropertyDetails() {
-    var propertyId = parseInt(this.props.propertyID);
-
-    Api.getPropertyDetails({
-      propertyId,
-      callback: (err, response) => {
-        if (err) return console.log(err);
-        this.setState(response.data);
-      }
-    });
+    return this.props.details;
   },
 
   onButtonClick() {
@@ -53,9 +29,6 @@ var UpdatePropertyForm = React.createClass({
       authFailure: '',
       fileSizeError: ''
     });
-
-    // Request values to fill the form
-    this.getPropertyDetails();
 
     this.refs.dialog.show();
   },
@@ -72,7 +45,7 @@ var UpdatePropertyForm = React.createClass({
    * Form submission event handler. Sends a request to the server to add the
    * repair request, and updates the repair requests if successful.
    */
-  onSubmit(event) {
+  onSubmit() {
     // Clear prior error states.
     this.setState({
       validationError: false,
@@ -86,12 +59,9 @@ var UpdatePropertyForm = React.createClass({
       return;
     }
 
-    // API call to update property details
-    var propertyId = parseInt(this.props.propertyID);
-
     Api.updatePropertyDetails({
       data: {
-        propertyId: propertyId,
+        propertyId: this.state.id,
         tenantEmail: this.state.tenantEmail,
         ownerEmail: this.state.ownerEmail,
         street: this.state.street,
@@ -107,11 +77,7 @@ var UpdatePropertyForm = React.createClass({
           this.setState({ authFailure: msg });
           return;
         }
-
-        // Request new values for the form
-        this.getPropertyDetails();
-
-        this.props.propertyDetailsUpdated();
+        this.props.onPropertyDetailsUpdated();
         this.refs.dialog.dismiss();
       }
     });
@@ -136,8 +102,8 @@ var UpdatePropertyForm = React.createClass({
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
-    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
-    this.setState({ fileSizeError: error });
+    var errorMessage = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: errorMessage });
   },
 
   render() {
@@ -145,7 +111,7 @@ var UpdatePropertyForm = React.createClass({
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
-    var errorMessage;
+
     var standardActions = [
       { text: 'Cancel' },
       { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
@@ -156,24 +122,23 @@ var UpdatePropertyForm = React.createClass({
     ) : null;
 
     // Form validation error
-    var validationError = (validationError) ? (
+    var validationErrorMessage = (validationError) ? (
       <JoiError error={validationError} fillBackground={true} />
     ) : null;
 
     return (
       <div>
-        <RaisedButton label="Update Details"
+        <RaisedButton label="Edit Details"
                       primary={true}
                       onClick={this.onButtonClick} />
         <Dialog
-          title="Update Details"
+          title="Edit Details"
           actions={standardActions}
           actionFocus="submit"
           modal={this.state.modal}
           ref="dialog">
-          <div style={style.error}> { errorMessage } </div>
-          <div style={style.error}> {validationError} </div>
-          <div style={style.error}> {authFailMessage} </div>
+          {validationErrorMessage}
+          {authFailMessage}
           <TextField
             value={street}
             multiLine={true}
@@ -205,7 +170,7 @@ var UpdatePropertyForm = React.createClass({
             onChange={this.onChange.bind(this, 'tenantEmail')}
             floatingLabelText="Tenant Email (Leaving blank will remove current tenant)"
             fullWidth />
-          <div style={style.selectorContainer}>
+          <div>
             <Label>Image (Not Required)</Label>
             <img width={300} src={photo} />
             {sizeError}
@@ -229,27 +194,4 @@ var schema = Joi.object().keys({
   photo: Joi.string(),
 });
 
-var style = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-  },
-  form: {
-    display: 'flex',
-    padding: '2em',
-    flexDirection: 'column',
-    maxWidth: '20em',
-  },
-  inputContainer: {
-    margin: '40px 0'
-  },
-  img: {
-    maxWidth: 200,
-  },
-  heading: {
-    margin: 0
-  }
-};
-
-module.exports = Radium(MuiContextified(UpdatePropertyForm));
+module.exports = MuiContextified(Radium(UpdatePropertyForm));
