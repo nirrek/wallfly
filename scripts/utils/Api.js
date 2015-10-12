@@ -63,6 +63,7 @@ let Api = {
 
   // Fetches a user model for the current user
   getUser({ callback = () => {} } = {}) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}`, {
       withCredentials: true
     })
@@ -79,6 +80,7 @@ let Api = {
 
   // Update the user model
   updateUser({ data={}, callback = () => {} } = {}) {
+    userId = User.getUserId();
     axios.put(`${host}/users/${userId}`, data, {
       withCredentials: true
     })
@@ -94,6 +96,7 @@ let Api = {
 
   // Fetch calendar events for the current user.
   getEvents({ callback = () => {} } = {}) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/events`, {
       withCredentials: true
     })
@@ -110,6 +113,7 @@ let Api = {
 
   // Fetch messages for the current user.
   getMessages({ callback = () => {} } = {}) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/messages`, {
         withCredentials: true, // send cookies for cross-site requests
     })
@@ -126,6 +130,7 @@ let Api = {
 
   // Post new messages from the current user
   postMessages({ data={}, callback=()=>{} }) {
+    userId = User.getUserId();
     data.sender = userId;
     axios.post(`${host}/users/${userId}/messages`, data, {
       withCredentials: true
@@ -142,6 +147,7 @@ let Api = {
 
   // Fetch property inspection details
   getInspections({ callback=()=>{} }) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/inspections`, {
         withCredentials: true, // send cookies for cross-site requests
       })
@@ -157,6 +163,7 @@ let Api = {
 
   // Fetch list of past rent payments
   getPayments({ callback=()=>{} }) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/payments`, {
         withCredentials: true, // send cookies for cross-site requests
       })
@@ -173,6 +180,7 @@ let Api = {
 
   // Add a new payment
   addPayment({ data={}, callback=()=>{} }) {
+    userId = User.getUserId();
     data.sender = userId;
     axios.post(`${host}/users/${userId}/payments`, data, {
       withCredentials: true
@@ -191,6 +199,7 @@ let Api = {
 
   // Fetch list of repair requests
   getRepairRequests({ callback=()=>{} }) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/repairs`, {
         withCredentials: true, // send cookies for cross-site requests
       })
@@ -206,6 +215,7 @@ let Api = {
 
   // Add a new repair request
   addRepairRequest({ data={}, callback=()=>{} }) {
+    userId = User.getUserId();
     data.sender = userId;
     axios.post(`${host}/users/${userId}/repairs`, data, {
       withCredentials: true
@@ -253,6 +263,7 @@ let Api = {
 
   // Fetch information for a given tenants property
   getUserPropertyDetails({ callback=()=>{} }) {
+    userId = User.getUserId();
     axios.get(`${host}/users/${userId}/property`, {
         withCredentials: true, // send cookies for cross-site requests
       })
