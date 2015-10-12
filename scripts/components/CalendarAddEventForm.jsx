@@ -7,12 +7,14 @@ var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
 
 var CalendarAddEventForm = React.createClass({
   propTypes: {
     eventAdded: React.PropTypes.func,
-    propertyId: React.PropTypes.number,
+    propertyId: React.PropTypes.string,
   },
 
   getInitialState() {
@@ -20,7 +22,9 @@ var CalendarAddEventForm = React.createClass({
       eventDesc: '', // User entered description
       date: '',
       time: '',
-    }
+      notes: '',
+      validationError: null, // clientside validation error object
+    };
   },
 
   onButtonClick() {
@@ -43,12 +47,23 @@ var CalendarAddEventForm = React.createClass({
 
     // API call to add repair request
     var propertyId = this.props.propertyId;
-    console.log(propertyId);
+
+    this.setState({
+      validationError: undefined,
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
+
     Api.addPropertyCalendarEvents({
       data: {
         eventDesc: this.state.eventDesc,
         date: this.state.date,
         time: this.state.time,
+        notes: this.state.notes,
         propertyId: propertyId,
       },
       callback: (err, response) => {
@@ -61,6 +76,7 @@ var CalendarAddEventForm = React.createClass({
           eventDesc: '',
           date: '',
           time: '',
+          notes: '',
         });
 
         this.props.eventAdded();
@@ -69,13 +85,25 @@ var CalendarAddEventForm = React.createClass({
     });
   },
 
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      'Event Description': this.state.eventDesc,
+      Date: this.state.date,
+      Time: this.state.time,
+      Notes: this.state.notes,
+    }, schema);
+   },
+
   render() {
-    var { eventDesc, date, time } = this.state;
-    var errorMessage;
+    var { eventDesc, date, time, notes, validationError } = this.state;
     var standardActions = [
       { text: 'Cancel' },
       { text: 'Add Event', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
+    var validationErrorMsg = validationError ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
 
     return (
       <div style={style.formContainer}>
@@ -86,17 +114,18 @@ var CalendarAddEventForm = React.createClass({
           title="Add an Event"
           actions={standardActions}
           actionFocus="submit"
-          modal={this.state.modal}
+          modal="true"
           ref="dialog">
-          <div style={style.error}> { errorMessage } </div>
+
+          {validationErrorMsg}
+
           <TextField
             value={eventDesc}
-            multiLine={true}
             name="Event Description"
             onChange={this.onChange.bind(this, 'eventDesc')}
             floatingLabelText="Event Description"
-            hintText="Describe what will be happening at this event"
-            fullWidth />
+            hintText="Describe what will be happening" />
+          <br />
           <TextField
             value={date}
             name="Date"
@@ -109,6 +138,14 @@ var CalendarAddEventForm = React.createClass({
             onChange={this.onChange.bind(this, 'time')}
             floatingLabelText="Time"
             hintText="Enter the time. (h:mm ampm)" />
+          <TextField
+            value={notes}
+            multiLine={true}
+            name="Notes"
+            onChange={this.onChange.bind(this, 'notes')}
+            floatingLabelText="Notes"
+            hintText="Add more detailed notes here"
+            fullWidth />
         </Dialog>
       </div>
     );
@@ -118,5 +155,13 @@ var CalendarAddEventForm = React.createClass({
 var style = {
 
 };
+
+// Validation schema for user profile form data.
+var schema = Joi.object().keys({
+  'Event Description': Joi.string().required(),
+  Date: Joi.date().format('DD/MM/YYYY'),
+  Time: Joi.date().format('h:mm a'),
+  Notes: Joi.optional(),
+});
 
 module.exports = Radium(MuiContextified(CalendarAddEventForm));

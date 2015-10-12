@@ -1,11 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 var DayPicker = require('react-day-picker');
-var MuiContextified = require('./MuiContextified.jsx');
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var EventList = require('./EventList.jsx');
 var Radium = require('radium');
 
 require('../../styles/DayPicker.scss');
@@ -21,23 +17,12 @@ var WallflyCalendar = React.createClass({
   },
 
   renderDay(day) {
-    var events = this.getEventsForDay(day);
-    var eventEntries = events.map(event => {
-      return (
-        <ListItem
-          primaryText={event.event}
-          secondaryText={event.date.format('h:mm a')}
-          secondaryTextLines={1}
-          />
-      );
-    });
+    var dayEvents = this.getEventsForDay(day);
 
     return (
       <div className="day" >
         { day.getDate() }
-        <List>
-          { eventEntries }
-        </List>
+        <EventList events={dayEvents} />
       </div>
     );
   },
@@ -61,8 +46,4 @@ var modifiers = {
   "firstOfMonth": (day) => day.getDate() === 1,
 };
 
-var style = {
-
-};
-
-module.exports = Radium(MuiContextified(WallflyCalendar));
+module.exports = Radium(WallflyCalendar);

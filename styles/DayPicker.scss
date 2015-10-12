@@ -17,6 +17,7 @@
 
 .DayPicker-Month {
   display: table;
+  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
   user-select: none;
