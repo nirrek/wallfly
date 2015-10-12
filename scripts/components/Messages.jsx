@@ -16,7 +16,6 @@ var Messages = React.createClass({
     Api.getPropertyContacts({
       propertyId: Property.getPropertyId(),
       callback: (err, res) => {
-        console.log(res);
         this.setState({
           sender: res.data.tenantId,
           receiver: res.data.agentId,

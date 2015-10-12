@@ -1,53 +1,43 @@
 var React = require('react');
-var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
 var MuiContextified = require('./MuiContextified.jsx');
-var Property = require('../utils/Property.js');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var FontIcon = MaterialUi.FontIcon;
-var User = require('../utils/User.js');
+var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 
 var PropertyDetails = React.createClass({
-  getInitialState() {
-    return {
-      ownerFN: '',
-      ownerLN: '',
-      ownerPhone: '',
-      ownerEmail: '',
-      agentFN: '',
-      agentLN: '',
-      agentPhone: '',
-      agentEmail: '',
-      tenantFN: '',
-      tenantLN: '',
-      tenantPhone: '',
-      tenantEmail: '',
-      userType: '',
-    };
+  propTypes: {
+    userType: React.PropTypes.string.isRequired,
+    onPropertyDetailsUpdated: React.PropTypes.func, // callback when details updated
+    details: React.PropTypes.shape({
+      id: React.PropTypes.number,
+      street: React.PropTypes.string,
+      suburb: React.PropTypes.string,
+      postcode: React.PropTypes.string,
+      photo: React.PropTypes.string,
+      ownerId: React.PropTypes.number,
+      ownerFN: React.PropTypes.string,
+      ownerLN: React.PropTypes.string,
+      ownerPhone: React.PropTypes.string,
+      ownerEmail: React.PropTypes.string,
+      agentFN: React.PropTypes.string,
+      agentLN: React.PropTypes.string,
+      agentPhone: React.PropTypes.string,
+      agentEmail: React.PropTypes.string,
+      tenantFN: React.PropTypes.string,
+      tenantLN: React.PropTypes.string,
+      tenantPhone: React.PropTypes.string,
+      tenantEmail: React.PropTypes.string,
+    }),
   },
 
-  componentWillMount() {
-    this.setState({ userType: User.getUser().type });
+  renderDetails(details) {
+    if (!details[1].value) return null; // no details
 
-    if (!Property.getProperty()) {
-      Api.getUserPropertyDetails({
-        callback: (err, response) => {
-          if (err) return console.log(err);
-          this.setState(response.data);
-          Property.setProperty(response.data);
-        }
-      });
-      return;
-    }
-
-    this.setState(Property.getProperty());
-  },
-
-  generateDetails(details) {
-    return details.map(row => {
+    return details.map((row, idx) => {
       return (
-        <div style={style.details}>
+        <div key={idx} style={style.details}>
           <FontIcon style={style.icon} className="material-icons">{row.icon}</FontIcon>
           <span style={style.detail}>{row.value}</span>
         </div>
@@ -56,26 +46,33 @@ var PropertyDetails = React.createClass({
   },
 
   render() {
+    var { details } = this.props;
 
     var ownerDetailRows = [
-      { icon: 'person', value: `${this.state.ownerFN} ${this.state.ownerLN}` },
-      { icon: 'phone', value: this.state.ownerPhone },
-      { icon: 'email', value: this.state.ownerEmail },
+      { icon: 'person', value: `${details.ownerFN} ${details.ownerLN}` },
+      { icon: 'phone', value: details.ownerPhone },
+      { icon: 'email', value: details.ownerEmail },
     ];
+    var ownerDetails = this.renderDetails(ownerDetailRows);
 
     var agentDetailRows = [
-      { icon: 'person', value: `${this.state.agentFN} ${this.state.agentLN}` },
-      { icon: 'phone', value: this.state.agentPhone },
-      { icon: 'email', value: this.state.agentEmail },
+      { icon: 'person', value: `${details.agentFN} ${details.agentLN}` },
+      { icon: 'phone', value: details.agentPhone },
+      { icon: 'email', value: details.agentEmail },
     ];
+    var agentDetails = this.renderDetails(agentDetailRows);
+
 
     var tenantDetailRows = [
-      { icon: 'person', value: `${this.state.tenantFN} ${this.state.tenantLN}` },
-      { icon: 'phone', value: this.state.tenantPhone },
-      { icon: 'email', value: this.state.tenantEmail },
+      { icon: 'person', value: `${details.tenantFN} ${details.tenantLN}` },
+      { icon: 'phone', value: details.tenantPhone },
+      { icon: 'email', value: details.tenantEmail },
     ];
+    var tenantDetails = this.renderDetails(tenantDetailRows) || <div>No current tenant</div>;
 
-    var { photo, street, suburb, userType } = this.state;
+    var { photo, street, suburb } = details;
+    var { userType } = this.props;
+
     var photoBg = photo ? {
       backgroundImage: `url(${photo})`,
       backgroundSize: 'cover',
@@ -84,8 +81,7 @@ var PropertyDetails = React.createClass({
     return (
       <div style={style.page}>
         <PageHeading>Property Details</PageHeading>
-
-        <div style={style.pocket}>
+        <div key="propertyDetails" style={style.pocket}>
           <div style={[
               style.img,
               photoBg
@@ -99,7 +95,7 @@ var PropertyDetails = React.createClass({
             <div style={style.keyValuePair}>
               <div style={style.key}>Managing Agent</div>
               <div style={style.value}>
-                { this.generateDetails(agentDetailRows) }
+                { agentDetails }
               </div>
             </div>
           </div>
@@ -109,7 +105,7 @@ var PropertyDetails = React.createClass({
               <div style={style.keyValuePair}>
                 <div style={style.key}>Current Tenant</div>
                 <div style={style.value}>
-                  { this.generateDetails(tenantDetailRows) }
+                  { tenantDetails }
                 </div>
               </div>
             </div>
@@ -120,7 +116,19 @@ var PropertyDetails = React.createClass({
               <div style={style.keyValuePair}>
                 <div style={style.key}>Owner</div>
                 <div style={style.value}>
-                  { this.generateDetails(ownerDetailRows) }
+                  { ownerDetails }
+                </div>
+              </div>
+            </div>
+          ) : null }
+
+          { userType === 'agent' && details ? (
+            <div style={[style.section, style.noPadding]}>
+              <div style={style.keyValuePair}>
+                <div style={style.updateButtonContainer}>
+                  <UpdatePropertyForm
+                    details={details}
+                    onPropertyDetailsUpdated={this.props.onPropertyDetailsUpdated} />
                 </div>
               </div>
             </div>
@@ -189,6 +197,11 @@ var style = {
   },
   icon: {
     color: '#555',
+  },
+  updateButtonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
   }
 };
 

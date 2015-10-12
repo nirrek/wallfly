@@ -8,7 +8,7 @@ var prefix = '/agent';
 var navItemData = [
   { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
   { text: 'New Property', path: `${prefix}/newProperty`, icon: 'add_box' },
-  { text: 'Agent Chat', path: `${prefix}/messages`, icon: 'message' },
+  { text: 'Calendar (Global)', path: `${prefix}/calendar`, icon: 'event' },
 ];
 
 var AgentNav = React.createClass({
@@ -30,6 +30,6 @@ var styles = {
     backgroundColor: '#2ECC71',
     height: 50,
   }
-}
+};
 
 module.exports = Radium(MuiContextified(AgentNav));

@@ -17,6 +17,10 @@ var Property = {
   setProperty(propertyModel) {
     property = propertyModel;
   },
+
+  deleteProperty() {
+    property = undefined;
+  }
 };
 
 module.exports = Property;
