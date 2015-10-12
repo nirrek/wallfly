@@ -7,6 +7,7 @@ var Paper = MaterialUi.Paper;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
+var Notice = require('./Notice.jsx');
 
 /**
  * PropertyList component.
@@ -17,19 +18,29 @@ var PropertyList = React.createClass({
   getInitialState() {
     return {
       properties: [],
+      responseReceived: false, // received API response?
     };
   },
 
   componentWillMount() {
     Api.getPropertyList({
       callback: (err, res) => {
-        if (err) return;
-        this.setState({ properties: res.data });
+        if (err) {
+          console.log(err);
+          return;
+        }
 
         // Set the managing agent so we can consume it in Chat.
         if (this.getUserType() === 'owner') {
-          User.set('managingAgent', res.data[0].agentId);
+          if (res.data.length > 0) {
+            User.set('managingAgent', res.data[0].agentId);
+          }
         }
+
+        this.setState({
+          responseReceived: true,
+          properties: res.data,
+        });
       }
     });
   },
@@ -58,10 +69,14 @@ var PropertyList = React.createClass({
   },
 
   render() {
+    // Don't render until we have data cached from the server.
+    if (!this.state.responseReceived) return null;
+
+    var user = User.getUser();
     var { properties } = this.state;
 
     var propertyCards = properties.map((property, idx) => {
-      var { id, photo, street, suburb, postcode } = property;
+      var { id, photo, street, suburb } = property;
 
       return (
         <Paper key={street + idx} zIndex={1} style={style.card}>
@@ -78,8 +93,19 @@ var PropertyList = React.createClass({
       );
     });
 
+    // Check if an owner does not have an agent yet.
+    var ownerNotice;
+    if (user && user.type === 'owner' && !user.managingAgent) {
+      ownerNotice = (
+        <Notice>Your account doesn't currently have a managing agent. Please get in touch with your agent and ask them to assign you as the owner of any of your properties by using your registered email address: <b>{user && user.email}</b>. Once they have done this, your properties will show up on this page, and your agent will be correctly listed as your managing agent.</Notice>
+      );
+    }
+
+
+
     return (
       <div style={style.cardContainer}>
+        {ownerNotice}
         {propertyCards}
       </div>
     );
@@ -97,8 +123,6 @@ var style = {
     margin: '1em',
     display: 'flex',
     flexFlow: 'column',
-
-    // paddingBottom: '1em',
   },
   content: {
     display: 'flex',
@@ -114,6 +138,6 @@ var style = {
   img: {
     width: 300,
   },
-}
+};
 
 module.exports = Radium(MuiContextified(PropertyList));

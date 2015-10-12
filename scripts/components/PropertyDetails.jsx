@@ -1,96 +1,139 @@
 var React = require('react');
-var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
-var LinearProgress = MaterialUi.LinearProgress;
-var Card = MaterialUi.Card;
-var CardMedia = MaterialUi.CardMedia;
-var CardTitle = MaterialUi.CardTitle;
-var Paper = MaterialUi.Paper;
-var Avatar = MaterialUi.Avatar;
 var MuiContextified = require('./MuiContextified.jsx');
-var Property = require('../utils/Property.js');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
+var FontIcon = MaterialUi.FontIcon;
+var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 
 var PropertyDetails = React.createClass({
-  getInitialState() {
-    return {
-      ownerFN: '',
-      ownerLN: '',
-      ownerPhone: '',
-      ownerEmail: '',
-      agentFN: '',
-      agentLN: '',
-      agentPhone: '',
-      agentEmail: '',
-      tenantFN: '',
-      tenantLN: '',
-      tenantPhone: '',
-      tenantEmail: '',
-    };
+  propTypes: {
+    userType: React.PropTypes.string.isRequired,
+    onPropertyDetailsUpdated: React.PropTypes.func, // callback when details updated
+    details: React.PropTypes.shape({
+      id: React.PropTypes.number,
+      street: React.PropTypes.string,
+      suburb: React.PropTypes.string,
+      postcode: React.PropTypes.string,
+      photo: React.PropTypes.string,
+      ownerId: React.PropTypes.number,
+      ownerFN: React.PropTypes.string,
+      ownerLN: React.PropTypes.string,
+      ownerPhone: React.PropTypes.string,
+      ownerEmail: React.PropTypes.string,
+      agentFN: React.PropTypes.string,
+      agentLN: React.PropTypes.string,
+      agentPhone: React.PropTypes.string,
+      agentEmail: React.PropTypes.string,
+      tenantFN: React.PropTypes.string,
+      tenantLN: React.PropTypes.string,
+      tenantPhone: React.PropTypes.string,
+      tenantEmail: React.PropTypes.string,
+    }),
   },
 
-  componentWillMount() {
-    if (!Property.getProperty()) {
-      Api.getUserPropertyDetails({
-        callback: (err, response) => {
-          if (err) return console.log(err);
-          this.setState(response.data);
-          Property.setProperty(response.data);
-        }
-      });
-      return;
-    }
+  renderDetails(details) {
+    if (!details[1].value) return null; // no details
 
-    this.setState(Property.getProperty());
+    return details.map((row, idx) => {
+      return (
+        <div key={idx} style={style.details}>
+          <FontIcon style={style.icon} className="material-icons">{row.icon}</FontIcon>
+          <span style={style.detail}>{row.value}</span>
+        </div>
+      );
+    });
   },
 
   render() {
+    var { details } = this.props;
 
     var ownerDetailRows = [
-      { header: 'Name', value: `${this.state.ownerFN} ${this.state.ownerLN}` },
-      { header: 'Phone', value: this.state.ownerPhone },
-      { header: 'Email', value: this.state.ownerEmail },
+      { icon: 'person', value: `${details.ownerFN} ${details.ownerLN}` },
+      { icon: 'phone', value: details.ownerPhone },
+      { icon: 'email', value: details.ownerEmail },
     ];
+    var ownerDetails = this.renderDetails(ownerDetailRows);
 
     var agentDetailRows = [
-      { header: 'Name', value: `${this.state.agentFN} ${this.state.agentLN}` },
-      { header: 'Phone', value: this.state.agentPhone },
-      { header: 'Email', value: this.state.agentEmail },
+      { icon: 'person', value: `${details.agentFN} ${details.agentLN}` },
+      { icon: 'phone', value: details.agentPhone },
+      { icon: 'email', value: details.agentEmail },
     ];
+    var agentDetails = this.renderDetails(agentDetailRows);
+
 
     var tenantDetailRows = [
-      { header: 'Name', value: `${this.state.tenantFN} ${this.state.tenantLN}` },
-      { header: 'Phone', value: this.state.tenantPhone },
-      { header: 'Email', value: this.state.tenantEmail },
+      { icon: 'person', value: `${details.tenantFN} ${details.tenantLN}` },
+      { icon: 'phone', value: details.tenantPhone },
+      { icon: 'email', value: details.tenantEmail },
     ];
+    var tenantDetails = this.renderDetails(tenantDetailRows) || <div>No current tenant</div>;
+
+    var { photo, street, suburb } = details;
+    var { userType } = this.props;
+
+    var photoBg = photo ? {
+      backgroundImage: `url(${photo})`,
+      backgroundSize: 'cover',
+    } : null;
 
     return (
       <div style={style.page}>
-        <Card style={{maxWidth: 400}}>
-          <CardMedia overlay={<CardTitle title={this.state.street} subtitle={this.state.suburb}/>}>
-            <img width="400" src={this.state.photo} />
-          </CardMedia>
-        </Card>
+        <PageHeading>Property Details</PageHeading>
+        <div key="propertyDetails" style={style.pocket}>
+          <div style={[
+              style.img,
+              photoBg
+            ]}></div>
+          <div style={style.section}>
+            <div style={style.street}>{street}</div>
+            <div style={style.suburb}>{suburb}</div>
+          </div>
 
-        <div>
-          <h3>Owner</h3>
-          <table>
-            { ownerDetailRows.map(row => <tr><td>{row.header}</td><td>{row.value}</td></tr>) }
-          </table>
-        </div>
+          <div style={[style.section, style.noPadding]}>
+            <div style={style.keyValuePair}>
+              <div style={style.key}>Managing Agent</div>
+              <div style={style.value}>
+                { agentDetails }
+              </div>
+            </div>
+          </div>
 
-        <div>
-          <h3>Agent</h3>
-          <table>
-            { agentDetailRows.map(row => <tr><td>{row.header}</td><td>{row.value}</td></tr>) }
-          </table>
-        </div>
+          { userType !== 'owner' ? (
+            <div style={[style.section, style.noPadding]}>
+              <div style={style.keyValuePair}>
+                <div style={style.key}>Current Tenant</div>
+                <div style={style.value}>
+                  { tenantDetails }
+                </div>
+              </div>
+            </div>
+          ) : null }
 
-        <div>
-          <h3>Tenant</h3>
-          <table>
-            { tenantDetailRows.map(row => <tr><td>{row.header}</td><td>{row.value}</td></tr>) }
-          </table>
+          { userType !== 'tenant' ? (
+            <div style={[style.section, style.noPadding]}>
+              <div style={style.keyValuePair}>
+                <div style={style.key}>Owner</div>
+                <div style={style.value}>
+                  { ownerDetails }
+                </div>
+              </div>
+            </div>
+          ) : null }
+
+          { userType === 'agent' && details ? (
+            <div style={[style.section, style.noPadding]}>
+              <div style={style.keyValuePair}>
+                <div style={style.updateButtonContainer}>
+                  <UpdatePropertyForm
+                    details={details}
+                    onPropertyDetailsUpdated={this.props.onPropertyDetailsUpdated} />
+                </div>
+              </div>
+            </div>
+          ) : null }
+
         </div>
       </div>
     );
@@ -101,8 +144,65 @@ var style = {
   page: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '20px',
+  },
+  pocket: {
+    width: 400,
+    borderRadius: 4,
+    boxShadow: '0 1px 3px rgba(0,0,0,.3)',
+    marginBottom: '5em',
+  },
+  street: {
+    fontSize: 25,
+  },
+  suburb: {
+    marginTop: -5,
+    color: '#888'
+  },
+  img: {
+    borderRadius: '4px 4px 0 0',
+    boxShadow: 'inset 0 0 50px rgba(0,0,0,.7), -1px 0 1px rgba(0,0,0,.3), 1px 0 1px rgba(0,0,0,.3), inset 0 0 1px rgba(0,0,0, .9)',
+    width: '100%',
+    height: 250,
+  },
+  section: {
+    padding: '1em',
+  },
+  keyValuePair: {
+    borderTop: '2px solid #ddd',
+    padding: '1em 0',
+    display: 'flex',
+  },
+  key: {
+    color: '#888',
+    flex: '1 0 none',
+    width: '50%',
+    fontSize: 14,
+    paddingTop: 3,
+  },
+  value: {
+    flex: '1 0 none'
+  },
+  noPadding: {
+    padding: '0 1em 1em 1em',
+  },
+  details: {
+    display: 'flex',
+    alignItems: 'center',
+    minHeight: '2em',
+    fontSize: 14,
+    color: '#333',
+  },
+  detail: {
+    paddingLeft: '1em',
+  },
+  icon: {
+    color: '#555',
+  },
+  updateButtonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
   }
 };
 
-module.exports = Radium(MuiContextified(PropertyDetails));
+module.exports = MuiContextified(Radium(PropertyDetails));

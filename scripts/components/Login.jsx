@@ -7,7 +7,6 @@ var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
 var Paper = mui.Paper;
 var Snackbar = mui.Snackbar;
-var cookie = require('react-cookie');
 var User = require('../utils/User.js');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
@@ -15,6 +14,7 @@ var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Radium = require('radium');
+var Property = require('../utils/Property.js');
 
 /**
  * Login View
@@ -29,7 +29,7 @@ var Login = React.createClass({
       password: '', // user entered password
       authFailure: '', // server auth failure message
       validationError: false, // clientside validation failure
-    }
+    };
   },
 
   componentDidMount() {
@@ -74,6 +74,10 @@ var Login = React.createClass({
           return;
         }
 
+        // Clear any cached user/property models
+        User.deleteUser();
+        Property.deleteProperty();
+
         User.setUser(response.data);
 
         // Transition to the given userType's dashboard.
@@ -106,6 +110,7 @@ var Login = React.createClass({
     var { username, password, authFailure, validationError } = this.state;
     if (this.props.location.query) {
       var accountCreated = this.props.location.query.accountCreated;
+      var testAccounts = this.props.location.query.testAccounts;
     }
     var authFailMessage = authFailure ? (
       <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
@@ -147,6 +152,24 @@ var Login = React.createClass({
         <div style={styles.registerContainer}>
           Don't have an account? <Link to="createAccount">Register Now</Link>
         </div>
+
+        { testAccounts ? (
+          <div style={styles.testAccounts}>
+            <h3 style={styles.testAccountsTitle}>The following test accounts can be used.</h3>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th>Username</th><th>Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>tenant</td><td>tenant</td></tr>
+                <tr><td>owner</td><td>owner</td></tr>
+                <tr><td>agent</td><td>agent</td></tr>
+              </tbody>
+            </table>
+          </div>
+        ): null }
       </div>
     );
   }
@@ -165,7 +188,7 @@ var styles = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
-    flexGrow: 1,
+    flex: '1 0 auto',
   },
   loginContainer: {
     padding: '2em',
@@ -187,7 +210,14 @@ var styles = {
   },
   registerContainer: {
     padding: '1em'
-  }
+  },
+  testAccounts: {
+    marginTop: '2em',
+    textAlign: 'center',
+  },
+  table: {
+    margin: '0 auto',
+  },
 };
 
-module.exports = Radium(MuiContextified(Login));
+module.exports = MuiContextified(Radium(Login));

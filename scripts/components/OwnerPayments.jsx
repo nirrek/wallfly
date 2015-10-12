@@ -1,22 +1,14 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
-var MaterialUi = require('material-ui');
-var Table = MaterialUi.Table;
-var TableHeader = MaterialUi.TableHeader;
-var TableBody = MaterialUi.TableBody;
-var TableFooter = MaterialUi.TableFooter;
-var TableRow = MaterialUi.TableRow;
-var TableHeaderColumn = MaterialUi.TableHeaderColumn;
-var TableRowColumn = MaterialUi.TableRowColumn;
-var MuiContextified = require('./MuiContextified.jsx');
 var moment = require('moment');
 var Radium = require('radium');
+var PageHeading = require('./PageHeading.jsx');
 
 var OwnerPayments = React.createClass({
   getInitialState() {
     return {
       payments: [], // list of recent payments
-    }
+    };
   },
 
   componentWillMount() {
@@ -34,34 +26,27 @@ var OwnerPayments = React.createClass({
   render() {
     var rows = this.state.payments.map(payment => {
       return (
-        <TableRow key={payment.id}>
-          <TableRowColumn style={style.dateCol}>{moment(payment.date).format('Do MMM YYYY')}</TableRowColumn>
-          <TableRowColumn>{payment.propertyId}</TableRowColumn>
-          <TableRowColumn>{payment.amount}</TableRowColumn>
-        </TableRow>
+        <tr key={payment.id}>
+          <td>{moment(payment.date).format('Do MMM YYYY')}</td>
+          <td>{payment.propertyId}</td>
+          <td>${payment.amount}</td>
+        </tr>
       );
     });
 
     return (
       <div style={style.container}>
-
-        <Table>
-          <TableHeader
-            adjustForCheckbox={false}
-            displaySelectAll={false}>
-            <TableRow>
-              <TableHeaderColumn style={{...style.header, ...style.dateCol}}>Date</TableHeaderColumn>
-              <TableHeaderColumn style={style.header}>Property</TableHeaderColumn>
-              <TableHeaderColumn style={style.header}>Amount</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            stripedRows={true}>
+        <PageHeading>Payments</PageHeading>
+        <table>
+          <thead>
+            <th>Date</th>
+            <th>Property</th>
+            <th>Amount</th>
+          </thead>
+          <tbody>
             {rows}
-          </TableBody>
-        </Table>
-
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -70,15 +55,13 @@ var OwnerPayments = React.createClass({
 var style = {
   container: {
     display: 'flex',
+    flexFlow: 'column',
   },
   header: {
     fontSize: 18,
     fontWeight: 800,
     textAlign: 'left',
   },
-  dateCol: {
-    width: 125
-  }
-}
+};
 
-module.exports = Radium(MuiContextified(OwnerPayments));
+module.exports = Radium(OwnerPayments);

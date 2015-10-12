@@ -7,10 +7,10 @@ var Dialog = materialUi.Dialog;
 var IconMenu = materialUi.IconMenu;
 var MenuItem = require('material-ui/lib/menus/menu-item');
 var Api = require('../utils/Api.js');
-var User = require('../utils/User.js');
 var Navigation = require('react-router').Navigation;
 var UserProfile = require('./UserProfile.js');
 var User = require('../utils/User.js');
+var Property = require('../utils/Property.js');
 var Radium = require('radium');
 
 /**
@@ -43,13 +43,12 @@ var Header = React.createClass({
     Api.logout({
       callback: (err, res) => {
         if (err) {
-          // TODO add a UI notification
-          console.log('Error logging out');
           return;
         }
 
         // Remove local user model and redirect.
         User.deleteUser();
+        Property.deleteProperty();
         this.transitionTo('/');
       }
     });
@@ -101,11 +100,11 @@ var Header = React.createClass({
 
 var styles = {
   header: {
-    // backgroundImage: 'linear-gradient(45deg, #5FCF93, #2ECC71)',
     backgroundColor: '#2ECC71',
     height: 50,
     display: 'flex',
     alignItems: 'center',
+    flexShrink: 0,
   },
   logo: {
     flex: 1, // expand to fill available space
