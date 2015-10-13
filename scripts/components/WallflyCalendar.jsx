@@ -1,6 +1,8 @@
 var React = require('react');
 var moment = require('moment');
 var DayPicker = require('react-day-picker');
+var EventList = require('./EventList.jsx');
+var Radium = require('radium');
 
 require('../../styles/DayPicker.scss');
 
@@ -15,19 +17,12 @@ var WallflyCalendar = React.createClass({
   },
 
   renderDay(day) {
-    var events = this.getEventsForDay(day);
-    var eventsEntries = events.map(event => {
-      return (
-        <div key={day.getTime()}>
-          {event.event}
-        </div>
-      );
-    });
+    var dayEvents = this.getEventsForDay(day);
 
     return (
-      <div className="day">
+      <div className="day" >
         { day.getDate() }
-        { eventsEntries }
+        <EventList events={dayEvents} />
       </div>
     );
   },
@@ -48,7 +43,7 @@ var WallflyCalendar = React.createClass({
 
 // Modifiers specify what <DayPicker> inteprets particular days as.
 var modifiers = {
-  "firstOfMonth": (day) => day.getDate() === 1,
-}
+  'firstOfMonth': (day) => day.getDate() === 1,
+};
 
-module.exports = WallflyCalendar;
+module.exports = Radium(WallflyCalendar);

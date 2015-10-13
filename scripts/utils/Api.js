@@ -436,6 +436,20 @@ let Api = {
       });
   },
 
+  addPropertyCalendarEvents({ data={}, callback=()=>{} }) {
+    axios.post(`${host}/properties/${data.propertyId}/calendarEvents`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.addPropertyCalendarEvents(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
   getPropertyContacts({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/contacts`, {
         withCredentials: true, // send cookies for cross-site requests

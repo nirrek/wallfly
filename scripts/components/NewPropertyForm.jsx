@@ -1,14 +1,16 @@
 var React = require('react');
-var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
 var Snackbar = mui.Snackbar;
+var ImageSelector = require('./ImageSelector.jsx');
+var ErrorMessage = require('./ErrorMessage.jsx');
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
+var Label = require('./Label.jsx');
 
 var NewPropertyForm = React.createClass({
   getInitialState() {
@@ -19,7 +21,10 @@ var NewPropertyForm = React.createClass({
       ownerEmail: '', // User entered owner email
       tenantEmail: '', // User entered tenant email
       dataUrl: '', // base64 encoding of the user selected image.
-    }
+      fileSizeError: '', // file size error message
+      authFailure: '', // server auth failure message
+      validationError: false, // clientside validation failure
+    };
   },
 
   /**
@@ -38,6 +43,19 @@ var NewPropertyForm = React.createClass({
     event.preventDefault();
     event.stopPropagation();
 
+    // Clear prior error states.
+    this.setState({
+      fileSizeError: '',
+      authFailure: '',
+      validationError: false,
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
+
     // API call to add new property
     Api.addNewProperty({
       data: {
@@ -50,6 +68,10 @@ var NewPropertyForm = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
+          var msg = (response.status === 0)
+            ? 'Connection timed-out. Please try again.'
+            : response.data;
+          this.setState({ authFailure: msg });
           return;
         }
 
@@ -61,36 +83,66 @@ var NewPropertyForm = React.createClass({
           ownerEmail: '',
           tenantEmail: '',
           dataUrl: '',
+          fileSizeError: '',
+          authFailure: '',
+          validationError: false,
         });
+        React.findDOMNode(this.refs.form).reset();
 
         this.refs.snackbar.show();
       }
     });
   },
 
-  /**
-   * Callback for a user selecting a file for upload. Reads the file as a base64
-   * encoded data URI and stores this in component state.
-   */
-  onFileSelected(event) {
-    var reader = new FileReader(); // File API
-    var file = event.target.files[0];
-
-    reader.onload = upload => this.setState({ dataUrl: upload.target.result });
-    reader.readAsDataURL(file);
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      streetAddress: this.state.streetAddress,
+      suburb: this.state.suburb,
+      postCode: this.state.postCode,
+      ownerEmail: this.state.ownerEmail,
+      tenantEmail: this.state.tenantEmail,
+      dataUrl: this.state.dataUrl,
+    }, schema);
   },
 
+  onImageSelected(payload) {
+    this.setState({ dataUrl: payload.dataURL });
+  },
+
+  onImageSizeError(error) {
+    var file = error.file;
+    var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
+    var errorMessage = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: errorMessage });
+  },
 
   render() {
-    var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl } = this.state;
+    var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl, fileSizeError, authFailure, validationError } = this.state;
+
+    var sizeError = fileSizeError ? (
+      <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
+    ) : null;
+
+    var authFailMessage = authFailure ? (
+      <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
+    ) : null;
+
+    // Form validation error
+    var validationError = (validationError) ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
+
     return (
       <div>
         <Snackbar
           ref="snackbar"
           message="New property successfully added"
           autoHideDuration={3000} />
-        <form style={style.form} onSubmit={this.onSubmit}>
+        <form ref="form" style={style.form} onSubmit={this.onSubmit}>
           <h2>Add New Property</h2>
+          { validationError }
+          { authFailMessage }
           <TextField
             value={streetAddress}
             multiLine={true}
@@ -116,22 +168,31 @@ var NewPropertyForm = React.createClass({
             multiLine={true}
             onChange={this.onChange.bind(this, 'tenantEmail')}
             floatingLabelText="Tenant Email (optional)" />
-          <div style={style.label}>Property Photo</div>
-          <div style={style.photoSelectorContainer}>
-            {dataUrl ?
-              (<img style={style.img} src={dataUrl} />) :
-              (null)}
-            <input type="file" onChange={this.onFileSelected} />
+          <Label>Property Photo</Label>
+          <div style={style.selectorContainer}>
+            {sizeError}
+            <ImageSelector maxSize={200000}
+                           image={dataUrl}
+                           onImageSelected={this.onImageSelected}
+                           onImageSizeError={this.onImageSizeError} />
           </div>
           <RaisedButton
             type="submit"
             label="Add New Property"
-            primary={true}
-            style={style.button} />
+            primary={true} />
         </form>
       </div>
     );
   }
+});
+
+var schema = Joi.object().keys({
+  streetAddress: Joi.string().min(1).max(500),
+  suburb: Joi.string().min(1).max(500),
+  postCode: Joi.string().min(4).max(4),
+  ownerEmail: Joi.string().email().max(255),
+  tenantEmail: Joi.string().email().max(255).allow(['', null]),
+  dataUrl: Joi.string(),
 });
 
 var style = {
@@ -139,18 +200,11 @@ var style = {
     display: 'flex',
     padding: '2em',
     flexDirection: 'column',
-    maxWidth: '20em',
+    width: '20em',
   },
-  img: {
-    maxWidth: 200,
-  },
-  label: {
-    marginTop: '1em',
-    fontSize: 15,
-  },
-  photoSelectorContainer: {
+  selectorContainer: {
     marginBottom: '2em'
   }
 };
 
-module.exports = Radium(MuiContextified(NewPropertyForm));
+module.exports = MuiContextified(Radium(NewPropertyForm));

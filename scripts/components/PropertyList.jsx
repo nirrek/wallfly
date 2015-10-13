@@ -68,6 +68,13 @@ var PropertyList = React.createClass({
     this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
   },
 
+  addPropertyClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var userType = this.getUserType();
+    this.transitionTo(`/${userType}/newProperty`);
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
@@ -101,12 +108,26 @@ var PropertyList = React.createClass({
       );
     }
 
+    // Check if user is an agent.
+    var addProperty;
+    if (user && user.type === 'agent') {
+      addProperty = (
+        <Paper key='addproperty' zIndex={1} style={style.card}>
+          <div style={style.content}>
+            <RaisedButton label="Add New Property"
+                          primary={true}
+                          onClick={this.addPropertyClick.bind(this)} />
+          </div>
+        </Paper>
+      );
+    }
 
 
     return (
       <div style={style.cardContainer}>
         {ownerNotice}
         {propertyCards}
+        {addProperty}
       </div>
     );
   }
