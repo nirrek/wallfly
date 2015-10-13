@@ -66,8 +66,9 @@ var CalendarAddEventForm = React.createClass({
       },
       callback: (err, response) => {
         if (err) {
-          return;
-        }
+        console.log(err);
+        return reply(err);
+      }
 
         // Clear the form
         this.setState({
@@ -122,7 +123,7 @@ var CalendarAddEventForm = React.createClass({
             name="Event Description"
             onChange={this.onChange.bind(this, 'eventDesc')}
             floatingLabelText="Event Description"
-            hintText="Describe what will be happening" />
+            hintText="Short description of the event" />
           <br />
           <TextField
             value={date}
@@ -142,7 +143,7 @@ var CalendarAddEventForm = React.createClass({
             name="Notes"
             onChange={this.onChange.bind(this, 'notes')}
             floatingLabelText="Notes"
-            hintText="Add more detailed notes here"
+            hintText="Add more detailed notes here (1000 characters max)"
             fullWidth />
         </Dialog>
       </div>
@@ -152,10 +153,10 @@ var CalendarAddEventForm = React.createClass({
 
 // Validation schema for user profile form data.
 var schema = Joi.object().keys({
-  'Event Description': Joi.string().required(),
+  'Event Description': Joi.string().max(64).required(),
   Date: Joi.date().format('DD/MM/YYYY'),
   Time: Joi.date().format('h:mm a'),
-  Notes: Joi.optional(),
+  Notes: Joi.string().max(1000).allow(''),
 });
 
 module.exports = Radium(MuiContextified(CalendarAddEventForm));

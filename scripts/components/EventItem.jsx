@@ -55,7 +55,11 @@ var style = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    cursor: 'pointer',
+    ':hover': {
+      background: '#efefef',
+    }
   }
 };
 
-module.exports = Radium(MuiContextified(EventItem));
+module.exports = MuiContextified(Radium(EventItem));
