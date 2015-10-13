@@ -41,7 +41,10 @@ var EventItem = React.createClass({
           <Label>Date</Label>
           {event.date.format('DD/MM/YYYY — hh:mm A')}
           <Label>Notes</Label>
-          {event.notes}
+          { event.notes
+            ? event.notes
+            : <span style={style.noNotes}>No notes added.</span>
+          }
         </Dialog>
       </div>
     );
@@ -59,6 +62,10 @@ var style = {
     ':hover': {
       background: '#efefef',
     }
+  },
+  noNotes: {
+    color: '#ccc',
+    fontStyle: 'italic',
   }
 };
 
