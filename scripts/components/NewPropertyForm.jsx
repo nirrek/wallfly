@@ -1,18 +1,16 @@
 var React = require('react');
-var moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
-var Paper = mui.Paper;
 var Snackbar = mui.Snackbar;
 var ImageSelector = require('./ImageSelector.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
+var Label = require('./Label.jsx');
 
 var NewPropertyForm = React.createClass({
   getInitialState() {
@@ -26,7 +24,7 @@ var NewPropertyForm = React.createClass({
       fileSizeError: '', // file size error message
       authFailure: '', // server auth failure message
       validationError: false, // clientside validation failure
-    }
+    };
   },
 
   /**
@@ -89,6 +87,7 @@ var NewPropertyForm = React.createClass({
           authFailure: '',
           validationError: false,
         });
+        React.findDOMNode(this.refs.form).reset();
 
         this.refs.snackbar.show();
       }
@@ -114,8 +113,8 @@ var NewPropertyForm = React.createClass({
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
-    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
-    this.setState({ fileSizeError: error });
+    var errorMessage = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: errorMessage });
   },
 
   render() {
@@ -124,11 +123,6 @@ var NewPropertyForm = React.createClass({
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
-    var errorMessage;
-    var standardActions = [
-      { text: 'Cancel' },
-      { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
-    ];
 
     var authFailMessage = authFailure ? (
       <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
@@ -145,11 +139,10 @@ var NewPropertyForm = React.createClass({
           ref="snackbar"
           message="New property successfully added"
           autoHideDuration={3000} />
-        <form style={style.form} onSubmit={this.onSubmit}>
+        <form ref="form" style={style.form} onSubmit={this.onSubmit}>
           <h2>Add New Property</h2>
-          <div style={style.error}> { errorMessage } </div>
-          <div style={style.error}> {validationError} </div>
-          <div style={style.error}> {authFailMessage} </div>
+          { validationError }
+          { authFailMessage }
           <TextField
             value={streetAddress}
             multiLine={true}
@@ -175,18 +168,18 @@ var NewPropertyForm = React.createClass({
             multiLine={true}
             onChange={this.onChange.bind(this, 'tenantEmail')}
             floatingLabelText="Tenant Email (optional)" />
-          <div style={style.label}>Property Photo</div>
+          <Label>Property Photo</Label>
           <div style={style.selectorContainer}>
             {sizeError}
             <ImageSelector maxSize={200000}
+                           image={dataUrl}
                            onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
           <RaisedButton
             type="submit"
             label="Add New Property"
-            primary={true}
-            style={style.button} />
+            primary={true} />
         </form>
       </div>
     );
@@ -207,18 +200,11 @@ var style = {
     display: 'flex',
     padding: '2em',
     flexDirection: 'column',
-    maxWidth: '20em',
+    width: '20em',
   },
-  img: {
-    maxWidth: 200,
-  },
-  label: {
-    marginTop: '1em',
-    fontSize: 15,
-  },
-  SelectorContainer: {
+  selectorContainer: {
     marginBottom: '2em'
   }
 };
 
-module.exports = Radium(MuiContextified(NewPropertyForm));
+module.exports = MuiContextified(Radium(NewPropertyForm));
