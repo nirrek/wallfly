@@ -14,7 +14,7 @@ var ImageSelector = React.createClass({
       maxSize: 2500000,  // 250k max by default
       onImageSizeError: () => {}, // noop
       onImageSelected: () => {}, // noop
-    }
+    };
   },
 
   getInitialState() { return {}; },
@@ -40,13 +40,13 @@ var ImageSelector = React.createClass({
       var dataURL = this.reader.result;
       this.setState({ src: dataURL });
       this.props.onImageSelected({ dataURL: dataURL });
-    }
+    };
     this.reader.readAsDataURL(file);
   },
 
   render() {
     // Externally provided image has higher precedence
-    var src = this.props.image || this.state.src;
+    var src = ('image' in this.props) ? this.props.image : this.state.src;
     var preview = src ? <img style={style.img} src={src} />
                       : null;
 
