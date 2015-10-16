@@ -4,6 +4,10 @@ var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
 var RaisedButton = MaterialUi.RaisedButton;
 var Paper = MaterialUi.Paper;
+var List = MaterialUi.List;
+var ListItem = MaterialUi.ListItem;
+var FontIcon = MaterialUi.FontIcon;
+var Avatar = MaterialUi.Avatar;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
@@ -50,7 +54,10 @@ var PropertyList = React.createClass({
   componentDidMount() {
     // focus fails until the DOM has done some sort of initialization.
     // hence the 300ms delay required.
-    setTimeout(() => React.findDOMNode(this.refs.filter).focus(), 300);
+    setTimeout(() => {
+      var filterInput = React.findDOMNode(this.refs.filter);
+      if (filterInput) filterInput.focus();
+    }, 300);
   },
 
   /**
@@ -67,13 +74,6 @@ var PropertyList = React.createClass({
     if      (split.indexOf('owner') != -1) return 'owner';
     else if (split.indexOf('agent') != -1) return 'agent';
     return '';
-  },
-
-  onPropertyClick(propertyId, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    var userType = this.getUserType();
-    this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
   },
 
   addPropertyClick(event) {
@@ -94,6 +94,11 @@ var PropertyList = React.createClass({
     this.setState({ 'filter': event.target.value });
   },
 
+  onPropertyTap(propertyId, event) {
+    var userType = this.getUserType();
+    this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
@@ -107,17 +112,15 @@ var PropertyList = React.createClass({
       var { id, photo, street, suburb } = filterMatch.original;
 
       return (
-        <Paper key={street + idx} zIndex={1} style={style.card}>
-          <img src={photo} style={style.img} />
-          <div style={style.content}>
-            <div style={style.address}>
-              {street} {suburb}
-            </div>
-            <RaisedButton label="View Property Dashboard"
-                          primary={true}
-                          onClick={this.onPropertyClick.bind(this, id)} />
-          </div>
-        </Paper>
+        <ListItem
+          key={street + idx}
+          style={style.listItem}
+          onTouchTap={this.onPropertyTap.bind(this, id)}
+          leftAvatar={<Avatar src={photo} />}
+          primaryText={street}
+          secondaryText={suburb}
+          rightIcon={<FontIcon className="material-icons">chevron_right</FontIcon>}
+          />
       );
     });
 
@@ -143,7 +146,6 @@ var PropertyList = React.createClass({
       );
     }
 
-
     return (
       <div>
         <div style={style.filterContainer}>
@@ -155,7 +157,9 @@ var PropertyList = React.createClass({
         </div>
         <div style={style.cardContainer}>
           {ownerNotice}
+          <List>
           {propertyCards}
+          </List>
           {addProperty}
         </div>
       </div>
@@ -165,8 +169,6 @@ var PropertyList = React.createClass({
 
 var style = {
   cardContainer: {
-    display: 'flex',
-    flexFlow: 'row wrap',
   },
   card: {
     width: 300,
@@ -204,6 +206,10 @@ var style = {
       border: '1px solid #2ECC71',
     }
   },
+  listItem: {
+    width: '100%',
+    paddingRight: 20,
+  }
 };
 
 module.exports = MuiContextified(Radium(PropertyList));
