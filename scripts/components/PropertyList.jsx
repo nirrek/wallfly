@@ -8,6 +8,7 @@ var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
 var Avatar = MaterialUi.Avatar;
+var FloatingActionButton = MaterialUi.FloatingActionButton;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
@@ -99,6 +100,11 @@ var PropertyList = React.createClass({
     this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
   },
 
+  onAddProperty() {
+    var userType = this.getUserType();
+    this.transitionTo(`/${userType}/newProperty`);
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
@@ -136,13 +142,9 @@ var PropertyList = React.createClass({
     var addProperty;
     if (user && user.type === 'agent') {
       addProperty = (
-        <Paper key='addproperty' zIndex={1} style={style.card}>
-          <div style={style.content}>
-            <RaisedButton label="Add New Property"
-                          primary={true}
-                          onClick={this.addPropertyClick.bind(this)} />
-          </div>
-        </Paper>
+        <FloatingActionButton style={style.fab} onClick={this.onAddProperty}>
+          <FontIcon className="material-icons">add</FontIcon>
+        </FloatingActionButton>
       );
     }
 
@@ -158,7 +160,7 @@ var PropertyList = React.createClass({
         <div style={style.cardContainer}>
           {ownerNotice}
           <List>
-          {propertyCards}
+            {propertyCards}
           </List>
           {addProperty}
         </div>
@@ -209,6 +211,11 @@ var style = {
   listItem: {
     width: '100%',
     paddingRight: 20,
+  },
+  fab: {
+    position: 'fixed',
+    bottom: 50,
+    right: 45,
   }
 };
 
