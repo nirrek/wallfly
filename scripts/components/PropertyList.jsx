@@ -2,18 +2,18 @@ var React = require('react');
 var MuiContextified = require('./MuiContextified.jsx');
 var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
-var RaisedButton = MaterialUi.RaisedButton;
-var Paper = MaterialUi.Paper;
 var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
 var Avatar = MaterialUi.Avatar;
 var FloatingActionButton = MaterialUi.FloatingActionButton;
+var Snackbar = MaterialUi.Snackbar;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
 var Notice = require('./Notice.jsx');
 var fuzzy = require('fuzzy');
+var AddPropertyDialog = require('./AddPropertyDialog.jsx');
 
 /**
  * PropertyList component.
@@ -26,10 +26,16 @@ var PropertyList = React.createClass({
       properties: [],
       responseReceived: false, // received API response?
       filter: '', // fuzzy search term for properties
+      isPropertyDialogOpen: false,
     };
   },
 
   componentWillMount() {
+    this.getPropertyList();
+  },
+
+  // Fetches the property list from the server
+  getPropertyList() {
     Api.getPropertyList({
       callback: (err, res) => {
         if (err) {
@@ -95,14 +101,23 @@ var PropertyList = React.createClass({
     this.setState({ 'filter': event.target.value });
   },
 
-  onPropertyTap(propertyId, event) {
+  onPropertyTap(propertyId) {
     var userType = this.getUserType();
     this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
   },
 
+  onAddPropertyClick() {
+    this.setState({ isPropertyDialogOpen: true });
+  },
+
+  onClose() {
+    this.setState({ isPropertyDialogOpen: false });
+  },
+
   onAddProperty() {
-    var userType = this.getUserType();
-    this.transitionTo(`/${userType}/newProperty`);
+    this.setState({ isPropertyDialogOpen: false });
+    this.getPropertyList();
+    this.refs.snackbar.show();
   },
 
   render() {
@@ -142,7 +157,7 @@ var PropertyList = React.createClass({
     var addProperty;
     if (user && user.type === 'agent') {
       addProperty = (
-        <FloatingActionButton style={style.fab} onClick={this.onAddProperty}>
+        <FloatingActionButton style={style.fab} onClick={this.onAddPropertyClick}>
           <FontIcon className="material-icons">add</FontIcon>
         </FloatingActionButton>
       );
@@ -157,42 +172,26 @@ var PropertyList = React.createClass({
                  style={style.filter}
                  onChange={this.onFilterChange} />
         </div>
-        <div style={style.cardContainer}>
+        <div>
           {ownerNotice}
           <List>
             {propertyCards}
           </List>
           {addProperty}
         </div>
+        <AddPropertyDialog isOpen={this.state.isPropertyDialogOpen}
+                           onClose={this.onClose}
+                           onAddProperty={this.onAddProperty} />
+         <Snackbar
+           ref="snackbar"
+           message="Property Successfully Added"
+           autoHideDuration={3000} />
       </div>
     );
   }
 });
 
 var style = {
-  cardContainer: {
-  },
-  card: {
-    width: 300,
-    height: 320,
-    margin: '1em',
-    display: 'flex',
-    flexFlow: 'column',
-  },
-  content: {
-    display: 'flex',
-    flexFlow: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    flexGrow: 1,
-    padding: '1em 0',
-  },
-  address: {
-    fontSize: 18,
-  },
-  img: {
-    width: 300,
-  },
   filterContainer: {
     padding: '10px 14px',
   },
