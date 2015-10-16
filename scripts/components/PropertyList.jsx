@@ -8,6 +8,7 @@ var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
 var Notice = require('./Notice.jsx');
+var fuzzy = require('fuzzy');
 
 /**
  * PropertyList component.
@@ -19,6 +20,7 @@ var PropertyList = React.createClass({
     return {
       properties: [],
       responseReceived: false, // received API response?
+      filter: '', // fuzzy search term for properties
     };
   },
 
@@ -43,6 +45,12 @@ var PropertyList = React.createClass({
         });
       }
     });
+  },
+
+  componentDidMount() {
+    // focus fails until the DOM has done some sort of initialization.
+    // hence the 300ms delay required.
+    setTimeout(() => React.findDOMNode(this.refs.filter).focus(), 300);
   },
 
   /**
@@ -75,15 +83,28 @@ var PropertyList = React.createClass({
     this.transitionTo(`/${userType}/newProperty`);
   },
 
+  // Filters a list of properties, given the fuzzy search term.
+  // Produces the filtered list.
+  filterProperties(properties, term) {
+    var options = { extract: (p) => `${p.street} ${p.suburb}` };
+    return fuzzy.filter(term, properties, options);
+  },
+
+  onFilterChange(event) {
+    this.setState({ 'filter': event.target.value });
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
 
     var user = User.getUser();
-    var { properties } = this.state;
+    var { properties, filter } = this.state;
 
-    var propertyCards = properties.map((property, idx) => {
-      var { id, photo, street, suburb } = property;
+    var filteredProperties = this.filterProperties(properties, filter);
+
+    var propertyCards = filteredProperties.map((filterMatch, idx) => {
+      var { id, photo, street, suburb } = filterMatch.original;
 
       return (
         <Paper key={street + idx} zIndex={1} style={style.card}>
@@ -124,10 +145,19 @@ var PropertyList = React.createClass({
 
 
     return (
-      <div style={style.cardContainer}>
-        {ownerNotice}
-        {propertyCards}
-        {addProperty}
+      <div>
+        <div style={style.filterContainer}>
+          <input placeholder="Start typing to filter by suburb or street address"
+                 ref="filter"
+                 type="text"
+                 style={style.filter}
+                 onChange={this.onFilterChange} />
+        </div>
+        <div style={style.cardContainer}>
+          {ownerNotice}
+          {propertyCards}
+          {addProperty}
+        </div>
       </div>
     );
   }
@@ -159,6 +189,21 @@ var style = {
   img: {
     width: 300,
   },
+  filterContainer: {
+    padding: '10px 14px',
+  },
+  filter: {
+    width: '100%',
+    fontSize: 18,
+    padding: '.7em',
+    border: '1px solid #ddd',
+    borderRadius: 4,
+    ':focus': {
+      outline: 'none',
+      boxShadow: 'inset 0 0 0 1px #2ECC71',
+      border: '1px solid #2ECC71',
+    }
+  },
 };
 
-module.exports = Radium(MuiContextified(PropertyList));
+module.exports = MuiContextified(Radium(PropertyList));
