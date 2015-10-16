@@ -3,16 +3,21 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Snackbar = mui.Snackbar;
 var ImageSelector = require('./ImageSelector.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
 var Label = require('./Label.jsx');
+var DialogEnhanced = require('./DialogEnhanced.jsx');
 
-var NewPropertyForm = React.createClass({
+var AddPropertyDialog = React.createClass({
+  propTypes: {
+    isOpen: React.PropTypes.bool.isRequired,
+    onClose: React.PropTypes.func.isRequired,
+    onAddProperty: React.PropTypes.func.isRequired,
+  },
+
   getInitialState() {
     return {
       streetAddress: '', // User entered street address
@@ -35,14 +40,8 @@ var NewPropertyForm = React.createClass({
     this.setState({ [field]: event.target.value });
   },
 
-  /**
-   * Form submission event handler. Sends a request to the server to add the
-   * repair request, and updates the repair requests if successful.
-   */
-  onSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
+  // Adds a new property with the current state of the form
+  onAddProperty() {
     // Clear prior error states.
     this.setState({
       fileSizeError: '',
@@ -76,21 +75,26 @@ var NewPropertyForm = React.createClass({
         }
 
         // Clear the form
-        this.setState({
-          streetAddress: '',
-          suburb: '',
-          postCode: '',
-          ownerEmail: '',
-          tenantEmail: '',
-          dataUrl: '',
-          fileSizeError: '',
-          authFailure: '',
-          validationError: false,
-        });
+        this.resetState();
         React.findDOMNode(this.refs.form).reset();
 
-        this.refs.snackbar.show();
+        this.props.onAddProperty();
       }
+    });
+  },
+
+  // Resets the state of the form
+  resetState() {
+    this.setState({
+      streetAddress: '', // User entered street address
+      suburb: '', // User entered suburb
+      postCode: '', // User entered post code
+      ownerEmail: '', // User entered owner email
+      tenantEmail: '', // User entered tenant email
+      dataUrl: '', // base64 encoding of the user selected image.
+      fileSizeError: '', // file size error message
+      authFailure: '', // server auth failure message
+      validationError: false, // clientside validation failure
     });
   },
 
@@ -117,6 +121,11 @@ var NewPropertyForm = React.createClass({
     this.setState({ fileSizeError: errorMessage });
   },
 
+  onClose() {
+    this.resetState();
+    this.props.onClose();
+  },
+
   render() {
     var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl, fileSizeError, authFailure, validationError } = this.state;
 
@@ -133,14 +142,19 @@ var NewPropertyForm = React.createClass({
       <JoiError error={validationError} fillBackground={true} />
     ) : null;
 
+    var actions = [
+      { text: 'Cancel', onTouchTap: this.onClose },
+      { text: 'Add New Property', onTouchTap: this.onAddProperty }
+    ];
+
     return (
-      <div>
-        <Snackbar
-          ref="snackbar"
-          message="New property successfully added"
-          autoHideDuration={3000} />
-        <form ref="form" style={style.form} onSubmit={this.onSubmit}>
-          <h2>Add New Property</h2>
+      <DialogEnhanced isOpen={this.props.isOpen}
+                      autoScrollBodyContent={true}
+                      autoDetectWindowHeight={true}
+                      contentStyle={{width: 375}}
+                      bodyStyle={{}}
+                      actions={actions}>
+        <form ref="form" style={style.form}>
           { validationError }
           { authFailMessage }
           <TextField
@@ -176,12 +190,8 @@ var NewPropertyForm = React.createClass({
                            onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
-          <RaisedButton
-            type="submit"
-            label="Add New Property"
-            primary={true} />
         </form>
-      </div>
+      </DialogEnhanced>
     );
   }
 });
@@ -207,4 +217,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(NewPropertyForm));
+module.exports = MuiContextified(Radium(AddPropertyDialog));

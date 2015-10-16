@@ -2,12 +2,18 @@ var React = require('react');
 var MuiContextified = require('./MuiContextified.jsx');
 var Api = require('../utils/Api.js');
 var MaterialUi = require('material-ui');
-var RaisedButton = MaterialUi.RaisedButton;
-var Paper = MaterialUi.Paper;
+var List = MaterialUi.List;
+var ListItem = MaterialUi.ListItem;
+var FontIcon = MaterialUi.FontIcon;
+var Avatar = MaterialUi.Avatar;
+var FloatingActionButton = MaterialUi.FloatingActionButton;
+var Snackbar = MaterialUi.Snackbar;
 var Navigation = require('react-router').Navigation;
 var User = require('../utils/User.js');
 var Radium = require('radium');
 var Notice = require('./Notice.jsx');
+var fuzzy = require('fuzzy');
+var AddPropertyDialog = require('./AddPropertyDialog.jsx');
 
 /**
  * PropertyList component.
@@ -19,10 +25,17 @@ var PropertyList = React.createClass({
     return {
       properties: [],
       responseReceived: false, // received API response?
+      filter: '', // fuzzy search term for properties
+      isPropertyDialogOpen: false,
     };
   },
 
   componentWillMount() {
+    this.getPropertyList();
+  },
+
+  // Fetches the property list from the server
+  getPropertyList() {
     Api.getPropertyList({
       callback: (err, res) => {
         if (err) {
@@ -45,6 +58,15 @@ var PropertyList = React.createClass({
     });
   },
 
+  componentDidMount() {
+    // focus fails until the DOM has done some sort of initialization.
+    // hence the 300ms delay required.
+    setTimeout(() => {
+      var filterInput = React.findDOMNode(this.refs.filter);
+      if (filterInput) filterInput.focus();
+    }, 300);
+  },
+
   /**
    * Gets the current userType as determined by the URL.
    * @return {String} The current user type.
@@ -61,13 +83,6 @@ var PropertyList = React.createClass({
     return '';
   },
 
-  onPropertyClick(propertyId, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    var userType = this.getUserType();
-    this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
-  },
-
   addPropertyClick(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -75,28 +90,58 @@ var PropertyList = React.createClass({
     this.transitionTo(`/${userType}/newProperty`);
   },
 
+  // Filters a list of properties, given the fuzzy search term.
+  // Produces the filtered list.
+  filterProperties(properties, term) {
+    var options = { extract: (p) => `${p.street} ${p.suburb}` };
+    return fuzzy.filter(term, properties, options);
+  },
+
+  onFilterChange(event) {
+    this.setState({ 'filter': event.target.value });
+  },
+
+  onPropertyTap(propertyId) {
+    var userType = this.getUserType();
+    this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
+  },
+
+  onAddPropertyClick() {
+    this.setState({ isPropertyDialogOpen: true });
+  },
+
+  onClose() {
+    this.setState({ isPropertyDialogOpen: false });
+  },
+
+  onAddProperty() {
+    this.setState({ isPropertyDialogOpen: false });
+    this.getPropertyList();
+    this.refs.snackbar.show();
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
 
     var user = User.getUser();
-    var { properties } = this.state;
+    var { properties, filter } = this.state;
 
-    var propertyCards = properties.map((property, idx) => {
-      var { id, photo, street, suburb } = property;
+    var filteredProperties = this.filterProperties(properties, filter);
+
+    var propertyCards = filteredProperties.map((filterMatch, idx) => {
+      var { id, photo, street, suburb } = filterMatch.original;
 
       return (
-        <Paper key={street + idx} zIndex={1} style={style.card}>
-          <img src={photo} style={style.img} />
-          <div style={style.content}>
-            <div style={style.address}>
-              {street} {suburb}
-            </div>
-            <RaisedButton label="View Property Dashboard"
-                          primary={true}
-                          onClick={this.onPropertyClick.bind(this, id)} />
-          </div>
-        </Paper>
+        <ListItem
+          key={street + idx}
+          style={style.listItem}
+          onTouchTap={this.onPropertyTap.bind(this, id)}
+          leftAvatar={<Avatar src={photo} />}
+          primaryText={street}
+          secondaryText={suburb}
+          rightIcon={<FontIcon className="material-icons">chevron_right</FontIcon>}
+          />
       );
     });
 
@@ -112,53 +157,65 @@ var PropertyList = React.createClass({
     var addProperty;
     if (user && user.type === 'agent') {
       addProperty = (
-        <Paper key='addproperty' zIndex={1} style={style.card}>
-          <div style={style.content}>
-            <RaisedButton label="Add New Property"
-                          primary={true}
-                          onClick={this.addPropertyClick.bind(this)} />
-          </div>
-        </Paper>
+        <FloatingActionButton style={style.fab} onClick={this.onAddPropertyClick}>
+          <FontIcon className="material-icons">add</FontIcon>
+        </FloatingActionButton>
       );
     }
 
-
     return (
-      <div style={style.cardContainer}>
-        {ownerNotice}
-        {propertyCards}
-        {addProperty}
+      <div>
+        <div style={style.filterContainer}>
+          <input placeholder="Start typing to filter by suburb or street address"
+                 ref="filter"
+                 type="text"
+                 style={style.filter}
+                 onChange={this.onFilterChange} />
+        </div>
+        <div>
+          {ownerNotice}
+          <List>
+            {propertyCards}
+          </List>
+          {addProperty}
+        </div>
+        <AddPropertyDialog isOpen={this.state.isPropertyDialogOpen}
+                           onClose={this.onClose}
+                           onAddProperty={this.onAddProperty} />
+         <Snackbar
+           ref="snackbar"
+           message="Property Successfully Added"
+           autoHideDuration={3000} />
       </div>
     );
   }
 });
 
 var style = {
-  cardContainer: {
-    display: 'flex',
-    flexFlow: 'row wrap',
+  filterContainer: {
+    padding: '10px 14px',
   },
-  card: {
-    width: 300,
-    height: 320,
-    margin: '1em',
-    display: 'flex',
-    flexFlow: 'column',
-  },
-  content: {
-    display: 'flex',
-    flexFlow: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    flexGrow: 1,
-    padding: '1em 0',
-  },
-  address: {
+  filter: {
+    width: '100%',
     fontSize: 18,
+    padding: '.7em',
+    border: '1px solid #ddd',
+    borderRadius: 4,
+    ':focus': {
+      outline: 'none',
+      boxShadow: 'inset 0 0 0 1px #2ECC71',
+      border: '1px solid #2ECC71',
+    }
   },
-  img: {
-    width: 300,
+  listItem: {
+    width: '100%',
+    paddingRight: 20,
   },
+  fab: {
+    position: 'fixed',
+    bottom: 50,
+    right: 45,
+  }
 };
 
-module.exports = Radium(MuiContextified(PropertyList));
+module.exports = MuiContextified(Radium(PropertyList));
