@@ -5,11 +5,13 @@ var MuiContextified = require('./MuiContextified.jsx');
 var RepairRequestForm = require('./RepairRequestForm.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
+var Priority = require('./Priority.jsx');
 
 var RepairRequest = React.createClass({
   getInitialState() {
     return {
       repairRequests: [], // list of repair requests
+      responseReceived: false, // received API response?
     };
   },
 
@@ -17,11 +19,13 @@ var RepairRequest = React.createClass({
     Api.getRepairRequests({
       callback: (err, response) => {
         if (err) {
-          // TODO
           return console.log(err);
         }
 
+        console.log(response.data);
+
         this.setState({
+          responseReceived: true,
           repairRequests: response.data
         });
       }
@@ -32,12 +36,16 @@ var RepairRequest = React.createClass({
   },
 
   render() {
+    // Don't render until we have data cached from the server.
+    if (!this.state.responseReceived) return null;
+
     var { repairRequests } = this.state;
 
     var rows = repairRequests.map(request => {
       return (
         <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
+          <td><Priority type={request.priority} /></td>
           <td>{request.request}</td>
           <td>
             {request.photo ?
@@ -66,6 +74,7 @@ var RepairRequest = React.createClass({
           <thead>
             <tr>
               <th>Date</th>
+              <th>Priority</th>
               <th>Description</th>
               <th>Image</th>
               <th>Status</th>
