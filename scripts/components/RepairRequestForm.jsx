@@ -5,11 +5,14 @@ var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var TextField = mui.TextField;
 var RaisedButton = mui.RaisedButton;
+var SelectField = mui.SelectField;
 var Dialog = mui.Dialog;
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Radium = require('radium');
+var Joi = require('joi');
+var JoiError = require('./JoiError.jsx');
 
 var RepairRequestForm = React.createClass({
   propTypes: {
@@ -18,10 +21,12 @@ var RepairRequestForm = React.createClass({
 
   getInitialState() {
     return {
-      description: '', // User entered description
+      request: '', // User entered request
+      priority: '',
       image: '', //base64 encoding of repair request image
       fileSizeError: '', // file size error message
-    }
+      validationError: null, // clientside validation error object
+    };
   },
 
   onButtonClick() {
@@ -41,11 +46,22 @@ var RepairRequestForm = React.createClass({
    * repair request, and updates the repair requests if successful.
    */
   onSubmit(event) {
+    // Clear prior error states.
+    this.setState({
+      validationError: '',
+    });
+
+    var validation = this.validate();
+    if (validation.error) {
+      this.setState({ validationError: validation.error });
+      return;
+    }
 
     // API call to add repair request
     Api.addRepairRequest({
       data: {
-        description: this.state.description,
+        request: this.state.request,
+        priority: this.state.priority,
         image: this.state.image,
       },
       callback: (err, response) => {
@@ -55,7 +71,7 @@ var RepairRequestForm = React.createClass({
 
         // Clear the form
         this.setState({
-          description: '',
+          request: '',
           image: '',
         });
 
@@ -65,6 +81,15 @@ var RepairRequestForm = React.createClass({
     });
   },
 
+  // Validate the form, returns the Joi result of the validation.
+  validate() {
+    return Joi.validate({
+      request: this.state.request,
+      priority: this.state.priority,
+      image: this.state.image,
+    }, schema);
+  },
+
   onImageSelected(payload) {
     this.setState({ image: payload.dataURL });
   },
@@ -72,22 +97,34 @@ var RepairRequestForm = React.createClass({
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
-    var error = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
-    this.setState({ fileSizeError: error });
+    var errorMessage = `${file.name} exceeds size limit of ${sizeLimit}kb.`;
+    this.setState({ fileSizeError: errorMessage });
+  },
+
+  onStatusChange(event, selectedPriorityIndex) {
+    var priority = priorities[selectedPriorityIndex].text;
+    this.setState({ priority: priority });
   },
 
   render() {
-    var { description, fileSizeError } = this.state;
+    var { request, fileSizeError, priority, validationError } = this.state;
+
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
-    var errorMessage;
+
+    console.log(validationError);
+    var validationError = (validationError) ? (
+      <JoiError error={validationError} fillBackground={true} />
+    ) : null;
+
     var standardActions = [
       { text: 'Cancel' },
       { text: 'Lodge Repair Request', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
+
     return (
-      <div style={style.formContainer}>
+      <div style={styles.formContainer}>
         <RaisedButton label="Lodge a New Repair Request"
                       primary={true}
                       onClick={this.onButtonClick} />
@@ -96,18 +133,27 @@ var RepairRequestForm = React.createClass({
           actions={standardActions}
           actionFocus="submit"
           modal={this.state.modal}
+          autoDetectWindowHeight={true}
+          autoScrollBodyContent={true}
           ref="dialog">
-          <div style={style.error}> { errorMessage } </div>
+          {validationError}
+          {sizeError}
           <TextField
-            value={description}
+            value={request}
             multiLine={true}
             name="Description"
-            onChange={this.onChange.bind(this, 'description')}
+            onChange={this.onChange.bind(this, 'request')}
             floatingLabelText="Describe the Issue"
             hintText="Describe what needs repairing, how urgent it is,
             and how the damage occurred."
             fullWidth />
-          <div style={style.selectorContainer}>
+          <SelectField
+            floatingLabelText="Priority of the Issue"
+            value={priority}
+            valueMember="name"
+            onChange={this.onStatusChange}
+            menuItems={priorities} />
+          <div style={styles.selectorContainer}>
             <Label>Image</Label>
             {sizeError}
             <ImageSelector maxSize={200000}
@@ -120,30 +166,26 @@ var RepairRequestForm = React.createClass({
   }
 });
 
-var style = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-  },
+// Validation schema for repair request form data.
+var schema = Joi.object().keys({
+  request: Joi.string().max(2048),
+  priority: Joi.string().valid(['Urgent', 'Can Wait', 'Information']),
+  image: Joi.string(),
+});
+
+var priorities = [
+  { name: 'Urgent', text: 'Urgent' },
+  { name: 'Can Wait', text: 'Can Wait' },
+  { name: 'Information', text: 'Information' },
+];
+
+var styles = {
   formContainer: {
     width: '325px',
-  },
-  form: {
-    display: 'flex',
-    padding: '2em',
-    flexDirection: 'column',
-    maxWidth: '20em',
   },
   selectorContainer: {
     width: '100%'
   },
-  img: {
-    maxWidth: 200,
-  },
-  heading: {
-    margin: 0
-  }
 };
 
 module.exports = Radium(MuiContextified(RepairRequestForm));
