@@ -44,6 +44,8 @@ var PropertyList = React.createClass({
           return;
         }
 
+        console.log(res.data);
+
         this.setState({
           responseReceived: true,
           repairRequests: res.data,
@@ -61,6 +63,8 @@ var PropertyList = React.createClass({
   onStatusChange(id, event, selectedStatusIndex) {
     var modifiedRequest = this.state.repairRequests.find(el => el.id === id);
     modifiedRequest.status = statuses[selectedStatusIndex].text;
+    delete modifiedRequest.street;
+    delete modifiedRequest.suburb;
 
     Api.putRepairRequest({
       data: {
@@ -94,6 +98,7 @@ var PropertyList = React.createClass({
         <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
           <td><Priority type={request.priority} /></td>
+          <td style={{ whiteSpace: 'nowrap' }}>{request.street}<br />{request.suburb}</td>
           <td>{request.request}</td>
           <td>
             {request.photo ?
@@ -102,6 +107,7 @@ var PropertyList = React.createClass({
           </td>
           <td>
             <SelectField
+              style={{ width: 140 }}
               value={request.status}
               valueMember="name"
               onChange={this.onStatusChange.bind(this, request.id)}
@@ -139,6 +145,7 @@ var PropertyList = React.createClass({
             <tr>
               <th>Date</th>
               <th>Priority</th>
+              <th>Property</th>
               <th>Description</th>
               <th>Image</th>
               <th>Status</th>
