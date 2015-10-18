@@ -1,15 +1,22 @@
 var React = require('react');
 var Api = require('../utils/Api.js');
 var moment = require('moment');
-var OwnerRepairRequestStatus = require('./OwnerRepairRequestStatus.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var OwnerRepairRequestImages = require('./OwnerRepairRequestImages.jsx');
+var Priority = require('./Priority.jsx');
+var User = require('../utils/User.js');
+var MuiContextified = require('./MuiContextified.jsx');
+var MaterialUi = require('material-ui');
+var SelectField = MaterialUi.SelectField;
+var Snackbar = MaterialUi.Snackbar;
+
 
 var OwnerRepairRequests = React.createClass({
   getInitialState() {
     return {
-      requests: []
+      requests: [],
+      responseReceived: false, // received API response?
     };
   },
 
@@ -19,7 +26,10 @@ var OwnerRepairRequests = React.createClass({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
-        this.setState({ requests: response.data });
+        this.setState({
+          responseReceived: true,
+          requests: response.data
+        });
       }
     });
   },
@@ -28,22 +38,55 @@ var OwnerRepairRequests = React.createClass({
     this.getPropertyRepairRequests();
   },
 
+  onStatusChange(id, event, selectedStatusIndex) {
+    var modifiedRequest = this.state.requests.find(el => el.id === id);
+    modifiedRequest.status = statuses[selectedStatusIndex].text;
+
+    Api.putRepairRequest({
+      data: {
+        ...modifiedRequest
+      },
+      callback: (err, res) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        this.refs.snackbar.show();
+      }
+    });
+
+    this.forceUpdate();
+  },
+
   render() {
+    // Don't render until we have data cached from the server.
+    if (!this.state.responseReceived) return null;
+
     var rows = this.state.requests.map(request => {
       return (
         <tr key={request.id}>
           <td>{moment(request.date).format('Do MMM YYYY')}</td>
+          <td><Priority type={request.priority} /></td>
           <td>{request.request}</td>
+<<<<<<< HEAD
           <td>
             <OwnerRepairRequestImages requestId={request.id}/>
           </td>
           <td>{request.status}</td>
+=======
+          <td><img style={styles.img} src={request.photo} /></td>
+>>>>>>> master
           <td>
-            <OwnerRepairRequestStatus
-                requestId={request.id}
-                propertyId={this.props.params.propertyId}
-                statusChanged={this.getPropertyRepairRequests}
-                status={request.status} />
+            { User.getUser().type === 'agent' ? (
+              <SelectField
+                value={request.status}
+                valueMember="name"
+                onChange={this.onStatusChange.bind(this, request.id)}
+                menuItems={statuses} />
+            ) : (
+              request.status
+            )}
           </td>
         </tr>
       );
@@ -56,19 +99,32 @@ var OwnerRepairRequests = React.createClass({
           <thead>
             <colgroup style={{width: 140}}></colgroup>
             <th>Date</th>
+            <th>Priority</th>
             <th>Request</th>
             <th>Photo</th>
             <th>Status</th>
-            <th></th>
           </thead>
           <tbody>
             {rows}
           </tbody>
         </table>
+
+        <Snackbar
+          ref="snackbar"
+          message="Repair Request Updated"
+          autoHideDuration={3000} />
       </div>
     );
   }
 });
+
+// Statuses
+var statuses = [
+  { name: 'Submitted', text: 'Submitted' },
+  { name: 'Pending', text: 'Pending' },
+  { name: 'Approved', text: 'Approved' },
+  { name: 'Declined', text: 'Declined' },
+];
 
 var styles = {
   container: {
@@ -77,4 +133,4 @@ var styles = {
   },
 };
 
-module.exports = Radium(OwnerRepairRequests);
+module.exports = MuiContextified(Radium(OwnerRepairRequests));

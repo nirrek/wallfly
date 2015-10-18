@@ -7,8 +7,8 @@ var Radium = require('radium');
 var prefix = '/agent';
 var navItemData = [
   { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
-  { text: 'New Property', path: `${prefix}/newProperty`, icon: 'add_box' },
   { text: 'Calendar (Global)', path: `${prefix}/calendar`, icon: 'event' },
+  { text: 'Repairs (Global)', path: `${prefix}/repairRequests`, icon: 'report_problem' },
 ];
 
 var AgentNav = React.createClass({

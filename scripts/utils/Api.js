@@ -216,7 +216,6 @@ let Api = {
   // Add a new repair request
   addRepairRequest({ data={}, callback=()=>{} }) {
     userId = User.getUserId();
-    data.sender = userId;
     axios.post(`${host}/users/${userId}/repairs`, data, {
       withCredentials: true
     })
@@ -505,6 +504,38 @@ let Api = {
     .catch((response) => {
       let error = response.data.errorMessage;
       console.log(`Error in Api.postMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // ---------------------------------------------------------------------------
+  // Repair Requests Resource Endpoints
+  // ---------------------------------------------------------------------------
+  getAllRepairRequests({ params={}, callback=()=>{} }) {
+    axios.get(`${host}/repairRequests`, {
+      params: params,
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.fetchMessages(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  putRepairRequest({ data={}, callback=()=>{} }) {
+    axios.put(`${host}/repairRequests/${data.id}`, data, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.updateUser(): ${error}`);
       callback(new Error(error), response);
     });
   },
