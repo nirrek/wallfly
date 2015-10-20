@@ -108,8 +108,9 @@ var style = {
   rightMenuDelete: {
     color: '#F65035'
   },
-  time: {
-    color: '#333333',
+  noNotes: {
+    color: '#ccc',
+    fontStyle: 'italic',
   },
 
 };

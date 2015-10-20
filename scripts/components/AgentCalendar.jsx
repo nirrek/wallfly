@@ -14,8 +14,6 @@ var IconButton = MaterialUI.IconButton;
 var CalendarListDay = require('./CalendarListDay.jsx');
 
 var AgentCalendar = React.createClass({
-  propTypes: {
-  },
 
   getInitialState() {
     return {
@@ -72,32 +70,49 @@ var AgentCalendar = React.createClass({
       <div>
         <Toolbar>
           <ToolbarGroup key={0} float="left">
-            <IconButton style={style.ArrowButtons} onClick={this.getPrevMonth} iconClassName="material-icons">keyboard_arrow_left</IconButton>
-            <ToolbarTitle style={style.ToolbarTitle} text={this.state.month.format('MMMM YYYY')} />
-            <IconButton style={style.ArrowButtons} onClick={this.getNextMonth} iconClassName="material-icons">keyboard_arrow_right</IconButton>
+            <IconButton style={style.arrowButtons}
+              onClick={this.getPrevMonth}
+              iconClassName="material-icons">keyboard_arrow_left</IconButton>
+            <ToolbarTitle style={style.toolbarTitle}
+              text={this.state.month.format('MMMM YYYY')} />
+            <IconButton style={style.arrowButtons}
+              onClick={this.getNextMonth}
+              iconClassName="material-icons">keyboard_arrow_right</IconButton>
           </ToolbarGroup>
           <ToolbarGroup key={1} float="right">
-            <IconButton style={style.ArrowButtons} onClick={this.getToday} iconClassName="material-icons" tooltip="Today">today</IconButton>
+            <IconButton style={style.arrowButtons}
+              onClick={this.getToday}
+              iconClassName="material-icons"
+              tooltip="Today">today</IconButton>
           </ToolbarGroup>
         </Toolbar>
+        {filteredRequests.length == 0 ?
+          <p style={style.noEvents}>No events for this month.</p> :
+          <CalendarListDay
+            events={filteredRequests}
+            refresh={this.getEvents} />
+         }
 
-        <CalendarListDay events={filteredRequests} refresh={this.getEvents} />
       </div>
     );
   }
 });
 
 var style = {
-  ToolbarTitle: {
+  toolbarTitle: {
     paddingRight: '0',
     textAlign: 'center',
     width: '155px',
   },
-  ArrowButtons: {
+  arrowButtons: {
     float: 'left',
     width: '56px',
     height: '56px',
-  }
+  },
+  noEvents: {
+    color: '#ccc',
+    fontStyle: 'italic',
+  },
 };
 
 module.exports = MuiContextified(Radium(AgentCalendar));

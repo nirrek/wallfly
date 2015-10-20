@@ -16,7 +16,7 @@ var CalendarListDay = React.createClass({
   groupByDay() {
     var events = this.props.events;
     var obj = events.reduce(function(acc, d) {
-      var p = Moment(d.date).format('DD ddd');
+      var p = Moment(d.date).format('DD dddd');
       if (!acc[0].hasOwnProperty(p)) acc[0][p] = [];
       acc[0][p].push(d);
       return acc;
@@ -63,9 +63,6 @@ var style = {
   subheader: {
     color: '#FFFFFF',
     background: '#2ECC71',
-  },
-  time: {
-    color: '#333333',
   },
 
 };
