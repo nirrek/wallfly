@@ -490,7 +490,7 @@ let Api = {
     })
     .catch((response) => {
       let error = response.data.errorMessage;
-      console.log(`Error in Api.fetchMessages(): ${error}`);
+      console.log(`Error in Api.getAllRepairRequests(): ${error}`);
       callback(new Error(error), response);
     });
   },
@@ -504,7 +504,39 @@ let Api = {
     })
     .catch((response) => {
       let error = response.data.errorMessage;
-      console.log(`Error in Api.updateUser(): ${error}`);
+      console.log(`Error in Api.putRepairRequest(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // ---------------------------------------------------------------------------
+  // Payments Resource Endpoints
+  // ---------------------------------------------------------------------------
+  getAllPayments({ params={}, callback=()=>{} }) {
+    axios.get(`${host}/payments`, {
+      params: params,
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.getAllPayments(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  postPayment({ payload={}, callback=()=>{} }) {
+    axios.post(`${host}/payments`, payload, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.postPayment(): ${error}`);
       callback(new Error(error), response);
     });
   },
