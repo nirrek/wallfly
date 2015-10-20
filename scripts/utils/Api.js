@@ -478,6 +478,37 @@ let Api = {
   },
 
   // ---------------------------------------------------------------------------
+  // Events Resource Endpoints
+  // ---------------------------------------------------------------------------
+  getEvents({ params={}, callback=()=>{} }) {
+    axios.get(`${host}/events`, {
+      params: params,
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.getEvents(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+  deleteEvent({ eventId, callback=()=>{} }) {
+    axios.delete(`${host}/events/${eventId}`, {
+      withCredentials: true, // send cookies for cross-site requests
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.deleteEvent(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
+  // ---------------------------------------------------------------------------
   // Repair Requests Resource Endpoints
   // ---------------------------------------------------------------------------
   getAllRepairRequests({ params={}, callback=()=>{} }) {
