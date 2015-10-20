@@ -59,9 +59,8 @@ var CalendarListItem = React.createClass({
     ];
     let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>
     let rightIconMenu = <IconMenu iconButtonElement={iconButtonElement}>
-  <MenuItem primaryText="Edit" />
+  <MenuItem primaryText="Edit" disabled={true}/>
   <MenuItem style={style.rightMenuDelete} onTouchTap={this.showRemoveDialog} primaryText="Delete"  />
-  <MenuItem style={style.rightMenuClose} primaryText="Close"  />
 </IconMenu>
 
     var item = this.props.event;
@@ -102,9 +101,6 @@ var CalendarListItem = React.createClass({
 });
 
 var style = {
-  rightMenuClose: {
-    color: '#CCC',
-  },
   rightMenuDelete: {
     color: '#F65035'
   },

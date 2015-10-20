@@ -61,6 +61,7 @@ var CalendarListDay = React.createClass({
 
 var style = {
   subheader: {
+    fontSize: '1.2em',
     color: '#FFFFFF',
     background: '#2ECC71',
   },
