@@ -47,8 +47,8 @@ var CalendarListItem = React.createClass({
       { text: 'Close' }
     ];
     var deleteActions = [
-      <FlatButton label="Cancel" secondary={true} onTouchTap={this.dismissDeleteDialog} />,
-      <FlatButton label="Delete" primary={true} onTouchTap={this.deleteEvent} />
+      <FlatButton key="cancel" label="Cancel" secondary={true} onTouchTap={this.dismissDeleteDialog} />,
+      <FlatButton key="delete" label="Delete" primary={true} onTouchTap={this.deleteEvent} />
     ];
     let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>;
     let rightIconMenu = (
