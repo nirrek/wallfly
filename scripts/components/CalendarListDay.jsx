@@ -15,35 +15,32 @@ var CalendarListDay = React.createClass({
 
   groupByDay() {
     var events = this.props.events;
-    var obj = events.reduce(function(acc, d) {
+    var obj = events.reduce((acc, d) => {
       var p = Moment(d.date).format('DD dddd');
       if (!acc[0].hasOwnProperty(p)) acc[0][p] = [];
       acc[0][p].push(d);
       return acc;
-    },[{}])
-    .reduce(function(acc, v){
-      Object.keys(v).forEach(function(k){acc.push({day:k, events:v[k]})});
+    }, [{}])
+    .reduce((acc, v) => {
+      Object.keys(v).forEach((k) => acc.push({ day: k, events: v[k] }));
       return acc;
-    },[]);
+    }, []);
     return obj;
 
   },
 
   render() {
-    let standardActions = [
-      { text: 'Close' }
-    ];
     var dayEvents = this.groupByDay();
     var eventItems = dayEvents.map((days) => {
       var event = days.events.map((item) => {
         return (
-          <div>
+          <div key={item.id}>
             <CalendarListItem event={item} refresh={this.props.refresh}/>
           </div>
         );
       });
       return (
-        <div>
+        <div key={days.day}>
           <List key={days.day} subheader={days.day} subheaderStyle={style.subheader}>
             { event }
           </List>
