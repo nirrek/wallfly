@@ -1,9 +1,6 @@
 var React = require('react');
 var materialUi = require('material-ui');
-var FontIcon = materialUi.FontIcon;
 var IconButton = materialUi.IconButton;
-var NavigationMenu = materialUi.NavigationMenu;
-var Dialog = materialUi.Dialog;
 var IconMenu = materialUi.IconMenu;
 var MenuItem = require('material-ui/lib/menus/menu-item');
 var Api = require('../utils/Api.js');
@@ -54,6 +51,10 @@ var Header = React.createClass({
     });
   },
 
+  onLogoClick() {
+    this.transitionTo('/');
+  },
+
   render() {
     var { onMenuClick, isMenuDocked, isBasic } = this.props;
 
@@ -65,13 +66,14 @@ var Header = React.createClass({
                     iconStyle={styles.icon}>
           menu
         </IconButton>
-      )
+      );
     }
 
     if (isBasic) {
       return (
-        <div style={styles.header}>
-          <div style={styles.logo}>WallFly</div>
+        <div style={[styles.header, styles.basic]}>
+          {/* <div style={styles.logo}>WallFly</div> */}
+          <img onClick={this.onLogoClick} style={styles.logo} src='assets/logotype.svg' />
         </div>
       );
     } else {
@@ -82,9 +84,10 @@ var Header = React.createClass({
       return (
         <div style={styles.header}>
           {menuIcon}
-          <div style={styles.logo}>WallFly</div>
-          {/* TODO add notifications
-          <IconButton iconStyle={styles.icon} iconClassName="material-icons">notifications</IconButton> */}
+          <div style={styles.logoContainer}>
+            <img style={[styles.logo, styles.logoApp]} src='/assets/logotype.svg' />
+          </div>
+          {/* <div style={styles.logo}>WallFly</div> */}
           <IconMenu iconButtonElement={settingsIcon}>
             <MenuItem onClick={this.onProfileClick} leftIcon={profileIcon} primaryText="View Your Profile" />
             <MenuItem onClick={this.onLogoutClick} leftIcon={logoutIcon} primaryText="Logout" />
@@ -106,15 +109,27 @@ var styles = {
     alignItems: 'center',
     flexShrink: 0,
   },
+  basic: {
+    justifyContent: 'center',
+  },
   logo: {
-    flex: 1, // expand to fill available space
+    height: 37,
+    marginTop: -1,
     textAlign: 'center',
-    color: '#fff',
-    fontSize: 20,
-    letterSpacing: -1,
-    fontWeight: 900,
-    textShadow: '0 1px 1px rgba(0,0,0, .3)',
-    textTransform: 'uppercase',
+    filter: 'drop-shadow(0 1px 0 rgba(0,0,0,.1))',
+    ':hover': {
+      cursor: 'pointer',
+    }
+  },
+  logoApp: { // in app logo
+    ':hover': {
+      cursor: 'default',
+    }
+  },
+  logoContainer: {
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'center',
   },
   icon: {
     color: '#fff',
@@ -123,6 +138,6 @@ var styles = {
   darkIcon: {
     color: '#333',
   }
-}
+};
 
 module.exports = Radium(Header);
