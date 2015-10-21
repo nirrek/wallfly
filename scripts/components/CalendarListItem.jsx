@@ -2,11 +2,9 @@ var React = require('react');
 var Radium = require('radium');
 var Moment = require('moment');
 var Api = require('../utils/Api.js');
-var User = require('../utils/User.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var MaterialUI = require('material-ui');
 var MenuItem = require('material-ui/lib/menus/menu-item');
-var MenuDivider = require('material-ui/lib/menus/menu-divider');
 var IconMenu = MaterialUI.IconMenu;
 var ListItem = MaterialUI.ListItem;
 var ListDivider = MaterialUI.ListDivider;
@@ -23,30 +21,25 @@ var CalendarListItem = React.createClass({
 
   showEventDialog() {
     this.refs.dialog.show();
-
   },
 
   deleteEvent() {
     Api.deleteEvent({
       eventId: this.props.event.id,
       callback: (err, response) => {
-        if (err) {
-        console.log(err);
-        return reply(err);
-      }
-        console.log("Deleting Event");
-        this.refs.deleteDialog.dismiss()
+        if (err) return console.log(err);
+        this.refs.deleteDialog.dismiss();
         this.props.refresh();
       }
     });
   },
 
   showRemoveDialog() {
-    this.refs.deleteDialog.show()
+    this.refs.deleteDialog.show();
   },
 
   dismissDeleteDialog() {
-    this.refs.deleteDialog.dismiss()
+    this.refs.deleteDialog.dismiss();
   },
 
   render() {
@@ -57,11 +50,13 @@ var CalendarListItem = React.createClass({
       <FlatButton label="Cancel" secondary={true} onTouchTap={this.dismissDeleteDialog} />,
       <FlatButton label="Delete" primary={true} onTouchTap={this.deleteEvent} />
     ];
-    let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>
-    let rightIconMenu = <IconMenu iconButtonElement={iconButtonElement}>
-  <MenuItem primaryText="Edit" disabled={true}/>
-  <MenuItem style={style.rightMenuDelete} onTouchTap={this.showRemoveDialog} primaryText="Delete"  />
-</IconMenu>
+    let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>;
+    let rightIconMenu = (
+      <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem primaryText="Edit" disabled={true}/>
+        <MenuItem style={style.rightMenuDelete} onTouchTap={this.showRemoveDialog} primaryText="Delete" />
+      </IconMenu>
+    );
 
     var item = this.props.event;
 
@@ -108,7 +103,6 @@ var style = {
     color: '#ccc',
     fontStyle: 'italic',
   },
-
 };
 
 module.exports = MuiContextified(Radium(CalendarListItem));
