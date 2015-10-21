@@ -72,7 +72,7 @@ var CalendarListItem = React.createClass({
           secondaryTextLines={1}
           rightIconButton={rightIconMenu}
           onTouchTap={this.showEventDialog} />
-        <ListDivider inset={true} />
+        <ListDivider inset={false} />
         <Dialog
           title={item.event}
           actions={standardActions}
