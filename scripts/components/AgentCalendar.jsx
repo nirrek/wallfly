@@ -28,7 +28,7 @@ var AgentCalendar = React.createClass({
   },
 
   getEvents() {
-    Api.getEvents({
+    Api.getAllEvents({
       params: {
         agentId: User.getUser().id,
       },
