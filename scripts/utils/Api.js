@@ -541,6 +541,20 @@ let Api = {
     });
   },
 
+  putPayment({ id, payload={}, callback=()=>{} }) {
+    axios.put(`${host}/payments/${id}`, payload, {
+      withCredentials: true
+    })
+    .then((response) => {
+      callback(null, response);
+    })
+    .catch((response) => {
+      let error = response.data.errorMessage;
+      console.log(`Error in Api.putPayment(): ${error}`);
+      callback(new Error(error), response);
+    });
+  },
+
 };
 
 
