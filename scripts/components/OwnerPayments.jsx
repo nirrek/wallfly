@@ -5,9 +5,15 @@ var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var AddPaymentDialog = require('./AddPaymentDialog.jsx');
+var Status = require('./Status.jsx');
 var MaterialUi = require('material-ui');
 var Snackbar = MaterialUi.Snackbar;
+var RaisedButton = MaterialUi.RaisedButton;
 
+var FixedDataTable = require('fixed-data-table');
+require('../../styles/fixed-data-table.css');
+var Table = FixedDataTable.Table;
+var Column = FixedDataTable.Column;
 
 var OwnerPayments = React.createClass({
   getInitialState() {
@@ -43,33 +49,71 @@ var OwnerPayments = React.createClass({
     this.refs.snackbar.show();
   },
 
+  rowGetter(rowIndex) {
+    var row = this.state.payments[rowIndex];
+
+    return [
+      moment(row.dateDue).format('Do MMM YYYY'),
+      row.isPaid,
+      row.description,
+      `$${row.amount.toFixed(2)}`,
+    ];
+  },
+
+  isPaidRenderer(data) {
+    var statusColor = data ? 'green' : 'red';
+    return (
+      <div className="public_fixedDataTableCell_cellContent">
+        <Status type={statusColor}>
+          {data ? 'Paid' : 'Unpaid' }
+        </Status>
+      </div>
+    );
+  },
+
   render() {
     var propertyId = parseInt(this.props.params.propertyId, 10);
 
-    var rows = this.state.payments.map(payment => {
-      return (
-        <tr key={payment.id}>
-          <td>{moment(payment.date).format('Do MMM YYYY')}</td>
-          <td>{payment.propertyId}</td>
-          <td>${payment.amount}</td>
-        </tr>
-      );
-    });
+    var rowHeight = Math.min((window.innerHeight * 5) / 8,
+      50 * (this.state.payments.length + 1) + 2);
 
     return (
       <div style={style.container}>
         <PageHeading>Payments</PageHeading>
-        <table>
-          <thead>
-            <th>Date</th>
-            <th>Property</th>
-            <th>Amount</th>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-        </table>
-        <button onClick={this.onShowPaymentDialog}>Add Payment</button>
+        <Table
+          rowHeight={50}
+          rowGetter={this.rowGetter}
+          rowsCount={this.state.payments.length}
+          width={705}
+          height={rowHeight}
+          headerHeight={50}
+          footerHeight={0}
+          >
+          <Column
+            label="Due Date"
+            width={130}
+            dataKey={0}
+          />
+          <Column
+            label="Status"
+            width={85}
+            dataKey={1}
+            cellRenderer={this.isPaidRenderer}
+          />
+          <Column
+            label="Description"
+            width={400}
+            dataKey={2}
+          />
+          <Column
+            label="Amount"
+            width={90}
+            dataKey={3}
+          />
+        </Table>
+        <div style={style.btnContainer}>
+          <RaisedButton primary={true} label="Add Payment" onClick={this.onShowPaymentDialog} />
+        </div>
         <AddPaymentDialog isOpen={this.state.showPaymentDialog}
                           onClose={this.onPaymentDialogClose}
                           onAddPayment={this.onPaymentAdded}
@@ -88,11 +132,9 @@ var style = {
     display: 'flex',
     flexFlow: 'column',
   },
-  header: {
-    fontSize: 18,
-    fontWeight: 800,
-    textAlign: 'left',
-  },
+  btnContainer: {
+    marginTop: '1em',
+  }
 };
 
 module.exports = MuiContextified(Radium(OwnerPayments));
