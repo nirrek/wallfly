@@ -83,10 +83,6 @@ var AddPaymentDialog = React.createClass({
 
   // Validate the form, returns the Joi result of the validation.
   validate() {
-    console.log('validate');
-    console.log(this.state.amount);
-    console.log(this.state.description);
-
     return Joi.validate({
       dateDue: new Date(),
       amount: this.state.amount,
