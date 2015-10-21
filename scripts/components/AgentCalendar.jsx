@@ -86,7 +86,7 @@ var AgentCalendar = React.createClass({
               tooltip="Today">today</IconButton>
           </ToolbarGroup>
         </Toolbar>
-        {filteredRequests.length == 0 ?
+        {filteredRequests.length === 0 ?
           <p style={style.noEvents}>No events for this month.</p> :
           <CalendarListDay
             events={filteredRequests}
