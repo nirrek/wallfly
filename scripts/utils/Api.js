@@ -480,7 +480,7 @@ let Api = {
   // ---------------------------------------------------------------------------
   // Events Resource Endpoints
   // ---------------------------------------------------------------------------
-  getEvents({ params={}, callback=()=>{} }) {
+  getAllEvents({ params={}, callback=()=>{} }) {
     axios.get(`${host}/events`, {
       params: params,
       withCredentials: true, // send cookies for cross-site requests
@@ -490,7 +490,7 @@ let Api = {
     })
     .catch((response) => {
       let error = response.data.errorMessage;
-      console.log(`Error in Api.getEvents(): ${error}`);
+      console.log(`Error in Api.getAllEvents(): ${error}`);
       callback(new Error(error), response);
     });
   },
