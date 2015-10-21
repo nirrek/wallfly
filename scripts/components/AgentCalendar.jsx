@@ -67,7 +67,7 @@ var AgentCalendar = React.createClass({
     var filteredRequests = events.filter((event) => Moment(event.date).isSame(month, 'month'));
 
     return (
-      <div>
+      <div style={style.container}>
         <Toolbar>
           <ToolbarGroup key={0} float="left">
             <IconButton style={style.arrowButtons}
@@ -99,6 +99,9 @@ var AgentCalendar = React.createClass({
 });
 
 var style = {
+  container: {
+    paddingBottom: '3em',
+  },
   toolbarTitle: {
     paddingRight: '0',
     textAlign: 'center',
