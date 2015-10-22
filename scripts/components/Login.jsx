@@ -33,8 +33,15 @@ var Login = React.createClass({
   },
 
   componentDidMount() {
+    // Show an account created snackbar if coming from account creation.
     if (this.refs.snackbar) {
       setTimeout(() => this.refs.snackbar.show(), 400);
+    }
+
+    // Autofocus username field onMount.
+    if (this.refs.username) {
+      setTimeout(() => this.refs.username.focus(), 300);
+
     }
   },
 
@@ -136,6 +143,7 @@ var Login = React.createClass({
             {validationError}
             {authFailMessage}
             <TextField
+              ref="username"
               value={username}
               name="username"
               onChange={this.onChange.bind(this, 'username')}

@@ -36,6 +36,8 @@ var AgentMessages = require('./components/AgentMessages.jsx');
 var OwnerMessages = require('./components/OwnerMessages.jsx');
 var TenantPropertyDetails = require('./components/TenantPropertyDetails.jsx');
 var RepairRequestAggregator = require('./components/RepairRequestAggregator.jsx');
+var OverdueRent = require('./components/OverdueRent.jsx');
+var Home = require('./components/Home.jsx');
 
 require('../styles/main.scss');
 
@@ -90,8 +92,9 @@ var redirectUnauthedUser = function(nextState, transition) {
 React.render((
   <Router history={history}>
     <Route component={App}>
+      <Route path="/" component={Home} />
       <Route path="" component={UnauthedSection}>
-        <Route path="/" component={Login} />
+        <Route path="/login" component={Login} />
         <Route path="/createAccount" component={CreateAccount} />
       </Route>
       <Route path="" component={AppFrame} onEnter={redirectUnauthedUser}>
@@ -112,6 +115,7 @@ React.render((
           <Route path="propertyList" component={PropertyList} />
           <Route path="calendar" component={Stub} />
           <Route path="repairRequests" component={RepairRequestAggregator} />
+          <Route path="overdueRent" component={OverdueRent} />
         </Route>
         {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}
         <Route path="agent/property/:propertyId" components={{ main: Page, sidebar: PropertyNav }}>

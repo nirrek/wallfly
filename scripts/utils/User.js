@@ -28,7 +28,7 @@ module.exports = {
   setUser(userModel) {
     user = userModel;
     // TODO, i think we want to specify the Path is root of domain "/"
-    cookie.save('userId', user.id);
+    cookie.save('userId', user.id, { path: '/' });
   },
 
   // Adds a new property to the user object.
