@@ -21,13 +21,19 @@ var DialogEnhanced = React.createClass({
     if (this.props.isOpen) this.refs.dialog.show();
   },
 
-  componentDidUpdate() {
-    if (this.props.isOpen) this.refs.dialog.show();
+  componentWillReceiveProps(props) {
+    // Adapt prop-based configuration into material-uis awful imperative api.
+    if (this.refs.dialog) {
+      if (props.isOpen) {
+        this.refs.dialog.show();
+      } else {
+        this.refs.dialog.dismiss();
+      }
+    }
   },
 
   render() {
     var { isOpen, children, ...others } = this.props;
-    if (!isOpen) return null;
     return (
       <Dialog ref="dialog" {...others}>
         {children}
