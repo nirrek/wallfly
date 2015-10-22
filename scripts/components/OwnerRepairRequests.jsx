@@ -3,19 +3,19 @@ var Api = require('../utils/Api.js');
 var moment = require('moment');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
-var OwnerRepairRequestImages = require('./OwnerRepairRequestImages.jsx');
 var Priority = require('./Priority.jsx');
 var User = require('../utils/User.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var MaterialUi = require('material-ui');
 var SelectField = MaterialUi.SelectField;
 var Snackbar = MaterialUi.Snackbar;
+var RepairRequestImages = require('./RepairRequestImages.jsx');
 
 
 var OwnerRepairRequests = React.createClass({
   getInitialState() {
     return {
-      requests: [],
+      repairRequests: [],
       responseReceived: false, // received API response?
     };
   },
@@ -28,7 +28,7 @@ var OwnerRepairRequests = React.createClass({
         if (err) return console.log(err);
         this.setState({
           responseReceived: true,
-          requests: response.data
+          repairRequests: response.data
         });
       }
     });
@@ -59,24 +59,34 @@ var OwnerRepairRequests = React.createClass({
     this.forceUpdate();
   },
 
+  groupById(data) {
+    var obj = data.reduce(function(acc, d) {
+      var p = d.id;
+      if (!acc[0].hasOwnProperty(p)) acc[0][p] = [];
+      acc[0][p].push(d);
+      return acc;
+    },[{}])
+    .reduce(function(acc, v){
+      Object.keys(v).forEach(function(k){acc.push({id:k, repairRequests:v[k]})});
+      return acc;
+    },[]);
+    return obj;
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
-
-    var rows = this.state.requests.map(request => {
+    var { repairRequests } = this.state;
+    var groupedRequests = this.groupById(repairRequests);
+    var rows = groupedRequests.map(request => {
       return (
         <tr key={request.id}>
-          <td>{moment(request.date).format('Do MMM YYYY')}</td>
-          <td><Priority type={request.priority} /></td>
-          <td>{request.request}</td>
-<<<<<<< HEAD
+          <td>{moment(request.repairRequests[0].date).format('Do MMM YYYY')}</td>
+          <td><Priority type={request.repairRequests[0].priority} /></td>
+          <td>{request.repairRequests[0].request}</td>
           <td>
-            <OwnerRepairRequestImages requestId={request.id}/>
+            <RepairRequestImages images={request.repairRequests} refresh={this.getPropertyRepairRequests}/>
           </td>
-          <td>{request.status}</td>
-=======
-          <td><img style={styles.img} src={request.photo} /></td>
->>>>>>> master
           <td>
             { User.getUser().type === 'agent' ? (
               <SelectField
