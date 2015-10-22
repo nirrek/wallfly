@@ -3,8 +3,6 @@ var User = require('../utils/User.js');
 var Api = require('../utils/Api.js');
 var mui = require('material-ui');
 var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
 var List = mui.List;
 var ListItem = mui.ListItem;
 var FontIcon = mui.FontIcon;
@@ -133,7 +131,7 @@ var UserProfile = React.createClass({
     var content = (!isEditing) ? (
       <div>
         <List>
-          <div><img style={styles.img} src={avatar} /></div>
+          <div style={{textAlign: 'center'}}><img style={styles.img} src={avatar} /></div>
           <ListItem leftIcon={nameIcon} primaryText={`${firstName} ${lastName}`} />
           <ListItem leftIcon={emailIcon} primaryText={email} />
           <ListItem leftIcon={phoneIcon} primaryText={phone} />
@@ -179,9 +177,10 @@ var UserProfile = React.createClass({
     return (
       <DialogEnhanced isOpen={isOpen}
                       modal={true}
-                      title="Profile"
                       actions={actions}
-                      autoScrollBodyContent={true}>
+                      autoScrollBodyContent={true}
+                      autoDetectWindowHeight={true}
+                      contentStyle={{width: 300}}>
         {content}
       </DialogEnhanced>
     );
