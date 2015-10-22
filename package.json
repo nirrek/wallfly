@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.5.4",
+    "fixed-data-table": "^0.4.7",
     "flux": "^2.0.3",
     "fuzzy": "^0.1.1",
     "joi": "^6.7.1",

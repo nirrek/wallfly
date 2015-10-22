@@ -4,22 +4,17 @@ var moment = require('moment');
 var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
-var AddPaymentDialog = require('./AddPaymentDialog.jsx');
 var Status = require('./Status.jsx');
-var MaterialUi = require('material-ui');
-var Snackbar = MaterialUi.Snackbar;
-var RaisedButton = MaterialUi.RaisedButton;
 
 var FixedDataTable = require('fixed-data-table');
 require('../../styles/fixed-data-table.css');
 var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
 
-var OwnerPayments = React.createClass({
+var OverdueRent = React.createClass({
   getInitialState() {
     return {
       payments: [], // list of recent payments
-      showPaymentDialog: false,
     };
   },
 
@@ -30,23 +25,13 @@ var OwnerPayments = React.createClass({
   fetchPayments() {
     Api.getAllPayments({
       params: {
-        propertyId: this.props.params.propertyId
+        overdue: true,
       },
       callback: (err, res) => {
         if (err) return console.log(err);
         this.setState({ payments: res.data });
       }
     });
-  },
-
-  onShowPaymentDialog() { this.setState({ showPaymentDialog: true }); },
-
-  onPaymentDialogClose() { this.setState({ showPaymentDialog: false }); },
-
-  onPaymentAdded() {
-    this.fetchPayments();
-    this.setState({ showPaymentDialog: false });
-    this.refs.snackbar.show();
   },
 
   rowGetter(rowIndex) {
@@ -56,6 +41,7 @@ var OwnerPayments = React.createClass({
       moment(row.dateDue).format('Do MMM YYYY'),
       row.isPaid,
       row.description,
+      `${row.street}, ${row.suburb}`,
       `$${row.amount.toFixed(2)}`,
     ];
   },
@@ -72,20 +58,19 @@ var OwnerPayments = React.createClass({
   },
 
   render() {
-    var propertyId = parseInt(this.props.params.propertyId, 10);
-
-    var rowHeight = Math.min((window.innerHeight * 5) / 8,
+    // Make table 5/8 the viewport, or length of content, whichever is shorter.
+    var height = Math.min((window.innerHeight * 5) / 8,
       50 * (this.state.payments.length + 1) + 2);
 
     return (
       <div style={style.container}>
-        <PageHeading>Payments</PageHeading>
+        <PageHeading>Overdue Rent</PageHeading>
         <Table
           rowHeight={50}
           rowGetter={this.rowGetter}
           rowsCount={this.state.payments.length}
           width={705}
-          height={rowHeight}
+          height={height}
           headerHeight={50}
           footerHeight={0}
           >
@@ -102,26 +87,20 @@ var OwnerPayments = React.createClass({
           />
           <Column
             label="Description"
-            width={400}
+            width={100}
             dataKey={2}
+          />
+          <Column
+            label="Property"
+            width={300}
+            dataKey={3}
           />
           <Column
             label="Amount"
             width={90}
-            dataKey={3}
+            dataKey={4}
           />
         </Table>
-        <div style={style.btnContainer}>
-          <RaisedButton primary={true} label="Add Payment" onClick={this.onShowPaymentDialog} />
-        </div>
-        <AddPaymentDialog isOpen={this.state.showPaymentDialog}
-                          onClose={this.onPaymentDialogClose}
-                          onAddPayment={this.onPaymentAdded}
-                          propertyId={propertyId} />
-        <Snackbar
-          ref="snackbar"
-          message="Payment Successfully Added"
-          autoHideDuration={3000} />
       </div>
     );
   }
@@ -132,9 +111,6 @@ var style = {
     display: 'flex',
     flexFlow: 'column',
   },
-  btnContainer: {
-    marginTop: '1em',
-  }
 };
 
-module.exports = MuiContextified(Radium(OwnerPayments));
+module.exports = MuiContextified(Radium(OverdueRent));

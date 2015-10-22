@@ -5,42 +5,84 @@ var MuiContextified = require('./MuiContextified.jsx');
 var PaymentForm = require('./PaymentForm.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
+var Status = require('./Status.jsx');
+var Property = require('../utils/Property.js');
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+var Snackbar = mui.Snackbar;
 
 var Payments = React.createClass({
   getInitialState() {
     return {
       payments: [], // list of recent payments
+      isDialogOpen: false,
+      currentPayment: null, // active payment for paying
     };
   },
 
   getPayments() {
-    Api.getPayments({
-      callback: (err, response) => {
+    Api.getAllPayments({
+      params: {
+        propertyId: Property.getPropertyId()
+      },
+      callback: (err, res) => {
         if (err) {
-          // TODO
           return console.log(err);
         }
 
+        console.log(res.data[0]);
+
         this.setState({
-          payments: response.data
+          payments: res.data
         });
       }
     });
   },
 
-   componentWillMount() {
+  componentWillMount() {
     this.getPayments();
+  },
+
+  payNow(payment) {
+    this.setState({
+      currentPayment: payment,
+      isDialogOpen: true,
+    });
+  },
+
+  onPaymentSuccess() {
+    this.state.currentPayment.isPaid = true;
+    this.setState({ isDialogOpen: false });
+    this.refs.snackbar.show();
+  },
+
+  onCancel() {
+    this.setState({ isDialogOpen: false });
   },
 
   render() {
     var { payments } = this.state;
 
     var rows = payments.map(payment => {
+      var statusColor = payment.isPaid ? 'green' : 'red';
       return (
         <tr key={payment.id}>
           <td>{moment(payment.date).format('Do MMM YYYY')}</td>
-          <td>{payment.property}</td>
+          <td>
+            <Status type={statusColor}>
+              {payment.isPaid ? 'Paid' : 'Unpaid' }
+            </Status>
+          </td>
+          <td>{payment.description}</td>
           <td>${payment.amount}</td>
+          <td>
+            {!payment.isPaid ? (
+              <RaisedButton
+                onClick={this.payNow.bind(this, payment)}
+                primary={true}
+                label="Pay Now" />
+            ) : null}
+          </td>
         </tr>
       );
     });
@@ -60,9 +102,11 @@ var Payments = React.createClass({
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Property</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Description</th>
               <th>Amount</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -71,8 +115,17 @@ var Payments = React.createClass({
         </table>
 
         <div style={style.formContainer}>
-          <PaymentForm paymentAdded={this.getPayments}/>
+          <PaymentForm
+            isOpen={this.state.isDialogOpen}
+            onPaymentSuccess={this.onPaymentSuccess}
+            onCancel={this.onCancel}
+            payment={this.state.currentPayment} />
         </div>
+
+        <Snackbar
+          ref="snackbar"
+          message="Payment Made Successfully"
+          autoHideDuration={3000} />
       </div>
     );
   }
