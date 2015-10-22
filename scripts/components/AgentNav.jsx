@@ -9,6 +9,7 @@ var navItemData = [
   { text: 'Property List', path: `${prefix}/propertyList`, icon: 'location_city' },
   { text: 'Calendar (Global)', path: `${prefix}/calendar`, icon: 'event' },
   { text: 'Repairs (Global)', path: `${prefix}/repairRequests`, icon: 'report_problem' },
+  { text: 'Overdue Rent', path: `${prefix}/overdueRent`, icon: 'attach_money' },
 ];
 
 var AgentNav = React.createClass({
