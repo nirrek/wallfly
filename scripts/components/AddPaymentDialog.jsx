@@ -3,7 +3,6 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var TextField = mui.TextField;
-var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
@@ -26,7 +25,6 @@ var AddPaymentDialog = React.createClass({
     return {
       amount: undefined,
       description: '',
-      authFailure: '', // server auth failure message
       validationError: false, // clientside validation failure
     };
   },
@@ -43,7 +41,6 @@ var AddPaymentDialog = React.createClass({
   onAddPayment() {
     // Clear prior error states.
     this.setState({
-      authFailure: '',
       validationError: false,
     });
 
@@ -61,10 +58,7 @@ var AddPaymentDialog = React.createClass({
         propertyId: this.props.propertyId, // from the router
       },
       callback: (err, res) => {
-        if (err) {
-          this.setState({ authFailure: res.data });
-          return;
-        }
+        if (err) return console.log(err);
 
         // Clear the form
         this.resetState();
@@ -78,6 +72,7 @@ var AddPaymentDialog = React.createClass({
     this.setState({
       amount: null,
       description: '',
+      validationError: false,
     });
   },
 
@@ -97,11 +92,7 @@ var AddPaymentDialog = React.createClass({
   },
 
   render() {
-    var { amount, description, authFailure, validationError } = this.state;
-
-    var authFailMessage = authFailure ? (
-      <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
-    ) : null;
+    var { amount, description, validationError } = this.state;
 
     // Form validation error
     var validationError = (validationError) ? (
@@ -122,7 +113,6 @@ var AddPaymentDialog = React.createClass({
                       actions={actions}>
         <form style={style.form}>
           { validationError }
-          { authFailMessage }
           <TextField
             value={amount}
             onChange={this.onChange.bind(this, 'amount')}
