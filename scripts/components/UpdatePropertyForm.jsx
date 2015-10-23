@@ -3,34 +3,54 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
 var ImageSelector = require('./ImageSelector.jsx');
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
+var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
+var Kronos = require('react-kronos');
 
 var UpdatePropertyForm = React.createClass({
   propTypes: {
+    isOpen: React.PropTypes.bool.isRequired,
+    onClose: React.PropTypes.func.isRequired,
     details: React.PropTypes.object.isRequired, // property details
     onPropertyDetailsUpdated: React.PropTypes.func.isRequired,
   },
 
-  getInitialState() {
-    return this.props.details;
+  getDefaultProps() {
+    return {
+      onClose: () => {}
+    };
   },
 
-  onButtonClick() {
-    // Clear prior error states.
+  getInitialState() {
+    return {
+      ...this.props.details,
+      validationError: false,
+      authFailure: '',
+      fileSizeError: ''
+    };
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ ...nextProps.details });
+  },
+
+  onClose() {
+    this.resetState();
+    this.props.onClose();
+  },
+
+  // Resets error state of the form.
+  resetState() {
     this.setState({
       validationError: false,
       authFailure: '',
       fileSizeError: ''
     });
-
-    this.refs.dialog.show();
   },
 
   /**
@@ -63,6 +83,7 @@ var UpdatePropertyForm = React.createClass({
       data: {
         propertyId: this.state.id,
         tenantEmail: this.state.tenantEmail,
+        leaseExpiry: this.state.leaseExpiry,
         ownerEmail: this.state.ownerEmail,
         street: this.state.street,
         suburb: this.state.suburb,
@@ -78,7 +99,6 @@ var UpdatePropertyForm = React.createClass({
           return;
         }
         this.props.onPropertyDetailsUpdated();
-        this.refs.dialog.dismiss();
       }
     });
   },
@@ -87,6 +107,7 @@ var UpdatePropertyForm = React.createClass({
   validate() {
     return Joi.validate({
       tenantEmail: this.state.tenantEmail,
+      leaseExpiry: this.state.leaseExpiry,
       ownerEmail: this.state.ownerEmail,
       street: this.state.street,
       suburb: this.state.suburb,
@@ -106,14 +127,24 @@ var UpdatePropertyForm = React.createClass({
     this.setState({ fileSizeError: errorMessage });
   },
 
+  onKronosChange(date) {
+    this.setState({ leaseExpiry: date });
+  },
+
+  onBlurTenantEmail(event) {
+    if (!event.target.value) {
+      this.setState({ leaseExpiry: '' });
+    }
+  },
+
   render() {
-    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, photo, authFailure, validationError } = this.state;
+    var { street, suburb, postcode, ownerEmail, tenantEmail, fileSizeError, photo, authFailure, validationError, leaseExpiry } = this.state;
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
 
     var standardActions = [
-      { text: 'Cancel' },
+      { text: 'Cancel', onTouchTap: this.onClose },
       { text: 'Update Details', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
 
@@ -128,57 +159,63 @@ var UpdatePropertyForm = React.createClass({
 
     return (
       <div>
-        <RaisedButton label="Edit Details"
-                      primary={true}
-                      onClick={this.onButtonClick} />
-        <Dialog
-          title="Edit Details"
-          actions={standardActions}
-          actionFocus="submit"
-          modal={this.state.modal}
-          ref="dialog">
+        <DialogEnhanced isOpen={this.props.isOpen}
+                        title="Edit Details"
+                        autoScrollBodyContent={true}
+                        autoDetectWindowHeight={true}
+                        contentStyle={{width: 450}}
+                        actions={standardActions}>
           {validationErrorMessage}
           {authFailMessage}
           <TextField
             value={street}
-            multiLine={true}
             name="Street Address"
             onChange={this.onChange.bind(this, 'street')}
             floatingLabelText="Street Address" />
           <TextField
             value={suburb}
-            multiLine={true}
             name="Suburb"
             onChange={this.onChange.bind(this, 'suburb')}
             floatingLabelText="Suburb" />
           <TextField
             value={postcode}
-            multiLine={true}
             name="Postcode"
             onChange={this.onChange.bind(this, 'postcode')}
             floatingLabelText="Postcode" />
           <TextField
             value={ownerEmail}
-            multiLine={true}
             name="Owner Email"
             onChange={this.onChange.bind(this, 'ownerEmail')}
-            floatingLabelText="Owner Email" />
+            floatingLabelText="Owner Email"
+            fullWidth />
           <TextField
             value={tenantEmail}
-            multiLine={true}
+            onBlur={this.onBlurTenantEmail}
             name="Tenant Email"
             onChange={this.onChange.bind(this, 'tenantEmail')}
-            floatingLabelText="Tenant Email (Leaving blank will remove current tenant)"
+            floatingLabelText="Tenant Email (Leave blank to remove current tenant)"
             fullWidth />
+          <div style={style.kronosContainer}>
+            <Kronos
+              date={leaseExpiry}
+              format="DD/MM/YYYY"
+              placeholder="Lease expiry date (optional)"
+              options={{
+                color: '#2ECC71',
+                font: 'Roboto',
+              }}
+              returnAs="ISO"
+              onChange={this.onKronosChange} />
+          </div>
           <div>
             <Label>Image (Not Required)</Label>
-            <img width={300} src={photo} />
             {sizeError}
             <ImageSelector maxSize={200000}
+                           image={photo}
                            onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
-        </Dialog>
+        </DialogEnhanced>
       </div>
     );
   }
@@ -187,11 +224,19 @@ var UpdatePropertyForm = React.createClass({
 // Validation schema for update property form data.
 var schema = Joi.object().keys({
   tenantEmail: Joi.string().email().max(255).allow(['', null]),
+  leaseExpiry: Joi.date().iso().allow(['', null]),
   ownerEmail: Joi.string().email().max(255),
   street: Joi.string().min(1).max(500),
   suburb: Joi.string().min(1).max(500),
   postcode: Joi.string().min(4).max(4),
   photo: Joi.string(),
 });
+
+var style = {
+  kronosContainer: {
+    marginTop: '1em',
+    width: 220,
+  }
+};
 
 module.exports = MuiContextified(Radium(UpdatePropertyForm));

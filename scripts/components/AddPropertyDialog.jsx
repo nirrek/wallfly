@@ -10,6 +10,7 @@ var JoiError = require('./JoiError.jsx');
 var Radium = require('radium');
 var Label = require('./Label.jsx');
 var DialogEnhanced = require('./DialogEnhanced.jsx');
+var Kronos = require('react-kronos');
 
 var AddPropertyDialog = React.createClass({
   propTypes: {
@@ -25,6 +26,7 @@ var AddPropertyDialog = React.createClass({
       postCode: '', // User entered post code
       ownerEmail: '', // User entered owner email
       tenantEmail: '', // User entered tenant email
+      leaseExpiry: '', // ISO-8601 string
       dataUrl: '', // base64 encoding of the user selected image.
       fileSizeError: '', // file size error message
       authFailure: '', // server auth failure message
@@ -63,6 +65,7 @@ var AddPropertyDialog = React.createClass({
         postCode: this.state.postCode,
         ownerEmail: this.state.ownerEmail,
         tenantEmail: this.state.tenantEmail,
+        leaseExpiry: this.state.leaseExpiry,
         dataUrl: this.state.dataUrl,
       },
       callback: (err, response) => {
@@ -86,15 +89,16 @@ var AddPropertyDialog = React.createClass({
   // Resets the state of the form
   resetState() {
     this.setState({
-      streetAddress: '', // User entered street address
-      suburb: '', // User entered suburb
-      postCode: '', // User entered post code
-      ownerEmail: '', // User entered owner email
-      tenantEmail: '', // User entered tenant email
-      dataUrl: '', // base64 encoding of the user selected image.
-      fileSizeError: '', // file size error message
-      authFailure: '', // server auth failure message
-      validationError: false, // clientside validation failure
+      streetAddress: '',
+      suburb: '',
+      postCode: '',
+      ownerEmail: '',
+      tenantEmail: '',
+      leaseExpiry: '',
+      dataUrl: '',
+      fileSizeError: '',
+      authFailure: '',
+      validationError: false,
     });
   },
 
@@ -106,6 +110,7 @@ var AddPropertyDialog = React.createClass({
       postCode: this.state.postCode,
       ownerEmail: this.state.ownerEmail,
       tenantEmail: this.state.tenantEmail,
+      leaseExpiry: this.state.leaseExpiry,
       dataUrl: this.state.dataUrl,
     }, schema);
   },
@@ -126,8 +131,12 @@ var AddPropertyDialog = React.createClass({
     this.props.onClose();
   },
 
+  onKronosChange(date) {
+    this.setState({ leaseExpiry: date });
+  },
+
   render() {
-    var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, dataUrl, fileSizeError, authFailure, validationError } = this.state;
+    var { streetAddress, suburb, postCode, ownerEmail, tenantEmail, leaseExpiry, dataUrl, fileSizeError, authFailure, validationError } = this.state;
 
     var sizeError = fileSizeError ? (
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
@@ -182,6 +191,18 @@ var AddPropertyDialog = React.createClass({
             multiLine={true}
             onChange={this.onChange.bind(this, 'tenantEmail')}
             floatingLabelText="Tenant Email (optional)" />
+          <div style={style.kronosContainer}>
+            <Kronos
+              date={leaseExpiry}
+              format="DD/MM/YYYY"
+              placeholder="Lease expiry date (optional)"
+              options={{
+                color: '#2ECC71',
+                font: 'Roboto',
+              }}
+              returnAs="ISO"
+              onChange={this.onKronosChange} />
+          </div>
           <Label>Property Photo</Label>
           <div style={style.selectorContainer}>
             {sizeError}
@@ -202,6 +223,7 @@ var schema = Joi.object().keys({
   postCode: Joi.string().min(4).max(4),
   ownerEmail: Joi.string().email().max(255),
   tenantEmail: Joi.string().email().max(255).allow(['', null]),
+  leaseExpiry: Joi.date().iso().allow(['', null]),
   dataUrl: Joi.string(),
 });
 
@@ -213,7 +235,11 @@ var style = {
     width: '20em',
   },
   selectorContainer: {
-    marginBottom: '2em'
+    marginBottom: '2em',
+    minHeight: 130,
+  },
+  kronosContainer: {
+    marginTop: '1em',
   }
 };
 
