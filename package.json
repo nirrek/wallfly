@@ -17,6 +17,7 @@
     "file-loader": "^0.8.4",
     "image-webpack-loader": "^1.6.1",
     "imagemin": "^3.2.0",
+    "json-loader": "^0.5.3",
     "node-sass": "^3.2.0",
     "react-hot-loader": "^1.2.8",
     "sass-loader": "^1.0.3",
@@ -36,6 +37,7 @@
     "react": "^0.13.3",
     "react-cookie": "^0.3.4",
     "react-day-picker": "^1.0.3",
+    "react-kronos": "^0.3.1",
     "react-router": "1.0.0-beta3",
     "react-sidebar": "^1.0.3",
     "react-tap-event-plugin": "^0.1.7"
