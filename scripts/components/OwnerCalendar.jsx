@@ -3,6 +3,11 @@ var moment = require('moment');
 var Api = require('../utils/Api.js');
 var WallflyCalendar = require('./WallflyCalendar.jsx');
 var CalendarAddEventForm = require('./CalendarAddEventForm.jsx');
+var MuiContextified = require('./MuiContextified.jsx');
+var MaterialUi = require('material-ui');
+var Snackbar = MaterialUi.Snackbar;
+var RaisedButton = MaterialUi.RaisedButton;
+var Radium = require('radium');
 
 require('../../styles/DayPicker.scss');
 
@@ -14,12 +19,12 @@ var OwnerCalendar = React.createClass({
   getInitialState() {
     return {
       events: [], // list of calendar events
+      isAddEventDialogOpen: false,
     };
   },
 
   componentWillMount() {
     this.getCalendarEvents();
-
   },
 
   getCalendarEvents() {
@@ -41,16 +46,38 @@ var OwnerCalendar = React.createClass({
     });
   },
 
+  onAddEventClick() {
+    this.setState({ isAddEventDialogOpen: true });
+  },
+
+  onClose() {
+    this.setState({ isAddEventDialogOpen: false });
+  },
+
+  onEventAdded() {
+    this.setState({ isAddEventDialogOpen: false });
+    this.getCalendarEvents();
+    this.refs.snackbar.show();
+  },
+
   render() {
     return (
       <div>
+        <RaisedButton primary={true} label="Add Event" onClick={this.onAddEventClick} />
         <CalendarAddEventForm
-          eventAdded={this.getCalendarEvents}
+          isOpen={this.state.isAddEventDialogOpen}
+          onClose={this.onClose}
+          onEventAdded={this.onEventAdded}
           propertyId={this.props.params.propertyId} />
         <WallflyCalendar events={this.state.events} />
+
+        <Snackbar
+          ref="snackbar"
+          message="Event Added"
+          autoHideDuration={3000} />
       </div>
     );
   }
 });
 
-module.exports = OwnerCalendar;
+module.exports = MuiContextified(Radium(OwnerCalendar));
