@@ -36,6 +36,7 @@ var AgentMessages = require('./components/AgentMessages.jsx');
 var OwnerMessages = require('./components/OwnerMessages.jsx');
 var TenantPropertyDetails = require('./components/TenantPropertyDetails.jsx');
 var RepairRequestAggregator = require('./components/RepairRequestAggregator.jsx');
+var AgentCalendar = require('./components/AgentCalendar.jsx');
 var OverdueRent = require('./components/OverdueRent.jsx');
 var Home = require('./components/Home.jsx');
 
@@ -113,7 +114,7 @@ React.render((
 
         <Route path="agent" components={{ main: Page, sidebar: AgentNav }}>
           <Route path="propertyList" component={PropertyList} />
-          <Route path="calendar" component={Stub} />
+          <Route path="calendar" component={AgentCalendar} />
           <Route path="repairRequests" component={RepairRequestAggregator} />
           <Route path="overdueRent" component={OverdueRent} />
         </Route>
