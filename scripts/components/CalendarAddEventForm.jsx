@@ -3,32 +3,29 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var mui = require('material-ui');
 var TextField = mui.TextField;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 var Label = require('./Label.jsx');
+var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
 var Kronos = require('react-kronos');
 
 var CalendarAddEventForm = React.createClass({
   propTypes: {
-    eventAdded: React.PropTypes.func,
+    isOpen: React.PropTypes.bool,
+    onClose: React.PropTypes.func.isRequired,
+    onEventAdded: React.PropTypes.func,
     propertyId: React.PropTypes.string,
   },
 
   getInitialState() {
     return {
       eventDesc: '', // User entered description
-      date: new Date(),
+      date: (new Date()).toISOString(),
       time: '',
       notes: '',
       validationError: null, // clientside validation error object
     };
-  },
-
-  onButtonClick() {
-    this.refs.dialog.show();
   },
 
   /**
@@ -43,9 +40,7 @@ var CalendarAddEventForm = React.createClass({
    * Form submission event handler. Sends a request to the server to add the
    * repair request, and updates the repair requests if successful.
    */
-  onSubmit(event) {
-
-    // API call to add repair request
+  onSubmit() {
     var propertyId = this.props.propertyId;
 
     this.setState({
@@ -66,21 +61,26 @@ var CalendarAddEventForm = React.createClass({
         propertyId: propertyId,
       },
       callback: (err, response) => {
-        if (err) {
-        console.log(err);
-        return reply(err);
-      }
+        if (err) return console.log(err);
 
-        // Clear the form
-        this.setState({
-          eventDesc: '',
-          date: '',
-          notes: '',
-        });
-
-        this.props.eventAdded();
-        this.refs.dialog.dismiss();
+        this.resetState();
+        this.props.onEventAdded();
       }
+    });
+  },
+
+  onClose() {
+    this.resetState();
+    this.props.onClose();
+  },
+
+  // Resets state of the form.
+  resetState() {
+    this.setState({
+      eventDesc: '',
+      date: (new Date()).toISOString(),
+      notes: '',
+      validationError: false,
     });
   },
 
@@ -94,13 +94,14 @@ var CalendarAddEventForm = React.createClass({
   },
 
   onKronosChange(date) {
-    this.setState({ Date: date });
+    console.log(date);
+    this.setState({ date: date });
   },
 
   render() {
-    var { eventDesc, date, time, notes, validationError } = this.state;
+    var { eventDesc, date, notes, validationError } = this.state;
     var standardActions = [
-      { text: 'Cancel' },
+      { text: 'Cancel', onTouchTap: this.onClose },
       { text: 'Add Event', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
     var validationErrorMsg = validationError ? (
@@ -109,10 +110,8 @@ var CalendarAddEventForm = React.createClass({
 
     return (
       <div>
-        <RaisedButton label="Add Event"
-                      primary={true}
-                      onClick={this.onButtonClick} />
-        <Dialog
+        <DialogEnhanced
+          isOpen={this.props.isOpen}
           title="Add an Event"
           actions={standardActions}
           actionFocus="submit"
@@ -159,7 +158,7 @@ var CalendarAddEventForm = React.createClass({
               hintText="Add more detailed notes here"
               fullWidth />
           </div>
-        </Dialog>
+        </DialogEnhanced>
       </div>
     );
   }
@@ -186,4 +185,4 @@ var schema = Joi.object().keys({
   Notes: Joi.string().max(1000).allow(''),
 });
 
-module.exports = Radium(MuiContextified(CalendarAddEventForm));
+module.exports = MuiContextified(Radium(CalendarAddEventForm));
