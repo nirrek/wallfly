@@ -21,7 +21,10 @@ var Home = React.createClass({
           <div style={styles.marquee}>
             <div style={styles.header}>
               <div style={styles.headerInner}>
-                <img style={styles.logo} height="45" src='assets/logotype.svg' />
+                <img
+                  style={styles.logo}
+                  height="45"
+                  src={require('../../assets/logotype.svg')} />
                 <div style={styles.separator}></div>
                 <div>
                   <a href="#" style={styles.navBtn} onClick={this.transition.bind(this, 'login')}>
@@ -50,7 +53,9 @@ var Home = React.createClass({
         <div>
           <div style={styles.macContainer}>
             <h2 style={styles.macTitle}>Wallfly brings all of your rental management needs<br />on to one web application.</h2>
-            <img style={styles.mac} src='/assets/mac.png' />
+            <img
+              style={styles.mac}
+              src={require('../../assets/mac.png')} />
           </div>
         </div>
         <div style={[styles.slat, styles.slatAccent]}>
@@ -58,7 +63,9 @@ var Home = React.createClass({
               styles.img,
               // styles.agent
             ]}>
-            <img style={styles.img} src='assets/agent.png' />
+            <img
+              style={styles.img}
+              src={require('../../assets/agent.png')} />
           </div>
           <div style={styles.featuresContainer}>
             <div style={styles.features}>
@@ -77,7 +84,9 @@ var Home = React.createClass({
               styles.img,
               // styles.agent
             ]}>
-            <img style={styles.img} src='assets/owner.png' />
+            <img
+              style={styles.img}
+              src={require('../../assets/owner.png')} />
           </div>
           <div style={[styles.featuresContainer, styles.featuresAlternate]}>
             <div style={styles.features}>
@@ -97,7 +106,9 @@ var Home = React.createClass({
               styles.img,
               // styles.agent
             ]}>
-            <img style={styles.img} src='assets/tenant.png' />
+            <img
+              style={styles.img}
+              src={require('../../assets/tenant.png')} />
           </div>
           <div style={[styles.featuresContainer]}>
             <div style={styles.features}>
@@ -120,16 +131,20 @@ var Home = React.createClass({
         </div>
 
         <div style={styles.footer}>
-          <img style={styles.footerLogo} src='assets/logo.svg' />
+          <img
+            style={styles.footerLogo}
+            src={require('../../assets/logo.svg')} />
         </div>
       </div>
     );
   }
 });
 
+var marqueeBg = require('../../assets/marquee.png');
+
 var styles = {
   marqueeBg: {
-    backgroundImage: `url('/assets/marquee.png')`,
+    backgroundImage: `url(${marqueeBg})`,
     height: 600,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -152,7 +167,6 @@ var styles = {
     flexGrow: 1,
   },
   header: {
-    // backgroundColor: 'red',
     height: 80,
     flexShrink: 0,
     display: 'flex',
@@ -170,7 +184,6 @@ var styles = {
   },
   separator: {
     flexGrow: 1,
-    // backgroundColor: 'yellow',
   },
   navBtn: {
     color: '#fff',
@@ -228,15 +241,6 @@ var styles = {
     lineHeight: 1.3,
     marginBottom: '2em',
     marginTop: 0,
-  },
-  agent: {
-    backgroundImage: `url('assets/agent.png')`,
-  },
-  owner: {
-
-  },
-  tenant: {
-
   },
   img: {
     lineHeight: 0,

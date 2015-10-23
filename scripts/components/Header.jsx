@@ -72,8 +72,10 @@ var Header = React.createClass({
     if (isBasic) {
       return (
         <div style={[styles.header, styles.basic]}>
-          {/* <div style={styles.logo}>WallFly</div> */}
-          <img onClick={this.onLogoClick} style={styles.logo} src='assets/logotype.svg' />
+          <img
+            onClick={this.onLogoClick}
+            style={styles.logo}
+            src={require('../../assets/logotype.svg')} />
         </div>
       );
     } else {
@@ -85,7 +87,9 @@ var Header = React.createClass({
         <div style={styles.header}>
           {menuIcon}
           <div style={styles.logoContainer}>
-            <img style={[styles.logo, styles.logoApp]} src='/assets/logotype.svg' />
+            <img
+              style={[styles.logo, styles.logoApp]}
+              src={require('../../assets/logotype.svg')} />
           </div>
           {/* <div style={styles.logo}>WallFly</div> */}
           <IconMenu iconButtonElement={settingsIcon}>
