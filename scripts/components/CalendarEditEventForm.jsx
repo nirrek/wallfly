@@ -8,33 +8,42 @@ var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
+var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
 var Kronos = require('react-kronos');
 
 var CalendarEditEventForm = React.createClass({
   propTypes: {
-    openEditForm: React.PropTypes.bool, // open the edit form
+    isOpen: React.PropTypes.bool.isRequired,
+    onClose: React.PropTypes.func.isRequired,
     details: React.PropTypes.object.isRequired, // event details
     onEventDetailsUpdated: React.PropTypes.func.isRequired,
   },
 
   getInitialState() {
-    return this.props.details;
+    return {
+      ...this.props.details,
+      event: '',
+      notes: '',
+      date: undefined,
+    };
   },
 
-  componentWillReceiveProps() {
-    // Clear prior error states.
+  componentWillReceiveProps(nextProps) {
+    this.setState({ ...nextProps.details });
+  },
+
+  onClose() {
+    this.resetState();
+    this.props.onClose();
+  },
+
+  // Clears the state of the form
+  resetState() {
     this.setState({
       validationError: false,
-      authFailure: '',
+      serverError: '',
     });
-  },
-
-  componentDidUpdate() {
-    // Check if form has been called to open
-    if (this.props.openEditForm) {
-        this.refs.editDialog.show();
-      };
   },
 
   /**
@@ -61,7 +70,7 @@ var CalendarEditEventForm = React.createClass({
     // Clear prior error states.
     this.setState({
       validationError: false,
-      authFailure: '',
+      serverError: '',
     });
 
     var validation = this.validate();
@@ -83,10 +92,11 @@ var CalendarEditEventForm = React.createClass({
           var msg = (response.status === 0)
             ? 'Connection timed-out. Please try again.'
             : response.data;
-          this.setState({ authFailure: msg });
+          this.setState({ serverError: msg });
           return;
         }
-        this.refs.editDialog.dismiss();
+
+        this.resetState();
         this.props.onEventDetailsUpdated(this.state.event);
       }
     });
@@ -102,18 +112,15 @@ var CalendarEditEventForm = React.createClass({
   },
 
   render() {
-    // Only render form if there is call for it to appear
-    if (!this.props.openEditForm) return null;
-
-    var { date, event, notes, authFailure, validationError } = this.state;
+    var { date, event, notes, serverError, validationError } = this.state;
 
     var standardActions = [
-      { text: 'Cancel' },
+      { text: 'Cancel', onTouchTap: this.onClose },
       { text: 'Update event', onTouchTap: this.onSubmit, ref: 'submit' }
     ];
 
-    var authFailMessage = authFailure ? (
-      <ErrorMessage fillBackground={true}>{authFailure}</ErrorMessage>
+    var serverErrorMessage = serverError ? (
+      <ErrorMessage fillBackground={true}>{serverError}</ErrorMessage>
     ) : null;
 
     // Form validation error
@@ -123,44 +130,69 @@ var CalendarEditEventForm = React.createClass({
 
     return (
       <div>
-        <Dialog
+        <DialogEnhanced
+          isOpen={this.props.isOpen}
           title="Edit the Event"
           actions={standardActions}
           actionFocus="submit"
           modal={true}
+          contentStyle={{width: 450}}
           ref="editDialog">
           {validationErrorMessage}
-          {authFailMessage}
+          {serverErrorMessage}
           <TextField
             value={event}
             name="Event Description"
             onChange={this.onChange.bind(this, 'event')}
             floatingLabelText="Event Description"
-            hintText="Short description of the event" /><br />
+            hintText="Short description of the event"
+            fullWidth={true} /><br />
           <Label>Date</Label>
-          <Kronos
-            date={this.state.date}
-            format='D/MM/YYYY'
-            onChange={this.onDateChange}
-          />
-        <Label>Time</Label>
-          <Kronos
-            time={this.state.date}
-            onChange={this.onDateChange}
-          />
-          <TextField
-            value={notes}
-            multiLine={true}
-            name="Notes"
-            onChange={this.onChange.bind(this, 'notes')}
-            floatingLabelText="Notes"
-            hintText="Add more detailed notes here (1000 characters max)"
-            fullWidth />
-        </Dialog>
+          <div style={styles.kronosContainer}>
+            <Kronos
+              date={this.state.date}
+              format='D/MM/YYYY'
+              onChange={this.onDateChange}
+              options={kronosOptions}
+            />
+          </div>
+          <Label>Time</Label>
+          <div style={styles.kronosContainer}>
+            <Kronos
+              time={this.state.date}
+              onChange={this.onDateChange}
+              options={kronosOptions}
+            />
+          </div>
+          <div style={styles.notesContainer}>
+            <TextField
+              value={notes}
+              multiLine={true}
+              name="Notes"
+              onChange={this.onChange.bind(this, 'notes')}
+              floatingLabelText="Notes"
+              hintText="Add more detailed notes here (1000 characters max)"
+              fullWidth={true} />
+          </div>
+        </DialogEnhanced>
       </div>
     );
   }
 });
+
+var kronosOptions = {
+  color: '#2ECC71',
+  font: 'Roboto',
+};
+
+var styles = {
+  kronosContainer: {
+    width: 196,
+  },
+  notesContainer: {
+    minHeight: 200,
+  },
+};
 
 // Validation schema for update property form data.
 var schema = Joi.object().keys({
