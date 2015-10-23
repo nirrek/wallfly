@@ -5,6 +5,7 @@ var Moment = require('moment');
 var User = require('../utils/User.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var MaterialUi = require('material-ui');
+var smoothScrollTo = require('../utils/smoothScroll.js').smoothScrollTo;
 
 var Toolbar = MaterialUi.Toolbar;
 var ToolbarGroup = MaterialUi.ToolbarGroup;
@@ -64,12 +65,10 @@ var AgentCalendar = React.createClass({
 
   scrollToToday() {
     var today = React.findDOMNode(this.refs.today);
-    if (today) {
-      today.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-      });
-    }
+    var page =  React.findDOMNode(this.refs.container).parentElement;
+    var toolbarHeight = 56;
+    var scrollOffset = today.offsetTop - toolbarHeight;
+    smoothScrollTo(scrollOffset, page);
   },
 
   componentDidUpdate(prevProps, prevState) {
@@ -191,7 +190,7 @@ var AgentCalendar = React.createClass({
     };
 
     return (
-      <div className="container" style={containerStyle}>
+      <div ref="container" style={containerStyle}>
         <Toolbar style={toolbarStyle} ref='toolbar'>
           <ToolbarGroup key={0} float="left">
             <IconButton style={style.arrowButtons}
