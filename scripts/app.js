@@ -37,6 +37,7 @@ var OwnerMessages = require('./components/OwnerMessages.jsx');
 var TenantPropertyDetails = require('./components/TenantPropertyDetails.jsx');
 var RepairRequestAggregator = require('./components/RepairRequestAggregator.jsx');
 var AgentCalendar = require('./components/AgentCalendar.jsx');
+var OverdueRent = require('./components/OverdueRent.jsx');
 var Home = require('./components/Home.jsx');
 
 require('../styles/main.scss');
@@ -115,6 +116,7 @@ React.render((
           <Route path="propertyList" component={PropertyList} />
           <Route path="calendar" component={AgentCalendar} />
           <Route path="repairRequests" component={RepairRequestAggregator} />
+          <Route path="overdueRent" component={OverdueRent} />
         </Route>
         {/* Property subroutes can't be nested, as we need to be able to specify sidbar component */}
         <Route path="agent/property/:propertyId" components={{ main: Page, sidebar: PropertyNav }}>
