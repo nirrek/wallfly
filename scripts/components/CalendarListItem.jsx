@@ -22,20 +22,18 @@ var CalendarListItem = React.createClass({
   },
 
   getInitialState() {
-    return { openEditForm: false, }
+    return {
+      isEditDialogOpen: false,
+    };
   },
 
   showEventDialog() {
     this.refs.dialog.show();
   },
 
-  showEditDialog() {
-    this.setState({ openEditForm: true });
-  },
 
   editDialogDismissed(eventTitle) {
-    this.setState({ openEditForm: false });
-    this.props.refresh('Event "' + eventTitle + '" Updated.');
+    this.setState({ isEditDialogOpen: false });
   },
 
   deleteEvent() {
@@ -58,6 +56,19 @@ var CalendarListItem = React.createClass({
     this.refs.deleteDialog.dismiss();
   },
 
+  onShowEditDialog() {
+    this.setState({ isEditDialogOpen: true });
+  },
+
+  onCloseEditDialog() {
+    this.setState({ isEditDialogOpen: false });
+  },
+
+  onEventEdited(eventTitle) {
+    this.setState({ isEditDialogOpen: false });
+    this.props.refresh('Event "' + eventTitle + '" Updated.');
+  },
+
   render() {
     var standardActions = [
       { text: 'Close' }
@@ -69,7 +80,7 @@ var CalendarListItem = React.createClass({
     let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>;
     let rightIconMenu = (
       <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem primaryText="Edit" onTouchTap={this.showEditDialog} />
+        <MenuItem primaryText="Edit" onTouchTap={this.onShowEditDialog} />
         <MenuItem style={style.rightMenuDelete} onTouchTap={this.showRemoveDialog} primaryText="Delete" />
       </IconMenu>
     );
@@ -105,9 +116,10 @@ var CalendarListItem = React.createClass({
           <div>Would you like to delete this event <strong>"{ item.event }"</strong>?</div>
         </Dialog>
         <CalendarEditEventForm
-          openEditForm={this.state.openEditForm}
+          isOpen={this.state.isEditDialogOpen}
+          onClose={this.onCloseEditDialog}
           details={item}
-          onEventDetailsUpdated={this.editDialogDismissed} />
+          onEventDetailsUpdated={this.onEventEdited} />
       </div>
     );
   }
