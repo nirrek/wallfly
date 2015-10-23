@@ -23,23 +23,65 @@ var AgentCalendar = React.createClass({
       events: [],
       responseReceived: false,
       snackbarMsg: '',
+      toolbarWidth: '100%',  // determine dynamically on screen resize.
     };
   },
 
   componentWillMount() {
     this.getEvents();
+    window.addEventListener('resize', this.onWindowResize);
   },
 
-  componentDidUpdate() {
-    // Scroll calendar to today
-    if (React.findDOMNode(this.refs.today)) {
-      React.findDOMNode(this.refs.today).scrollIntoView(true);
-    }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onWindowResize);
+  },
 
-    // Hacky way to get width for fixed toolbar
-    var width = React.findDOMNode(this.refs.days).clientWidth
-    React.findDOMNode(this.refs.toolbar)
-      .setAttribute('style', 'width: '+width+'px;position: fixed; z-index: 1;background:#bbb;margin-top:-1em;');
+  onWindowResize() {
+    this.setState({
+      toolbarWidth: React.findDOMNode(this.refs.days).clientWidth
+    });
+  },
+
+  componentDidMount() {
+    // The virtual DOM seems to have been rendered at this time, but the changes
+    // have not yet been flushed to the DOM, so timeout is required it seems.
+    setTimeout(() => {
+      this.setState({
+        minContainerHeight: this.computeContainerHeight(),
+        toolbarWidth: React.findDOMNode(this.refs.days).clientWidth,
+      });
+
+    }, 200);
+  },
+
+  // Computes the necessary height of the container, so that 'today' is able
+  // to be scrolled to. If there is no 'today', returns 0.
+  computeContainerHeight() {
+    if (!this.refs.today) return 0;
+    var today = React.findDOMNode(this.refs.today);
+    return today.offsetTop * 2 + today.offsetHeight;
+  },
+
+  scrollToToday() {
+    var today = React.findDOMNode(this.refs.today);
+    if (today) {
+      today.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    }
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    var minContainerHeight = this.computeContainerHeight();
+
+    if (prevState.minContainerHeight !== minContainerHeight) {
+      this.setState({
+        minContainerHeight: this.computeContainerHeight(),
+      }, () => this.scrollToToday());
+    } else {
+      this.scrollToToday();
+    }
   },
 
   getEvents() {
@@ -73,7 +115,7 @@ var AgentCalendar = React.createClass({
 
   getToday() {
     this.setState({month: Moment()});
-    React.findDOMNode(this.refs.today).scrollIntoView();
+    this.scrollToToday();
   },
 
   refresh(snackbarMsg) {
@@ -107,14 +149,25 @@ var AgentCalendar = React.createClass({
     var filteredRequests = events.filter((event) => Moment(event.date).isSame(month, 'month'));
     var groupedDays = this.groupByDay(filteredRequests);
 
+    var todayHasPassed = false;
+    var today = Moment();
     var days = groupedDays.map((day) => {
+      var ref = '';
       var date = Moment(day.events[0].date);
+
+      // Treat the first day on or after today's date as 'today' for the
+      // purposes of scrolling into view.
+      if (!todayHasPassed && !date.isBefore(today, 'day')) {
+        ref = 'today';
+        todayHasPassed = true;
+      }
+
       return (
         <div>
           <List
             subheader={day.day}
-            subheaderStyle={date.isBefore(Moment(), 'day') ? style.past : style.upcoming }
-            ref={date.isSame(Moment(), 'day') ? '' : 'today' }>
+            subheaderStyle={date.isBefore(today, 'day') ? style.past : style.upcoming }
+            ref={ref}>
             <div>
               <CalendarListDay
               dayEvents={day.events}
@@ -124,10 +177,22 @@ var AgentCalendar = React.createClass({
         </div>
       );
     });
-    
+
+    // Toolbar width style needs to be computed dynamically.
+    var toolbarStyle = {
+      width: this.state.toolbarWidth,
+      ...style.toolbar,
+    };
+
+    // minContainer height needs to be computed onload.
+    var containerStyle = {
+      minHeight: this.state.minContainerHeight,
+      ...style.container,
+    };
+
     return (
-      <div style={style.container}>
-        <Toolbar style={style.toolbar} ref='toolbar'>
+      <div className="container" style={containerStyle}>
+        <Toolbar style={toolbarStyle} ref='toolbar'>
           <ToolbarGroup key={0} float="left">
             <IconButton style={style.arrowButtons}
               onClick={this.getPrevMonth}
@@ -163,10 +228,13 @@ var AgentCalendar = React.createClass({
 var style = {
   container: {
     paddingBottom: '3em',
+    position: 'relative',
   },
   toolbar: {
     position: 'fixed',
     zIndex: 1,
+    background: '#bbb',
+    marginTop: '-1em',
   },
   toolbarTitle: {
     paddingRight: '0',
