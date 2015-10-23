@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "npm install && node server.js",
-    "build": "NODE_ENV=production webpack -p --config webpack.config.production.js && cp index.html dist && surge -p dist -d wallfly.surge.sh",
+    "build": "NODE_ENV=production webpack -p --config webpack.config.production.js",
+    "deploy": "cp index.html favicon.ico dist && surge -p dist -d wallfly.surge.sh",
     "lint": "eslint ."
   },
   "devDependencies": {
