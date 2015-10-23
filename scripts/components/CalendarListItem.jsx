@@ -3,33 +3,49 @@ var Radium = require('radium');
 var Moment = require('moment');
 var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
-var MaterialUI = require('material-ui');
+var MaterialUi = require('material-ui');
 var MenuItem = require('material-ui/lib/menus/menu-item');
-var IconMenu = MaterialUI.IconMenu;
-var ListItem = MaterialUI.ListItem;
-var ListDivider = MaterialUI.ListDivider;
-var IconButton = MaterialUI.IconButton;
-var Dialog = MaterialUI.Dialog;
-var FlatButton = MaterialUI.FlatButton;
+var IconMenu = MaterialUi.IconMenu;
+var ListItem = MaterialUi.ListItem;
+var ListDivider = MaterialUi.ListDivider;
+var IconButton = MaterialUi.IconButton;
+var Dialog = MaterialUi.Dialog;
+var FlatButton = MaterialUi.FlatButton;
 var Label = require('./Label.jsx');
+
+var CalendarEditEventForm = require('./CalendarEditEventForm.jsx');
 
 var CalendarListItem = React.createClass({
   propTypes: {
     event: React.PropTypes.object.isRequired,
-    refresh: React.PropTypes.func,
+    refresh: React.PropTypes.func, // Refresh the Agent Calendar
+  },
+
+  getInitialState() {
+    return { openEditForm: false, }
   },
 
   showEventDialog() {
     this.refs.dialog.show();
   },
 
+  showEditDialog() {
+    this.setState({ openEditForm: true });
+  },
+
+  editDialogDismissed(eventTitle) {
+    this.setState({ openEditForm: false });
+    this.props.refresh('Event "' + eventTitle + '" Updated.');
+  },
+
   deleteEvent() {
+    var event = this.props.event
     Api.deleteEvent({
-      eventId: this.props.event.id,
+      eventId: event.id,
       callback: (err, response) => {
         if (err) return console.log(err);
         this.refs.deleteDialog.dismiss();
-        this.props.refresh();
+        this.props.refresh('Event "' + event.event + '" has been deleted.');
       }
     });
   },
@@ -53,12 +69,12 @@ var CalendarListItem = React.createClass({
     let iconButtonElement = <IconButton iconClassName="material-icons">more_vert</IconButton>;
     let rightIconMenu = (
       <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem primaryText="Edit" disabled={true}/>
+        <MenuItem primaryText="Edit" onTouchTap={this.showEditDialog} />
         <MenuItem style={style.rightMenuDelete} onTouchTap={this.showRemoveDialog} primaryText="Delete" />
       </IconMenu>
     );
 
-    var item = this.props.event;
+    var item = this.props.event; // An event item object
 
     return (
       <div>
@@ -71,12 +87,10 @@ var CalendarListItem = React.createClass({
           }
           secondaryTextLines={1}
           rightIconButton={rightIconMenu}
-          onTouchTap={this.showEventDialog} />
+          onTouchTap={this.showEventDialog}
+          style={(Moment(item.date).isBefore(Moment(), 'day')) ? style.past : '' }/>
         <ListDivider inset={false} />
-        <Dialog
-          title={item.event}
-          actions={standardActions}
-          ref='dialog'>
+        <Dialog title={item.event} actions={standardActions} ref='dialog'>
           <Label>Property</Label>
           {item.street}, {item.suburb}
           <Label>Date</Label>
@@ -90,12 +104,19 @@ var CalendarListItem = React.createClass({
         <Dialog title='Are you sure?' actions={deleteActions} ref='deleteDialog'>
           <div>Would you like to delete this event <strong>"{ item.event }"</strong>?</div>
         </Dialog>
+        <CalendarEditEventForm
+          openEditForm={this.state.openEditForm}
+          details={item}
+          onEventDetailsUpdated={this.editDialogDismissed} />
       </div>
     );
   }
 });
 
 var style = {
+  past: {
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
   rightMenuDelete: {
     color: '#F65035'
   },

@@ -35,6 +35,7 @@
     "react": "^0.13.3",
     "react-cookie": "^0.3.4",
     "react-day-picker": "^1.0.3",
+    "react-kronos": "^0.3.1",
     "react-router": "1.0.0-beta3",
     "react-sidebar": "^1.0.3",
     "react-tap-event-plugin": "^0.1.7"
