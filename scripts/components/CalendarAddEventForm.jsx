@@ -7,7 +7,9 @@ var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
+var Label = require('./Label.jsx');
 var Radium = require('radium');
+var Kronos = require('react-kronos');
 
 var CalendarAddEventForm = React.createClass({
   propTypes: {
@@ -18,7 +20,7 @@ var CalendarAddEventForm = React.createClass({
   getInitialState() {
     return {
       eventDesc: '', // User entered description
-      date: '',
+      date: new Date(),
       time: '',
       notes: '',
       validationError: null, // clientside validation error object
@@ -60,7 +62,6 @@ var CalendarAddEventForm = React.createClass({
       data: {
         eventDesc: this.state.eventDesc,
         date: this.state.date,
-        time: this.state.time,
         notes: this.state.notes,
         propertyId: propertyId,
       },
@@ -74,7 +75,6 @@ var CalendarAddEventForm = React.createClass({
         this.setState({
           eventDesc: '',
           date: '',
-          time: '',
           notes: '',
         });
 
@@ -89,9 +89,12 @@ var CalendarAddEventForm = React.createClass({
     return Joi.validate({
       'Event Description': this.state.eventDesc,
       Date: this.state.date,
-      Time: this.state.time,
       Notes: this.state.notes,
     }, schema);
+  },
+
+  onKronosChange(date) {
+    this.setState({ Date: date });
   },
 
   render() {
@@ -114,6 +117,9 @@ var CalendarAddEventForm = React.createClass({
           actions={standardActions}
           actionFocus="submit"
           modal="true"
+          autoScrollBodyContent={true}
+          autoDetectWindowHeight={true}
+          contentStyle={{width: 350}}
           ref="dialog">
 
           {validationErrorMsg}
@@ -123,39 +129,60 @@ var CalendarAddEventForm = React.createClass({
             name="Event Description"
             onChange={this.onChange.bind(this, 'eventDesc')}
             floatingLabelText="Event Description"
-            hintText="Short description of the event" />
+            hintText="Short description of the event"
+            fullWidth={true} />
           <br />
-          <TextField
-            value={date}
-            name="Date"
-            onChange={this.onChange.bind(this, 'date')}
-            floatingLabelText="Date"
-            hintText="Enter the date. (dd/mm/yyyy)" />
-          <TextField
-            value={time}
-            name="Time"
-            onChange={this.onChange.bind(this, 'time')}
-            floatingLabelText="Time"
-            hintText="Enter the time. (h:mm ampm)" />
-          <TextField
-            value={notes}
-            multiLine={true}
-            name="Notes"
-            onChange={this.onChange.bind(this, 'notes')}
-            floatingLabelText="Notes"
-            hintText="Add more detailed notes here (1000 characters max)"
-            fullWidth />
+          <div style={styles.kronosContainer}>
+            <Label>Date</Label>
+            <Kronos
+              date={date}
+              onChange={this.onKronosChange}
+              options={kronosOptions}
+              format="DD/MM/YYYY"
+              placeholder="Date" />
+          </div>
+          <div style={styles.kronosContainer}>
+            <Label>Time</Label>
+            <Kronos
+              time={date}
+              onChange={this.onKronosChange}
+              options={kronosOptions}
+              placeholder="Time" />
+          </div>
+          <div style={styles.notesContainer}>
+            <TextField
+              value={notes}
+              multiLine={true}
+              name="Notes"
+              onChange={this.onChange.bind(this, 'notes')}
+              floatingLabelText="Notes"
+              hintText="Add more detailed notes here"
+              fullWidth />
+          </div>
         </Dialog>
       </div>
     );
   }
 });
 
+var kronosOptions = {
+  color: '#2ECC71',
+  font: 'Roboto',
+};
+
+var styles = {
+  kronosContainer: {
+    width: 196,
+  },
+  notesContainer: {
+    minHeight: 200,
+  },
+};
+
 // Validation schema for user profile form data.
 var schema = Joi.object().keys({
   'Event Description': Joi.string().max(64).required(),
-  Date: Joi.date().format('DD/MM/YYYY'),
-  Time: Joi.date().format('h:mm a'),
+  Date: Joi.date(),
   Notes: Joi.string().max(1000).allow(''),
 });
 
