@@ -4,7 +4,9 @@ var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var FontIcon = MaterialUi.FontIcon;
+var RaisedButton = MaterialUi.RaisedButton;
 var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
+var moment = require('moment');
 
 var PropertyDetails = React.createClass({
   propTypes: {
@@ -32,6 +34,12 @@ var PropertyDetails = React.createClass({
     }),
   },
 
+  getInitialState() {
+    return {
+      showUpdateForm: false,
+    };
+  },
+
   renderDetails(details) {
     if (!details[1].value) return null; // no details
 
@@ -39,10 +47,28 @@ var PropertyDetails = React.createClass({
       return (
         <div key={idx} style={style.details}>
           <FontIcon style={style.icon} className="material-icons">{row.icon}</FontIcon>
-          <span style={style.detail}>{row.value}</span>
+          <div style={style.detail}>
+            {row.value}
+          </div>
+          {row.subscript ? (
+            <div style={style.subscript}>{row.subscript}</div>
+          ) : null}
         </div>
       );
     });
+  },
+
+  onEditDetails() {
+    this.setState({ showUpdateForm: true });
+  },
+
+  onPropertyDetailsUpdated() {
+    this.setState({ showUpdateForm: false });
+    this.props.onPropertyDetailsUpdated();
+  },
+
+  onClose() {
+    this.setState({ showUpdateForm: false });
   },
 
   render() {
@@ -67,6 +93,7 @@ var PropertyDetails = React.createClass({
       { icon: 'person', value: `${details.tenantFN} ${details.tenantLN}` },
       { icon: 'phone', value: details.tenantPhone },
       { icon: 'email', value: details.tenantEmail },
+      { icon: 'bookmark', value: moment(details.leaseExpiry).format('DD–MM–YYYY'), subscript: 'Lease expiry' },
     ];
     var tenantDetails = this.renderDetails(tenantDetailRows) || <div>No current tenant</div>;
 
@@ -126,9 +153,14 @@ var PropertyDetails = React.createClass({
             <div style={[style.section, style.noPadding]}>
               <div style={style.keyValuePair}>
                 <div style={style.updateButtonContainer}>
+                  <RaisedButton label="Edit Details"
+                                primary={true}
+                                onClick={this.onEditDetails} />
                   <UpdatePropertyForm
+                    isOpen={this.state.showUpdateForm}
+                    onClose={this.onClose}
                     details={details}
-                    onPropertyDetailsUpdated={this.props.onPropertyDetailsUpdated} />
+                    onPropertyDetailsUpdated={this.onPropertyDetailsUpdated} />
                 </div>
               </div>
             </div>
@@ -191,9 +223,17 @@ var style = {
     minHeight: '2em',
     fontSize: 14,
     color: '#333',
+    position: 'relative',
   },
   detail: {
     paddingLeft: '1em',
+  },
+  subscript: {
+    position: 'absolute',
+    left: 38,
+    bottom: -12,
+    fontSize: 13,
+    color: '#999',
   },
   icon: {
     color: '#555',
