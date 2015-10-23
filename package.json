@@ -34,6 +34,7 @@
     "material-ui": "^0.11.0",
     "moment": "^2.10.5",
     "radium": "^0.14.1",
+    "raf": "^3.1.0",
     "react": "^0.13.3",
     "react-cookie": "^0.3.4",
     "react-day-picker": "^1.0.3",
