@@ -14,11 +14,7 @@ var InspectionReport = React.createClass({
   componentWillMount() {
     Api.getInspections({
       callback: (err, response) => {
-        if (err) {
-          // TODO
-          return console.log(err);
-        }
-
+        if (err) return console.log(err);
         this.setState({ inspections: response.data });
       }
     });
@@ -33,6 +29,7 @@ var InspectionReport = React.createClass({
           <td>{moment(inspection.date).format('Do MMM YYYY')}</td>
           <td>{inspection.inspector}</td>
           <td>{inspection.comments}</td>
+          <td><img style={style.img} src={inspection.photo} /></td>
         </tr>
       );
     });
@@ -50,11 +47,13 @@ var InspectionReport = React.createClass({
       <div style={style.page}>
         <PageHeading>Inspection Reports</PageHeading>
         <table>
+          <colgroup style={{width: 150}}></colgroup>
           <thead>
             <tr>
               <th>Date</th>
               <th>Inspector</th>
               <th>Comments</th>
+              <th>Photo</th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +72,11 @@ var style = {
   },
   center: {
     textAlign: 'center',
-  }
+  },
+  img: {
+    maxWidth: 150,
+    borderRadius: 4,
+  },
 };
 
 module.exports = Radium(InspectionReport);
