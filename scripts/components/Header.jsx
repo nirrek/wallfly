@@ -55,6 +55,12 @@ var Header = React.createClass({
     this.transitionTo('/');
   },
 
+  onHelpClick() {
+    var userType = User.getUser().type;
+    var pagePath = `/guides/${userType}`;
+    window.open(pagePath);
+  },
+
   render() {
     var { onMenuClick, isMenuDocked, isBasic } = this.props;
 
@@ -82,6 +88,7 @@ var Header = React.createClass({
       var settingsIcon = <IconButton iconStyle={styles.icon} iconClassName="material-icons">settings</IconButton>;
       var profileIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">account_circle</IconButton>;
       var logoutIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">exit_to_app</IconButton>;
+      var helpIcon = <IconButton iconStyle={styles.darkIcon} iconClassName="material-icons">help_outline</IconButton>;
 
       return (
         <div style={styles.header}>
@@ -91,9 +98,9 @@ var Header = React.createClass({
               style={[styles.logo, styles.logoApp]}
               src={require('../../assets/logotype.svg')} />
           </div>
-          {/* <div style={styles.logo}>WallFly</div> */}
           <IconMenu iconButtonElement={settingsIcon}>
             <MenuItem onClick={this.onProfileClick} leftIcon={profileIcon} primaryText="View Your Profile" />
+            <MenuItem onClick={this.onHelpClick} leftIcon={helpIcon} primaryText="View User Guide" />
             <MenuItem onClick={this.onLogoutClick} leftIcon={logoutIcon} primaryText="Logout" />
           </IconMenu>
 
