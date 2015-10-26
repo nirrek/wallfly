@@ -39,6 +39,9 @@ var RepairRequestAggregator = require('./components/RepairRequestAggregator.jsx'
 var AgentCalendar = require('./components/AgentCalendar.jsx');
 var OverdueRent = require('./components/OverdueRent.jsx');
 var Home = require('./components/Home.jsx');
+var GuideTenant = require('./components/GuideTenant.jsx');
+var GuideAgent = require('./components/GuideAgent.jsx');
+var GuideOwner = require('./components/GuideOwner.jsx');
 
 require('../styles/main.scss');
 
@@ -97,6 +100,9 @@ React.render((
       <Route path="" component={UnauthedSection}>
         <Route path="/login" component={Login} />
         <Route path="/createAccount" component={CreateAccount} />
+        <Route path="/guides/agent" component={GuideAgent} />
+        <Route path="/guides/owner" component={GuideOwner} />
+        <Route path="/guides/tenant" component={GuideTenant} />
       </Route>
       <Route path="" component={AppFrame} onEnter={redirectUnauthedUser}>
         <Route path="owner" components={{ main: Page, sidebar: OwnerNav }}>
