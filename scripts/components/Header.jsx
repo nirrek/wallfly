@@ -58,7 +58,9 @@ var Header = React.createClass({
   onHelpClick() {
     var userType = User.getUser().type;
     var pagePath = `/guides/${userType}`;
-    window.open(pagePath);
+    // Can't do this with surge.sh, as it wont find a static resource there.
+    // window.open(pagePath);
+    this.transitionTo(pagePath);
   },
 
   render() {
