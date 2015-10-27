@@ -17,18 +17,89 @@ var GuideAgent = React.createClass({
 
           <div style={styles.section}>
             <h2 style={styles.heading}>Getting Started</h2>
-            <p>Something something.</p>
+            <p>After creating your account, contact your owner and agents to create an account with Wallfly. Ensure that you ask them to inform you when they do so, and to ask for their email address which they used to create the account. This will allow Wallfly to connect the their accounts with yours.</p>
 
-            <Screenshot src='tenant-no-property.png'
-                        caption='Just some examples to show you what to do.' />
+            <h3>Add a property</h3>
+
+            <p>Once you have the email address of your tenant and owners you can add a property. When you login, you'll see your property list.</p>
+
+            <Screenshot src='agent-property-list.png'
+                        caption='Add a property by clicking the + button.' />
             <p>
-              Some more stuff.
+               Click the + button to add your first property. Fill out the all the details including the email addresses of your owner and tenants.
             </p>
           </div>
 
           <div style={styles.section}>
-            <h2 style={styles.heading}>Another section</h2>
-            <p>blah blah</p>
+            <h2 style={styles.heading}>Agent View</h2>
+            <p>When you first login, you are presented with the Agent View. These tools will help you with managing all your properties in one place, aggregating the necessary and important details at first glance.</p>
+            <h3>Property List</h3>
+            <p>The Property List lists all the properties that are connected with your account. You can view the properties details by clicking on a given property.</p>
+            <Screenshot src='agent-view.png'
+                        caption='Agent View: You tools to manage all your properties - together.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Calendar (Global)</h2>
+            <p>This calendar shows a list of all your appointments that have been added to various properties. By clicking the appointment you can view further details. You can also edit or delete a giving property by clicking the more options icon on the right of every appointment.</p>
+            <Screenshot src='agent-calendar.png'
+                        caption='All your appointments are aggregated into one calendar list.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Repairs (Global)</h2>
+            <p>Repair requests from all properties that have been submitted are listed. Every repair request is categoried into priorties which can be used to filter the result. This can be done using the Filter by Priorty dropdown menu. As an agent, you can also  change the status of any given repair request.</p>
+            <Screenshot src='agent-repair-requests.png'
+                        caption='All your appointments are aggregated into one calendar list.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Overdue Rent</h2>
+            <p>All overdue rent payments across all properties are listed. You can proceed to communicate with the tenant to rectify the issue.</p>
+            <Screenshot src='agent-overduerent.png'
+                        caption='List all overdue rend in one place.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Property Details</h2>
+            <p>The property details gives an overview of all the important details of your property, including details for your managing agent, your current listed details, and the date that your lease expires. You can also update the details of the properties.</p>
+            <Screenshot src='agent-property-details.png'
+                        caption='Property details page.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Payments</h2>
+            <p>The payments page allows you to see all rent payments for that property. You can also add a payment that you've received here. </p>
+            <Screenshot src='agent-payments.png'
+                        caption='Payments page.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Repair Requests</h2>
+            <p>The repair requests page allows you to see all requests lodged by the tenants. You can update the status of each requests to pending, approved or declined. The status will then be updated for the tenants to check. </p>
+            <Screenshot src='agent-repair-requests-property.png'
+                        caption='Repair requests page.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Inspection Reports</h2>
+            <p>The inspection reports page allows you to lodge reports of completed inspections. These can then be viewed by the owners and tenants.</p>
+            <Screenshot src='tenant-inspection-reports.png'
+                        caption='Inspection reports page.' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Calendar</h2>
+            <p>The calendar page allows you to easily see any important dates for the property. You can add events and appointments that will be shown on the calendar include days that repairmen may be coming to fix something, inspections days, and the expiry of the lease. On a particular calendar day you can see a small snippet for any events, to get full information for the event simply click on the event to open up a more detailed view of it.</p>
+            <Screenshot src='agent-calendar-property.png'
+                        caption='Calendar Page' />
+          </div>
+
+          <div style={styles.section}>
+            <h2 style={styles.heading}>Messages</h2>
+            <p>The messages page give you the ability to chat with your owners and tenants. No need to keep track of emails or text messages between you and your agent. Using the messages feature ensures there is a record of everything you and your clients have ever discussed. It's quick and easy, and your agent will be in the Wallfly app all the time, so you will get a swift response.</p>
+            <Screenshot src='agent-messages.png'
+                        caption='Messages Page' />
           </div>
 
         </div>
