@@ -58,7 +58,7 @@ var AgentCalendar = React.createClass({
   // Computes the necessary height of the container, so that 'today' is able
   // to be scrolled to. If there is no 'today', returns 0.
   computeContainerHeight() {
-    if (!this.refs.today) return 0;
+    if (!this.refs.today || !React.findDOMNode(this.refs.today)) return 0;
     var today = React.findDOMNode(this.refs.today);
     return today.offsetTop * 2 + today.offsetHeight;
   },
@@ -66,6 +66,8 @@ var AgentCalendar = React.createClass({
   scrollToToday() {
     var today = React.findDOMNode(this.refs.today);
     var page =  React.findDOMNode(this.refs.container).parentElement;
+    if (!today || !page) return;
+
     var toolbarHeight = 56;
     var scrollOffset = today.offsetTop - toolbarHeight;
     smoothScrollTo(scrollOffset, page);
@@ -84,9 +86,11 @@ var AgentCalendar = React.createClass({
   },
 
   getEvents() {
+    var user = User.getUser() || {};
+
     Api.getAllEvents({
       params: {
-        agentId: User.getUser().id,
+        agentId: user.id,
       },
       callback: (err, res) => {
         if (err) {
@@ -150,7 +154,7 @@ var AgentCalendar = React.createClass({
 
     var todayHasPassed = false;
     var today = Moment();
-    var days = groupedDays.map((day) => {
+    var days = groupedDays.map((day, idx) => {
       var ref = '';
       var date = Moment(day.events[0].date);
 
@@ -160,6 +164,11 @@ var AgentCalendar = React.createClass({
         ref = 'today';
         todayHasPassed = true;
       }
+
+      // Ensure that if there are no dates in the list on or after today's date
+      // we treat the last item in the list as 'today' for scrolling purposes.
+      if (idx === groupedDays.length - 1)
+        ref = 'today';
 
       return (
         <div>
