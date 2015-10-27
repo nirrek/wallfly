@@ -5,15 +5,19 @@ var MaterialUi = require('material-ui');
 var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
+var IconButton = MaterialUi.IconButton;
 var Avatar = MaterialUi.Avatar;
 var FloatingActionButton = MaterialUi.FloatingActionButton;
 var Snackbar = MaterialUi.Snackbar;
-var Navigation = require('react-router').Navigation;
+var Router = require('react-router');
+var Navigation = Router.Navigation;
+var Link = Router.Link;
 var User = require('../utils/User.js');
 var Radium = require('radium');
 var Notice = require('./Notice.jsx');
 var fuzzy = require('fuzzy');
 var AddPropertyDialog = require('./AddPropertyDialog.jsx');
+var DialogEnhanced = require('./DialogEnhanced.jsx');
 
 /**
  * PropertyList component.
@@ -27,11 +31,17 @@ var PropertyList = React.createClass({
       responseReceived: false, // received API response?
       filter: '', // fuzzy search term for properties
       isPropertyDialogOpen: false,
+      isWelcomeMessageOpen: false,
     };
   },
 
   componentWillMount() {
     this.getPropertyList();
+
+    var user = User.getUser() || {};
+    if (user.isFirstLogin === 1) {
+      this.setState({ isWelcomeMessageOpen: true });
+    }
   },
 
   // Fetches the property list from the server
@@ -120,11 +130,17 @@ var PropertyList = React.createClass({
     this.refs.snackbar.show();
   },
 
+  onWelcomeClose() {
+    this.setState({ isWelcomeMessageOpen: false });
+    var user = User.getUser();
+    if (user) user.isFirstLogin = 0;
+  },
+
   render() {
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
 
-    var user = User.getUser();
+    var user = User.getUser() || {};
     var { properties, filter } = this.state;
 
     var filteredProperties = this.filterProperties(properties, filter);
@@ -147,7 +163,7 @@ var PropertyList = React.createClass({
 
     // Check if an owner does not have an agent yet.
     var ownerNotice;
-    if (user && user.type === 'owner' && !user.managingAgent) {
+    if (user.type === 'owner' && !user.managingAgent) {
       ownerNotice = (
         <Notice>Your account doesn't currently have a managing agent. Please get in touch with your agent and ask them to assign you as the owner of any of your properties by using your registered email address: <b>{user && user.email}</b>. Once they have done this, your properties will show up on this page, and your agent will be correctly listed as your managing agent.</Notice>
       );
@@ -155,16 +171,43 @@ var PropertyList = React.createClass({
 
     // Check if user is an agent.
     var addProperty;
-    if (user && user.type === 'agent') {
+    var noProperties;
+    if (user.type === 'agent') {
       addProperty = (
         <FloatingActionButton style={style.fab} onClick={this.onAddPropertyClick}>
           <FontIcon className="material-icons">add</FontIcon>
         </FloatingActionButton>
       );
+
+      if (properties.length === 0) {
+        noProperties = (
+          <div style={style.noProperties}> Looks like you haven't yet added any properties to manage.<br /> Use the green add button at the bottom to add one. </div>
+        );
+      }
     }
+
+    // Greeting modal shown on first login for a user.
+    var firstLoginGreeting = (
+      <DialogEnhanced isOpen={this.state.isWelcomeMessageOpen}
+                      modal={true}
+                      actions={[{ text: 'Ok Got It', onTouchTap: this.onWelcomeClose }]}
+                      autoScrollBodyContent={true}
+                      autoDetectWindowHeight={true}
+                      contentStyle={{width: 500}}>
+        <div style={style.greeting}>
+          <h2>Welcome to Wallfly!</h2>
+          <p>To get you started we've made a handy quickstart guide that gives you an overview of what you can do with Wallfly. You can view it right now by <Link to={`/guides/${user.type}`}>clicking here</Link>.</p>
+          <p>If you prefer to have a play with the app first though, you can always find the guide in the menu at the top of the page by clicking the <span style={style.gearPlaceholder}><IconButton style={style.gear} iconClassName="material-icons">settings</IconButton></span> icon.</p>
+          <div style={style.imgContainer}>
+            <img width="247" height="184" src={require(`../../assets/userguide.png`)} />
+          </div>
+        </div>
+      </DialogEnhanced>
+    );
 
     return (
       <div>
+        {firstLoginGreeting}
         <div style={style.filterContainer}>
           <input placeholder="Start typing to filter by suburb or street address"
                  ref="filter"
@@ -176,6 +219,7 @@ var PropertyList = React.createClass({
           {ownerNotice}
           <List>
             {propertyCards}
+            {noProperties}
           </List>
           {addProperty}
         </div>
@@ -215,6 +259,28 @@ var style = {
     position: 'fixed',
     bottom: 50,
     right: 45,
+  },
+  greeting: {
+    textAlign: 'center',
+  },
+  gearPlaceholder: {
+    position: 'relative',
+    display: 'inline-block',
+    width: 30,
+  },
+  gear: {
+    position: 'absolute',
+    left: -10,
+    top: -30,
+  },
+  imgContainer: {
+    margin: '2em 0 0 0',
+  },
+  noProperties: {
+    margin: '.5em 1em',
+    fontSize: 18,
+    color: '#aaa',
+    textAlign: 'center',
   }
 };
 
