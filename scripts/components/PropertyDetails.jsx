@@ -88,7 +88,6 @@ var PropertyDetails = React.createClass({
     ];
     var agentDetails = this.renderDetails(agentDetailRows);
 
-
     var tenantDetailRows = [
       { icon: 'person', value: `${details.tenantFN} ${details.tenantLN}` },
       { icon: 'phone', value: details.tenantPhone },

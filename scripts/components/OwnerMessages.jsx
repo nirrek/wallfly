@@ -6,9 +6,10 @@ var Notice = require('./Notice.jsx');
 
 var Messages = React.createClass({
   render() {
-    var user = User.getUser();
+    var user = User.getUser() || {};
     var sender = user.id;
     var receiver = user.managingAgent;
+
 
     return (
       <div style={style.page}>

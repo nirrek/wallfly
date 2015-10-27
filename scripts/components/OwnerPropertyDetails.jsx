@@ -24,7 +24,6 @@ var OwnerPropertyDetails = React.createClass({
       propertyId,
       callback: (err, response) => {
         if (err) return console.log(err);
-        console.log(response.data);
         this.setState({
           responseReceived: true,
           propertyDetails: response.data,
@@ -35,7 +34,7 @@ var OwnerPropertyDetails = React.createClass({
 
   renderPropertyDetails() {
     var { responseReceived, propertyDetails } = this.state;
-    var userType = User.getUser().type;
+    var user = User.getUser() || {};
 
     // No API response yet received. Don't render anything.
     if (!responseReceived) return null;
@@ -43,9 +42,10 @@ var OwnerPropertyDetails = React.createClass({
     // Response was empty, so no property details to display.
     if (!propertyDetails) return <div>No property details</div>
 
+
     return (
       <PropertyDetails
-        userType={userType}
+        userType={user.type}
         details={propertyDetails}
         onPropertyDetailsUpdated={this.getPropertyDetails} />
     );

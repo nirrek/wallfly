@@ -61,6 +61,8 @@ var OwnerRepairRequests = React.createClass({
     // Don't render until we have data cached from the server.
     if (!this.state.responseReceived) return null;
 
+    var user = User.getUser() || {};
+
     var rows = this.state.requests.map(request => {
       return (
         <tr key={request.id}>
@@ -69,7 +71,7 @@ var OwnerRepairRequests = React.createClass({
           <td>{request.request}</td>
           <td><img style={styles.img} src={request.photo} /></td>
           <td>
-            { User.getUser().type === 'agent' ? (
+            { user.type === 'agent' ? (
               <SelectField
                 value={request.status}
                 valueMember="name"
