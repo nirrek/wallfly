@@ -17,16 +17,16 @@ var GuideAgent = React.createClass({
 
           <div style={styles.section}>
             <h2 style={styles.heading}>Getting Started</h2>
-            <p>After creating your account, contact your owner and agents to create an account with Wallfly. Ensure that you ask them to inform you when they do so, and to ask for their email address which they used to create the account. This will allow Wallfly to connect the their accounts with yours.</p>
+            <p>After creating your account, contact your clients and tenants and get them to create an account with Wallfly. Ensure that you ask them to inform you when they do so, and to ask for their email address which they used to create the account. This will allow Wallfly to connect their accounts with yours.</p>
 
             <h3>Add a property</h3>
 
-            <p>Once you have the email address of your tenant and owners you can add a property. When you login, you'll see your property list.</p>
+            <p>Once you have the email address of your tenant and owners you can add a new property, and attach them to it. When you login, you'll see your property list.</p>
 
             <Screenshot src='agent-property-list.png'
                         caption='Add a property by clicking the + button.' />
             <p>
-               Click the + button to add your first property. Fill out the all the details including the email addresses of your owner and tenants.
+               Click the + button to add your first property. Fill out the all the details including the email addresses of your client and tenant.
             </p>
           </div>
 
