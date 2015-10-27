@@ -91,7 +91,7 @@ var CreateAccount = React.createClass({
           return;
         }
 
-        this.transitionTo('/?accountCreated=true');
+        this.transitionTo('/login?accountCreated=true');
       }
     });
   },
