@@ -206,8 +206,7 @@ var AddPropertyDialog = React.createClass({
           <Label>Property Photo</Label>
           <div style={style.selectorContainer}>
             {sizeError}
-            <ImageSelector maxSize={200000}
-                           image={dataUrl}
+            <ImageSelector image={dataUrl}
                            onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>

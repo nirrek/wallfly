@@ -112,8 +112,7 @@ var InspectionReportForm = React.createClass({
           <div style={style.selectorContainer}>
             <Label>Image</Label>
             {sizeError}
-            <ImageSelector maxSize={200000}
-                           onImageSelected={this.onImageSelected}
+            <ImageSelector onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
         </Dialog>

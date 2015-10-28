@@ -156,8 +156,7 @@ var RepairRequestForm = React.createClass({
           <div style={styles.selectorContainer}>
             <Label>Image</Label>
             {sizeError}
-            <ImageSelector maxSize={200000}
-                           onImageSelected={this.onImageSelected}
+            <ImageSelector onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
         </Dialog>
