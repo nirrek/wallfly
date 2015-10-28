@@ -11,7 +11,7 @@ var ImageSelector = React.createClass({
 
   getDefaultProps() {
     return {
-      maxSize: 2500000,  // 250k max by default
+      maxSize: 500000,  // 500k by default (Hapi has max 1 MiB Content-Length)
       onImageSizeError: () => {}, // noop
       onImageSelected: () => {}, // noop
     };
