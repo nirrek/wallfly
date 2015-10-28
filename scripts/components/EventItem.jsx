@@ -54,7 +54,7 @@ var EventItem = React.createClass({
 var style = {
   eventItem: {
     textAlign: 'left',
-    fontSize: '0.5em',
+    fontSize: '0.7em',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
