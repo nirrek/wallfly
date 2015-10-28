@@ -67,7 +67,7 @@ var Payments = React.createClass({
       var statusColor = payment.isPaid ? 'green' : 'red';
       return (
         <tr key={payment.id}>
-          <td>{moment(payment.date).format('Do MMM YYYY')}</td>
+          <td>{moment(payment.dateDue).format('Do MMM YYYY')}</td>
           <td>
             <Status type={statusColor}>
               {payment.isPaid ? 'Paid' : 'Unpaid' }
