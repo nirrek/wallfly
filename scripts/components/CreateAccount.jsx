@@ -91,7 +91,7 @@ var CreateAccount = React.createClass({
           return;
         }
 
-        this.transitionTo('/?accountCreated=true');
+        this.transitionTo('/login?accountCreated=true');
       }
     });
   },
@@ -198,8 +198,7 @@ var CreateAccount = React.createClass({
             <div style={style.selectorContainer}>
               <Label>Profile Picture</Label>
               {sizeError}
-              <ImageSelector maxSize={200000}
-                             onImageSelected={this.onImageSelected}
+              <ImageSelector onImageSelected={this.onImageSelected}
                              onImageSizeError={this.onImageSizeError} />
             </div>
             <RaisedButton type="submit"

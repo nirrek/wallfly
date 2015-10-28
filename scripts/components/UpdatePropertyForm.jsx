@@ -210,8 +210,7 @@ var UpdatePropertyForm = React.createClass({
           <div>
             <Label>Image (Not Required)</Label>
             {sizeError}
-            <ImageSelector maxSize={200000}
-                           image={photo}
+            <ImageSelector image={photo}
                            onImageSelected={this.onImageSelected}
                            onImageSizeError={this.onImageSizeError} />
           </div>
