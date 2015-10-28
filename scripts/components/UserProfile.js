@@ -200,6 +200,7 @@ var schema = Joi.object().keys({
 var styles = {
   img: {
     borderRadius: 4,
+    maxWidth: 252,
   },
 };
 
