@@ -1,3 +1,12 @@
+//
+// Global styles.
+// Most styles should be colocated with the module. Styles that don't make
+// sense to be colocated can be placed here.
+//
+
+// -----------------------------------------------------------------------------
+// Top Level Styles
+// -----------------------------------------------------------------------------
 html, body {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   color: #333;
@@ -19,6 +28,9 @@ html {
   box-sizing: inherit;
 }
 
+// -----------------------------------------------------------------------------
+// Material Icons
+// -----------------------------------------------------------------------------
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -44,6 +56,9 @@ html {
   font-feature-settings: 'liga';
 }
 
+// -----------------------------------------------------------------------------
+// Table Styles
+// -----------------------------------------------------------------------------
 table {
   box-shadow: 0 1px 3px rgba(0,0,0, .3);
   border-collapse: collapse;
@@ -87,11 +102,17 @@ tbody tr:last-of-type td:last-of-type {
   border-radius: 0 0 4px 0;
 }
 
+// -----------------------------------------------------------------------------
+// Link Styles
+// -----------------------------------------------------------------------------
 a {
   color: #1CAF5A;
   text-decoration: none;
 }
 
+// -----------------------------------------------------------------------------
+// Kronos Datepicker Styles
+// -----------------------------------------------------------------------------
 .react-kronos > input {
   width: 100%;
   padding: .5em;
