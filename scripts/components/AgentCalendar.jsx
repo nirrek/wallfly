@@ -199,7 +199,7 @@ var AgentCalendar = React.createClass({
 
       // Ensure that if there are no dates in the list on or after today's date
       // we treat the last item in the list as 'today' for scrolling purposes.
-      if (idx === groupedDays.length - 1)
+      if (!todayHasPassed && idx === groupedDays.length - 1)
         ref = 'today';
 
       return (
