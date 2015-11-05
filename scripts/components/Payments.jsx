@@ -11,6 +11,10 @@ var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
 var Snackbar = mui.Snackbar;
 
+/**
+ * Payments Component.
+ * View component for display the payments for tenant user's property.
+ */
 var Payments = React.createClass({
   getInitialState() {
     return {
@@ -20,6 +24,9 @@ var Payments = React.createClass({
     };
   },
 
+  /**
+   * Fetches all payments from the server.
+   */
   getPayments() {
     Api.getAllPayments({
       params: {
@@ -29,8 +36,6 @@ var Payments = React.createClass({
         if (err) {
           return console.log(err);
         }
-
-        console.log(res.data[0]);
 
         this.setState({
           payments: res.data
@@ -43,6 +48,10 @@ var Payments = React.createClass({
     this.getPayments();
   },
 
+  /**
+   * Event handler for the `Pay Now` button.
+   * @param  {Object} payment Payment object that the payment is for.
+   */
   payNow(payment) {
     this.setState({
       currentPayment: payment,
@@ -50,12 +59,18 @@ var Payments = React.createClass({
     });
   },
 
+  /**
+   * Event handler for payment success event.
+   */
   onPaymentSuccess() {
     this.state.currentPayment.isPaid = true;
     this.setState({ isDialogOpen: false });
     this.refs.snackbar.show();
   },
 
+  /**
+   * Event handler for the cancel event for the payment dialog.
+   */
   onCancel() {
     this.setState({ isDialogOpen: false });
   },

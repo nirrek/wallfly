@@ -10,8 +10,10 @@ var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 
 /**
- * Payment form used by the client.
- * This form simulates a credit card form from a payment processor (eg Stripe)
+ * PaymenForm Component.
+ * Payment form used by the client. This form simulates a credit card form
+ * from a payment processor (eg Stripe). It is intentionally not a full
+ * featured payment solution.
  */
 var PaymentForm = React.createClass({
   propTypes: {
@@ -45,12 +47,19 @@ var PaymentForm = React.createClass({
     });
   },
 
-  // Capture the input field state after each keypress.
+  /**
+   * Capture the input field state after each keypress.
+   * @param  {String} field The name of the field firing the event.
+   * @param  {Object} event The event object.
+   */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       fullName: this.state.fullName,
@@ -62,7 +71,10 @@ var PaymentForm = React.createClass({
     }, schema);
   },
 
-  // Handle the form submission event when the user adds new repair request.
+  /**
+   * Handle the form submission event.
+   * @param  {Object} event The submit event object.
+   */
   onSubmit() {
     // Clear prior error states.
     this.setState({
@@ -100,6 +112,9 @@ var PaymentForm = React.createClass({
     });
   },
 
+  /**
+   * Cancel payment modal event handler.
+   */
   onCancel() {
     this.setState({
       validationError: false,
@@ -173,13 +188,16 @@ var PaymentForm = React.createClass({
   }
 });
 
+/**
+ * Joi validation schema for the form data.
+ */
 var schema = Joi.object().keys({
   fullName: Joi.string().required(),
   cardNumber: Joi.string().creditCard().required(),
   expMonth: Joi.string().length(2).required(),
   expYear: Joi.string().length(2).required(),
   ccv: Joi.string().length(3).required(),
-  amount: Joi.number().integer().positive().required(),
+  amount: Joi.number().positive().required(),
 });
 
 var style = {

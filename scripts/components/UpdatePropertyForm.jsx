@@ -12,6 +12,10 @@ var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
 var Kronos = require('react-kronos');
 
+/**
+ * UpdatePropertyForm Component.
+ * Dialog component for updating a given property's details.
+ */
 var UpdatePropertyForm = React.createClass({
   propTypes: {
     isOpen: React.PropTypes.bool.isRequired,
@@ -39,12 +43,17 @@ var UpdatePropertyForm = React.createClass({
     this.setState({ ...nextProps.details });
   },
 
+  /**
+   * Close dialog event handler.
+   */
   onClose() {
     this.resetState();
     this.props.onClose();
   },
 
-  // Resets error state of the form.
+  /**
+   * Resets the error state of the form.
+   */
   resetState() {
     this.setState({
       validationError: false,
@@ -62,8 +71,8 @@ var UpdatePropertyForm = React.createClass({
   },
 
   /**
-   * Form submission event handler. Sends a request to the server to add the
-   * repair request, and updates the repair requests if successful.
+   * Form submission event handler. Sends a request to the server to
+   * update the property details. Updates the property details on success.
    */
   onSubmit() {
     // Clear prior error states.
@@ -103,7 +112,10 @@ var UpdatePropertyForm = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       tenantEmail: this.state.tenantEmail,
@@ -116,10 +128,18 @@ var UpdatePropertyForm = React.createClass({
     }, schema);
   },
 
+  /**
+   * Image selected event handler
+   * @param  {Object} payload JS File API payload of selected file.
+   */
   onImageSelected(payload) {
     this.setState({ photo: payload.dataURL });
   },
 
+  /**
+   * Image size error event handler.
+   * @param  {Object} error The error object.
+   */
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
@@ -127,10 +147,19 @@ var UpdatePropertyForm = React.createClass({
     this.setState({ fileSizeError: errorMessage });
   },
 
+  /**
+   * Kronos datepicker date selected event handler.
+   * @param  {Date} Date selected.
+   */
   onKronosChange(date) {
     this.setState({ leaseExpiry: date });
   },
 
+  /**
+   * Tenant email text field on blur event handler.
+   * Ensure the lease expiry is empty if no tenant was specified.
+   * @param  {Object} event The event object.
+   */
   onBlurTenantEmail(event) {
     if (!event.target.value) {
       this.setState({ leaseExpiry: '' });
@@ -220,7 +249,9 @@ var UpdatePropertyForm = React.createClass({
   }
 });
 
-// Validation schema for update property form data.
+/**
+ * Joi validation schema for form data.
+ */
 var schema = Joi.object().keys({
   tenantEmail: Joi.string().email().max(255).allow(['', null]),
   leaseExpiry: Joi.date().iso().allow(['', null]),

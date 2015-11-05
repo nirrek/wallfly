@@ -5,6 +5,11 @@ var List = MaterialUi.List;
 var ListItem = MaterialUi.ListItem;
 var FontIcon = MaterialUi.FontIcon;
 
+/**
+ * NavList Component.
+ * Component for consuming a list of navigation items and rendering the
+ * appropriate navigation list.
+ */
 var NavList = React.createClass({
   mixins: [ Navigation ],
 

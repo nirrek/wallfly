@@ -1,18 +1,17 @@
-var axios = require('axios');
-var config = require('./config.js');
-var User = require('./User.js');
-
-let host = config.server;
-let userId = User.getUserId(); // current logged in user. Used in url creation.
-
 /**
  * Api Module
  * The Api module contains all interactions with the server. If you want to
  * make network requests to the server, then it should be a method in the Api
  * module that initiates the request.
  */
-let Api = {
+var axios = require('axios');
+var config = require('./config.js');
+var User = require('./User.js');
+let host = config.server;
+let userId = User.getUserId(); // current logged in user. Used in url creation.
 
+let Api = {
+  // Create a new account
   createAccount({ data={}, callback=()=>{} }) {
     axios.post(`${host}/users`, data, {
       withCredentials: true,
@@ -177,7 +176,6 @@ let Api = {
       });
   },
 
-
   // Add a new payment
   addPayment({ data={}, callback=()=>{} }) {
     userId = User.getUserId();
@@ -194,8 +192,6 @@ let Api = {
       callback(new Error(error), response);
     });
   },
-
-
 
   // Fetch list of repair requests
   getRepairRequests({ callback=()=>{} }) {
@@ -247,11 +243,11 @@ let Api = {
 
   // ---------------------------------------------------------------------------
   // Owner / Agent endpoints
-  // TODO. Delegate the tenant api calls to these ones.
   // ---------------------------------------------------------------------------
+
+  // Fetch a list of properties
   getPropertyList({ callback=()=>{} }) {
     userId = User.getUserId();
-    console.log('UserID = ', userId);
 
     axios.get(`${host}/properties`, {
         params: {
@@ -334,6 +330,7 @@ let Api = {
       });
   },
 
+  // Fetches a list of property repair requests
   getPropertyRepairRequests({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/repairRequests`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -348,6 +345,7 @@ let Api = {
       });
   },
 
+  // Updates a specific repair request
   updateRepairRequest({ data={}, callback=()=>{} }) {
     axios.put(`${host}/properties/${data.propertyId}/repairRequests`, data, {
       withCredentials: true
@@ -362,6 +360,7 @@ let Api = {
     });
   },
 
+  // Fetches a properties inspection reports
   getPropertyInspectionReports({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/inspectionReports`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -376,6 +375,7 @@ let Api = {
       });
   },
 
+  // Adds a new inspection report for a property
   addPropertyInspectionReports({ data={}, callback=()=>{} }) {
     axios.post(`${host}/properties/${data.propertyId}/inspectionReports`, data, {
       withCredentials: true
@@ -390,6 +390,7 @@ let Api = {
     });
   },
 
+  // Fetches the events for a given property
   getPropertyCalendarEvents({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/calendarEvents`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -404,6 +405,7 @@ let Api = {
       });
   },
 
+  // Adds a new event for a given property
   addPropertyCalendarEvents({ data={}, callback=()=>{} }) {
     axios.post(`${host}/properties/${data.propertyId}/calendarEvents`, data, {
       withCredentials: true
@@ -418,6 +420,7 @@ let Api = {
     });
   },
 
+  // Fetches the contacts details for a given property.
   getPropertyContacts({ propertyId, callback=()=>{} }) {
     axios.get(`${host}/properties/${propertyId}/contacts`, {
         withCredentials: true, // send cookies for cross-site requests
@@ -435,15 +438,15 @@ let Api = {
 
   // ---------------------------------------------------------------------------
   // Messages Resource Endpoints
-  // TODO Update tenant message API calls to use these.
   // ---------------------------------------------------------------------------
-
-  // Returns the 20 most recent messages sent to the authenticated user from
-  // the specified senderId.
-  // Parameters:
-  //  - senderId: the senderId of the messages to fetch.
-  //  - count(optional): number of messages to fetch
-  //  - offset(optional): offset in the message history (allow for paging)
+  /**
+   * Returns the 20 most recent messages sent to the authenticated user from
+   * the specified senderId.
+   * Parameters:
+   *  - senderId: the senderId of the messages to fetch.
+   *  - count(optional): number of messages to fetch
+   *  - offset(optional): offset in the message history (allow for paging)
+   */
   fetchMessages({ params={}, callback = ()=>{} } = {}) {
     axios.get(`${host}/messages`, {
       params: params,
@@ -459,10 +462,12 @@ let Api = {
     });
   },
 
-  // Sends a new message to the specified user from the authenticated user.
-  // Parameters:
-  //   - partnerId: the id of recipient of the message.
-  //   - message: Message to send
+  /**
+   * Sends a new message to the specified user from the authenticated user.
+   * Parameters:
+   *   - partnerId: the id of recipient of the message.
+   *   - message: Message to send
+   */
   newMessage({ params={}, callback=()=>{} }) {
     axios.post(`${host}/messages`, params, {
       withCredentials: true
@@ -477,9 +482,11 @@ let Api = {
     });
   },
 
+
   // ---------------------------------------------------------------------------
   // Events Resource Endpoints
   // ---------------------------------------------------------------------------
+  // Fetch all events
   getAllEvents({ params={}, callback=()=>{} }) {
     axios.get(`${host}/events`, {
       params: params,
@@ -495,6 +502,7 @@ let Api = {
     });
   },
 
+  // Update a given event
   updateEvent({ data={}, callback=()=>{} }) {
     axios.put(`${host}/events/${data.id}`, data, {
       withCredentials: true
@@ -509,6 +517,7 @@ let Api = {
     });
   },
 
+  // Delete a given event
   deleteEvent({ eventId, callback=()=>{} }) {
     axios.delete(`${host}/events/${eventId}`, {
       withCredentials: true, // send cookies for cross-site requests
@@ -526,6 +535,7 @@ let Api = {
   // ---------------------------------------------------------------------------
   // Repair Requests Resource Endpoints
   // ---------------------------------------------------------------------------
+  // Fetch all repair requests
   getAllRepairRequests({ params={}, callback=()=>{} }) {
     axios.get(`${host}/repairRequests`, {
       params: params,
@@ -541,6 +551,7 @@ let Api = {
     });
   },
 
+  // Update the given repair request
   putRepairRequest({ data={}, callback=()=>{} }) {
     axios.put(`${host}/repairRequests/${data.id}`, data, {
       withCredentials: true
@@ -558,6 +569,7 @@ let Api = {
   // ---------------------------------------------------------------------------
   // Payments Resource Endpoints
   // ---------------------------------------------------------------------------
+  // Fetch all payments
   getAllPayments({ params={}, callback=()=>{} }) {
     axios.get(`${host}/payments`, {
       params: params,
@@ -573,6 +585,7 @@ let Api = {
     });
   },
 
+  // Add a new payment
   postPayment({ payload={}, callback=()=>{} }) {
     axios.post(`${host}/payments`, payload, {
       withCredentials: true
@@ -587,6 +600,7 @@ let Api = {
     });
   },
 
+  // Update a payment
   putPayment({ id, payload={}, callback=()=>{} }) {
     axios.put(`${host}/payments/${id}`, payload, {
       withCredentials: true

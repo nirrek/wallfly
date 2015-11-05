@@ -2,13 +2,15 @@ var React = require('react');
 var Radium = require('radium');
 
 /**
- * Priority label
+ * Priority Component.
+ * Priority label component used for priorities of repair requests.
  */
 var Priority = React.createClass({
   propTypes: {
     type: React.PropTypes.string, // ['Urgent', 'Can Wait', 'Information']
     children: React.PropTypes.node,
   },
+
   render() {
     var priorityStyle;
     switch (this.props.type) {

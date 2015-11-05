@@ -1,6 +1,11 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * ImageSelector component.
+ * Component that allows a user to select images from the filesystem and renders
+ * a live preview of the selected image.
+ */
 var ImageSelector = React.createClass({
   propTypes: {
     maxSize: React.PropTypes.number, // max size of image in bytes
@@ -23,6 +28,10 @@ var ImageSelector = React.createClass({
     this.reader = new FileReader();
   },
 
+  /**
+   * Event handler for the file selected event.
+   * @param  {Object} event The event object.
+   */
   onFileSelected(event) {
     var file = event.target.files[0];
 

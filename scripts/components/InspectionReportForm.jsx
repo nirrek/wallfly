@@ -11,6 +11,10 @@ var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Radium = require('radium');
 
+/**
+ * InspectionReportForm Component
+ * Component for adding a new inspection report.
+ */
 var InspectionReportForm = React.createClass({
   propTypes: {
     inspectionReportAdded: React.PropTypes.func,
@@ -25,6 +29,9 @@ var InspectionReportForm = React.createClass({
     }
   },
 
+  /**
+   * Show the modal on button click.
+   */
   onButtonClick() {
     this.refs.dialog.show();
   },
@@ -68,10 +75,18 @@ var InspectionReportForm = React.createClass({
     });
   },
 
+  /**
+   * Event handler for the user selecting an image on the filesystem.
+   * @param  {Object} payload The File api event object.
+   */
   onImageSelected(payload) {
     this.setState({ image: payload.dataURL });
   },
 
+  /**
+   * Event handler for a file size error for the ImageSelector.
+   * @param  {Object} error The error object.
+   */
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)

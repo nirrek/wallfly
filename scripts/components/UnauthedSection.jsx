@@ -4,7 +4,8 @@ var Header = require('./Header.jsx');
 var Radium = require('radium');
 
 /**
- * Component view for the unauthenticated section of the front-end.
+ * UnauthedSection Component.
+ * Wrapper view for the unauthenticated section of the front-end.
  */
 var UnauthedSection = React.createClass({
   propTypes: {

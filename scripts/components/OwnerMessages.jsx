@@ -4,12 +4,15 @@ var User = require('../utils/User.js');
 var Radium = require('radium');
 var Notice = require('./Notice.jsx');
 
-var Messages = React.createClass({
+/**
+ * OwnerMessages Component.
+ * View component for the owner chat interface.
+ */
+var OwnerMessages = React.createClass({
   render() {
     var user = User.getUser() || {};
     var sender = user.id;
     var receiver = user.managingAgent;
-
 
     return (
       <div style={style.page}>
@@ -30,4 +33,4 @@ var style = {
   }
 };
 
-module.exports = Radium(Messages);
+module.exports = Radium(OwnerMessages);

@@ -1,9 +1,10 @@
-var property; // the property model
-
 /**
+ * Property Module.
  * Stores the current property model for the client and provides relevant
  * services for the model.
  */
+var property; // the property model
+
 var Property = {
   getPropertyId() {
     if (!property) return -1;

@@ -8,6 +8,10 @@ var RaisedButton = MaterialUi.RaisedButton;
 var UpdatePropertyForm = require('./UpdatePropertyForm.jsx');
 var moment = require('moment');
 
+/**
+ * PropertyDetails Component.
+ * View component for property details for use by all user types.
+ */
 var PropertyDetails = React.createClass({
   propTypes: {
     userType: React.PropTypes.string.isRequired,
@@ -40,6 +44,11 @@ var PropertyDetails = React.createClass({
     };
   },
 
+  /**
+   * Renders a list of details for the given details.
+   * @param  {Object} details Row details.
+   * @return {ReactElement}   React tree of the rendered details list.
+   */
   renderDetails(details) {
     if (!details[1].value) return null; // no details
 
@@ -58,15 +67,24 @@ var PropertyDetails = React.createClass({
     });
   },
 
+  /**
+   * Click handler for the `Edit` button to open the edit dialog.
+   */
   onEditDetails() {
     this.setState({ showUpdateForm: true });
   },
 
+  /**
+   * Properties details updated event handler.
+   */
   onPropertyDetailsUpdated() {
     this.setState({ showUpdateForm: false });
     this.props.onPropertyDetailsUpdated();
   },
 
+  /**
+   * Close event handler for the edit dialog.
+   */
   onClose() {
     this.setState({ showUpdateForm: false });
   },

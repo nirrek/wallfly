@@ -27,13 +27,15 @@ var OwnerCalendar = React.createClass({
     this.getCalendarEvents();
   },
 
+  /**
+   * Fetches all calendar event for the current owner from the server.
+   */
   getCalendarEvents() {
     var { propertyId } = this.props.params;
     Api.getPropertyCalendarEvents({
       propertyId: propertyId,
       callback: (err, response) => {
         if (err) {
-          // TODO
           return;
         }
 
@@ -46,14 +48,23 @@ var OwnerCalendar = React.createClass({
     });
   },
 
+  /**
+   * `Add Event` button click handler.
+   */
   onAddEventClick() {
     this.setState({ isAddEventDialogOpen: true });
   },
 
+  /**
+   * Close the add event modal handler.
+   */
   onClose() {
     this.setState({ isAddEventDialogOpen: false });
   },
 
+  /**
+   * Event added event handler.
+   */
   onEventAdded() {
     this.setState({ isAddEventDialogOpen: false });
     this.getCalendarEvents();

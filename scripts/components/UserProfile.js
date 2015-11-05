@@ -32,7 +32,9 @@ var UserProfile = React.createClass({
     };
   },
 
-  // Puts the profile into editing mode.
+  /**
+   * Put the profile into editing mode.
+   */
   enableEdit() {
     this.setState({
       isEditing: true,
@@ -41,7 +43,9 @@ var UserProfile = React.createClass({
     });
   },
 
-  // Puts the profile back into viewing mode.
+  /**
+   * Cancels editing mode, returns profile to viewing mode.
+   */
   cancelEdit() {
     this.setState({
       ...User.getUser(), // clear modified user state
@@ -49,7 +53,10 @@ var UserProfile = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validates the form; returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       username: this.state.username,
@@ -61,7 +68,9 @@ var UserProfile = React.createClass({
     }, schema);
   },
 
-  // Updates the user profile on the server.
+  /**
+   * Persists the user profile updates on the server.
+   */
   updateProfile() {
     var validation = this.validate();
     if (validation.error) {
@@ -97,12 +106,18 @@ var UserProfile = React.createClass({
     });
   },
 
-  // Capture the text inputted in the form in react state.
+  /**
+   * Event handler for capturing in the input field state on each keypress.
+   * @param  {String} field The identifier for the input field.
+   */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
   },
 
-  // Capture selected image data in react state.
+  /**
+   * Image selected event handler
+   * @param  {Object} payload JS File API payload of selected file.
+   */
   onImageSelected(data) {
     this.setState({ avatar: data.dataURL });
   },
@@ -187,7 +202,9 @@ var UserProfile = React.createClass({
   }
 });
 
-// Validation schema for user profile form data.
+/**
+ * Joi validation schema for the form data.
+ */
 var schema = Joi.object().keys({
   username: Joi.string().alphanum().min(3).max(30),
   firstName: Joi.string().alphanum().max(100),

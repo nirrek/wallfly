@@ -6,6 +6,10 @@ var Link = ReactRouter.Link;
 var Navigation = ReactRouter.Navigation;
 var Radium = require('radium');
 
+/**
+ * PropertyNav Component.
+ * Navigation component for a given property.
+ */
 var PropertyNav = React.createClass({
   mixins: [ Navigation ],
 
@@ -53,7 +57,6 @@ var PropertyNav = React.createClass({
   },
 
   render() {
-
     var navItemData = this.getNavItemData();
 
     return (

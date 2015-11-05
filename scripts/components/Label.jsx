@@ -1,6 +1,10 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * Label Component
+ * Component for form labels throughout the application.
+ */
 var Label = React.createClass({
   propTypes: {
     inline: React.PropTypes.bool

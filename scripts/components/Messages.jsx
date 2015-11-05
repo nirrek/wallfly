@@ -4,6 +4,10 @@ var Api = require('../utils/Api.js');
 var Chat = require('./Chat.jsx');
 var Radium = require('radium');
 
+/**
+ * Messages Component
+ * Renders a chat panel for messaging between the current tenant and the agent.
+ */
 var Messages = React.createClass({
   getInitialState() {
     return {

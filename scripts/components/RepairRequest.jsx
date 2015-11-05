@@ -7,6 +7,10 @@ var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var Priority = require('./Priority.jsx');
 
+/**
+ * RepairRequest Component.
+ * View component for displaying a list of a tenants repair requests.
+ */
 var RepairRequest = React.createClass({
   getInitialState() {
     return {
@@ -15,6 +19,13 @@ var RepairRequest = React.createClass({
     };
   },
 
+  componentWillMount() {
+    this.getRepairRequests();
+  },
+
+  /**
+   * Fetches all the repair requests for the current user from the server.
+   */
   getRepairRequests() {
     Api.getRepairRequests({
       callback: (err, response) => {
@@ -22,17 +33,12 @@ var RepairRequest = React.createClass({
           return console.log(err);
         }
 
-        console.log(response.data);
-
         this.setState({
           responseReceived: true,
           repairRequests: response.data
         });
       }
     });
-  },
-  componentWillMount() {
-    this.getRepairRequests();
   },
 
   render() {

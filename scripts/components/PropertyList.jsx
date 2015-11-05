@@ -20,7 +20,9 @@ var AddPropertyDialog = require('./AddPropertyDialog.jsx');
 var DialogEnhanced = require('./DialogEnhanced.jsx');
 
 /**
- * PropertyList component.
+ * PropertyList Component.
+ * View component displaying a list of properties for the current user.
+ * Used by both the agent and owner on their property list page.
  */
 var PropertyList = React.createClass({
   mixins: [ Navigation ],
@@ -44,7 +46,18 @@ var PropertyList = React.createClass({
     }
   },
 
-  // Fetches the property list from the server
+  componentDidMount() {
+    // focus fails until the DOM has done some sort of initialization.
+    // hence the 300ms delay required.
+    setTimeout(() => {
+      var filterInput = React.findDOMNode(this.refs.filter);
+      if (filterInput) filterInput.focus();
+    }, 300);
+  },
+
+  /**
+   * Fetches the property list for the current user from the server.
+   */
   getPropertyList() {
     Api.getPropertyList({
       callback: (err, res) => {
@@ -68,15 +81,6 @@ var PropertyList = React.createClass({
     });
   },
 
-  componentDidMount() {
-    // focus fails until the DOM has done some sort of initialization.
-    // hence the 300ms delay required.
-    setTimeout(() => {
-      var filterInput = React.findDOMNode(this.refs.filter);
-      if (filterInput) filterInput.focus();
-    }, 300);
-  },
-
   /**
    * Gets the current userType as determined by the URL.
    * @return {String} The current user type.
@@ -93,43 +97,61 @@ var PropertyList = React.createClass({
     return '';
   },
 
-  addPropertyClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    var userType = this.getUserType();
-    this.transitionTo(`/${userType}/newProperty`);
-  },
-
-  // Filters a list of properties, given the fuzzy search term.
-  // Produces the filtered list.
+  /**
+   * Filters a list of properties given the fuzzy ssearch term, and produces
+   * the filtered list.
+   * @param  {Array}  properties List of properties.
+   * @param  {String} term       The seach term to filter the list on.
+   * @return {Array}             Filtered list of properties.
+   */
   filterProperties(properties, term) {
     var options = { extract: (p) => `${p.street} ${p.suburb}` };
     return fuzzy.filter(term, properties, options);
   },
 
+  /**
+   * Filter input field onChange event handler.
+   * @param  {Object} event The event object.
+   */
   onFilterChange(event) {
     this.setState({ 'filter': event.target.value });
   },
 
+  /**
+   * Tap event handler for a given property.
+   * @param  {Number} propertyId The id of the tapped property.
+   */
   onPropertyTap(propertyId) {
     var userType = this.getUserType();
     this.transitionTo(`/${userType}/property/${propertyId}/propertyDetails`);
   },
 
+  /**
+   * Click event handler for the add property button.
+   */
   onAddPropertyClick() {
     this.setState({ isPropertyDialogOpen: true });
   },
 
+  /**
+   * Close event handler for the add property dialog.
+   */
   onClose() {
     this.setState({ isPropertyDialogOpen: false });
   },
 
+  /**
+   * Property added event handler.
+   */
   onAddProperty() {
     this.setState({ isPropertyDialogOpen: false });
     this.getPropertyList();
     this.refs.snackbar.show();
   },
 
+  /**
+   * Close event handler for the welcome dialog.
+   */
   onWelcomeClose() {
     this.setState({ isWelcomeMessageOpen: false });
     var user = User.getUser();

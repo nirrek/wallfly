@@ -1,3 +1,6 @@
+/**
+ * Webpack production configuration.
+ */
 var path = require('path');
 var webpack = require('webpack');
 

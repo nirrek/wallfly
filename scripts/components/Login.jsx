@@ -45,12 +45,19 @@ var Login = React.createClass({
     }
   },
 
-  // Capture the input field state after each keypress.
+  /**
+   * Capture the input field state after each keypress.
+   * @param  {String} field The name of the field firing the event.
+   * @param  {Object} event The event object.
+   */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
   },
 
-  // Handle the form submission event when the user tries to log in.
+  /**
+   * Handle the form submission event when the user tries to log in.
+   * @param  {Object} event The submit event object.
+   */
   onSubmit(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -105,7 +112,10 @@ var Login = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       username: this.state.username,
@@ -183,7 +193,9 @@ var Login = React.createClass({
   }
 });
 
-// Validation schema for user profile form data.
+/**
+ * Joi validation schema for the form data.
+ */
 var schema = Joi.object().keys({
   username: Joi.string().alphanum().min(3).max(30),
   password: Joi.string().regex(/[a-zA-Z0-9]{5,100}/),

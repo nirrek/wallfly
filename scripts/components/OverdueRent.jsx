@@ -5,12 +5,16 @@ var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 var Status = require('./Status.jsx');
-
 var FixedDataTable = require('fixed-data-table');
 require('../../styles/fixed-data-table.css');
 var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
 
+/**
+ * OverdueRent Component
+ * View component for rendering a list of all overdue rent payments across
+ * all properties that the current agent is managing.
+ */
 var OverdueRent = React.createClass({
   getInitialState() {
     return {
@@ -22,6 +26,9 @@ var OverdueRent = React.createClass({
     this.fetchPayments();
   },
 
+  /**
+   * Fetches all overdue payments for the current agent from the server.
+   */
   fetchPayments() {
     Api.getAllPayments({
       params: {
@@ -34,6 +41,11 @@ var OverdueRent = React.createClass({
     });
   },
 
+  /**
+   * Fetches the row data contents for the given rowIndex.
+   * @param  {Number} rowIndex The index of the row to fetch the content for.
+   * @return {Array}           Array of cell data for the row.
+   */
   rowGetter(rowIndex) {
     var row = this.state.payments[rowIndex];
 
@@ -46,6 +58,11 @@ var OverdueRent = React.createClass({
     ];
   },
 
+  /**
+   * Custom renderer for the isPaid cell in the table.
+   * @param  {String}  data The data for the cell.
+   * @return {ReactElement} The rendered react element for the cell.
+   */
   isPaidRenderer(data) {
     var statusColor = data ? 'green' : 'red';
     return (

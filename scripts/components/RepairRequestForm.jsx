@@ -14,6 +14,11 @@ var Radium = require('radium');
 var Joi = require('joi');
 var JoiError = require('./JoiError.jsx');
 
+/**
+ * RepairRequestForm Component.
+ * Modal component for rendering a repair request form that allows for
+ * submitting a new repair request for the current property.
+ */
 var RepairRequestForm = React.createClass({
   propTypes: {
     repairRequestAdded: React.PropTypes.func,
@@ -29,6 +34,9 @@ var RepairRequestForm = React.createClass({
     };
   },
 
+  /**
+   * Button click event handler for showing the form.
+   */
   onButtonClick() {
     this.refs.dialog.show();
   },
@@ -36,6 +44,7 @@ var RepairRequestForm = React.createClass({
   /**
    * Event handler for capturing in the input field state on each keypress.
    * @param  {String} field The identifier for the input field.
+   * @param  {Object} event The event object.
    */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
@@ -44,6 +53,7 @@ var RepairRequestForm = React.createClass({
   /**
    * Form submission event handler. Sends a request to the server to add the
    * repair request, and updates the repair requests if successful.
+   * @param  {Object} event The submit event object.
    */
   onSubmit(event) {
     // Clear prior error states.
@@ -81,7 +91,10 @@ var RepairRequestForm = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       request: this.state.request,
@@ -90,10 +103,18 @@ var RepairRequestForm = React.createClass({
     }, schema);
   },
 
+  /**
+   * Image selected event handler
+   * @param  {Object} payload JS File API payload of selected file.
+   */
   onImageSelected(payload) {
     this.setState({ image: payload.dataURL });
   },
 
+  /**
+   * Image size error event handler.
+   * @param  {Object} error The error object.
+   */
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
@@ -101,6 +122,11 @@ var RepairRequestForm = React.createClass({
     this.setState({ fileSizeError: errorMessage });
   },
 
+  /**
+   * Priorities select dropdown change event handler.
+   * @param  {Object} event                 The event object.
+   * @param  {Number} selectedPriorityIndex The index of the selected priority.
+   */
   onStatusChange(event, selectedPriorityIndex) {
     var priority = priorities[selectedPriorityIndex].text;
     this.setState({ priority: priority });
@@ -113,7 +139,6 @@ var RepairRequestForm = React.createClass({
       <ErrorMessage fillBackground={true}>Error: {fileSizeError}</ErrorMessage>
     ) : null;
 
-    console.log(validationError);
     var validationError = (validationError) ? (
       <JoiError error={validationError} fillBackground={true} />
     ) : null;
@@ -165,13 +190,18 @@ var RepairRequestForm = React.createClass({
   }
 });
 
-// Validation schema for repair request form data.
+/**
+ * Joi validation schema for the form data.
+ */
 var schema = Joi.object().keys({
   request: Joi.string().max(2048),
   priority: Joi.string().valid(['Urgent', 'Can Wait', 'Information']),
   image: Joi.string(),
 });
 
+/**
+ * Repair request priorities.
+ */
 var priorities = [
   { name: 'Urgent', text: 'Urgent' },
   { name: 'Can Wait', text: 'Can Wait' },

@@ -2,18 +2,20 @@ var React = require('react');
 var Radium = require('radium');
 
 /**
- * Status label
+ * Status Component.
+ * Status label component used for display various coloured status labels.
  */
 var Status = React.createClass({
   propTypes: {
     type: React.PropTypes.string, // ['red', 'green', 'yellow', 'blue']
     children: React.PropTypes.node,
   },
+
   render() {
     return (
        <span style={[
-           styles.status,
-           styles[this.props.type]
+            styles.status,
+            styles[this.props.type]
          ]}>{this.props.children || this.props.type}</span>
     );
   }

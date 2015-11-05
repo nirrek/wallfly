@@ -1,6 +1,10 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * ErrorMessage Component.
+ * Component for display error messages throughout the application.
+ */
 var ErrorMessage = React.createClass({
   propTypes: {
     fillBackground: React.PropTypes.bool, // filled bg style.

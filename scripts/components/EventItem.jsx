@@ -9,15 +9,16 @@ var Label = require('./Label.jsx');
  * Event Item
  * This is a event item that is located in an event List.
  */
-
 var EventItem = React.createClass({
   propTypes: {
     data: React.PropTypes.object.isRequired
   },
 
+  /**
+   * Shows the event dialog.
+   */
   showEventDialog() {
     this.refs.dialog.show();
-
   },
 
   render() {

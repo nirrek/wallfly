@@ -1,14 +1,16 @@
 var React = require('react');
-var Property = require('../utils/Property.js');
 var Api = require('../utils/Api.js');
 var Chat = require('./Chat.jsx');
-var Label = require('./Label.jsx');
 var mui = require('material-ui');
 var SelectField = mui.SelectField;
 var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 
-var Messages = React.createClass({
+/**
+ * AgentMessages component.
+ * This is the agent chat interface component.
+ */
+var AgentMessages = React.createClass({
   getInitialState() {
     return {
       sender: null,
@@ -29,7 +31,11 @@ var Messages = React.createClass({
     });
   },
 
-  // Update select menu on change.
+  /**
+   * Change event for the user chat selector.
+   * @param  {Object} event                 The event object.
+   * @param  {Number} selectedUserTypeIndex The index of the selected user.
+   */
   onSelectChange(event, selectedUserTypeIndex) {
     var userType = userTypes[selectedUserTypeIndex].name;
     this.setState({ chatPartner: userType });
@@ -63,7 +69,9 @@ var Messages = React.createClass({
   }
 });
 
-// User types
+/**
+ * User types.
+ */
 var userTypes = [
   { name: 'owner', text: 'Owner' },
   { name: 'tenant', text: 'Tenant' },
@@ -78,11 +86,9 @@ var styles = {
     marginTop: '-13px',
   },
   label: {
-    // display: 'inline',
-    // lineHeight: 4,
     paddingBottom: '10px',
     marginRight: '1em',
   },
 };
 
-module.exports = Radium(MuiContextified(Messages));
+module.exports = Radium(MuiContextified(AgentMessages));

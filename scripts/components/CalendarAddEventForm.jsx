@@ -10,6 +10,10 @@ var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
 var Kronos = require('react-kronos');
 
+/**
+ * CalendarAddEventForm Component.
+ * Modal component for adding a new event.
+ */
 var CalendarAddEventForm = React.createClass({
   propTypes: {
     isOpen: React.PropTypes.bool,
@@ -69,12 +73,17 @@ var CalendarAddEventForm = React.createClass({
     });
   },
 
+  /**
+   * Close event handler for the modal.
+   */
   onClose() {
     this.resetState();
     this.props.onClose();
   },
 
-  // Resets state of the form.
+  /**
+   * Resets the state of the form.
+   */
   resetState() {
     this.setState({
       eventDesc: '',
@@ -84,7 +93,10 @@ var CalendarAddEventForm = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validates the form; returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       'Event Description': this.state.eventDesc,
@@ -93,8 +105,11 @@ var CalendarAddEventForm = React.createClass({
     }, schema);
   },
 
+  /**
+   * Change event handler for the Kronos timepicker component.
+   * @param  {Date} date The newly selected date in the timepicker.
+   */
   onKronosChange(date) {
-    console.log(date);
     this.setState({ date: date });
   },
 
@@ -164,6 +179,9 @@ var CalendarAddEventForm = React.createClass({
   }
 });
 
+/**
+ * Configuration options for the kronos datepicker component.
+ */
 var kronosOptions = {
   color: '#2ECC71',
   font: 'Roboto',
@@ -178,7 +196,9 @@ var styles = {
   },
 };
 
-// Validation schema for user profile form data.
+/**
+ * Joi validation schema for event form data.
+ */
 var schema = Joi.object().keys({
   'Event Description': Joi.string().max(64).required(),
   Date: Joi.date(),

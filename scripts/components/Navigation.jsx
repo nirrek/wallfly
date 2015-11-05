@@ -7,6 +7,10 @@ var FontIcon = MaterialUi.FontIcon;
 var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 
+/**
+ * NavigationList component.
+ * Component for the primary navigation for a tenant.
+ */
 var NavigationList = React.createClass({
   mixins: [ Navigation ],
 

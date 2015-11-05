@@ -1,9 +1,13 @@
+/**
+ * Smooth scroll module to allow smooth scrolling the scroll position of
+ * a target element.
+ */
 let raf = require('raf');
 
 module.exports = {
   /**
    * Smooth scrolls the given element vertically to the given y coordinate.
-   * @param {Number} y  The y coordinate to scroll the window to.
+   * @param {Number} y        The y coordinate to scroll the window to.
    * @param {HTMLElement} el  The element to scroll.
    */
   smoothScrollTo(y, el) {

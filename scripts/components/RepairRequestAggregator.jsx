@@ -14,8 +14,9 @@ var Label = require('./Label.jsx');
 
 
 /**
- * RepairRequestAggregator is the route endpoint for the agent, providing an
- * aggregate view of all repair requests across the agent's properties.
+ * RepairRequestAggregator Component.
+ * View component for the agent that provides an aggregate view of all
+ * requests across the agent's properties.
  */
 var PropertyList = React.createClass({
   mixins: [ Navigation ],
@@ -32,7 +33,9 @@ var PropertyList = React.createClass({
     this.getRepairRequests();
   },
 
-  // Fetches the repair requests from the server
+  /**
+   * Fetches all repair requests for the agent's properties from the server.
+   */
   getRepairRequests() {
     Api.getAllRepairRequests({
       params: {
@@ -44,8 +47,6 @@ var PropertyList = React.createClass({
           return;
         }
 
-        console.log(res.data);
-
         this.setState({
           responseReceived: true,
           repairRequests: res.data,
@@ -54,15 +55,28 @@ var PropertyList = React.createClass({
     });
   },
 
-  // Update select menu on change.
+  /**
+   * Priorities select dropdown change event handler.
+   * @param  {Object} event                 The event object.
+   * @param  {Number} selectedPriorityIndex The index of the selected priority.
+   */
   onSelectChange(event, selectedPriorityIndex) {
     var priority = priorities[selectedPriorityIndex].name;
     this.setState({ priorityFilter: priority });
   },
 
+  /**
+   * Status select dropdown change event handler.
+   * @param  {Number} id                  The id of the repair request being
+   *                                      modified.
+   * @param  {Object} event               The event object.
+   * @param  {Number} selectedStatusIndex The index of the selected status.
+   */
   onStatusChange(id, event, selectedStatusIndex) {
     var modifiedRequest = this.state.repairRequests.find(el => el.id === id);
     modifiedRequest.status = statuses[selectedStatusIndex].text;
+
+    // Part of the Presentation model, not part of the backing data model.
     delete modifiedRequest.street;
     delete modifiedRequest.suburb;
 

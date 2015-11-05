@@ -1,6 +1,11 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * Screenshot Component.
+ * Component for rendering a screenshot with a caption. Primarily intended
+ * for use in the user guides.
+ */
 var Screenshot = React.createClass({
   propTypes: {
     src: React.PropTypes.string.isRequired,

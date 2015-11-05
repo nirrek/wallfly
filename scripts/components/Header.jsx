@@ -32,10 +32,19 @@ var Header = React.createClass({
     return { isProfileOpen: false, };
   },
 
+  /**
+   * Show profile click event handler.
+   */
   onProfileClick() { this.setState({ isProfileOpen: true }); },
 
+  /**
+   * Close profile click event handler
+   */
   onProfileClose() { this.setState({ isProfileOpen: false }); },
 
+  /**
+   * Logout the user on logout button click.
+   */
   onLogoutClick() {
     Api.logout({
       callback: (err, res) => {
@@ -51,10 +60,16 @@ var Header = React.createClass({
     });
   },
 
+  /**
+   * Transition to homepage on logo click.
+   */
   onLogoClick() {
     this.transitionTo('/');
   },
 
+  /**
+   * Help guide click event handler.
+   */
   onHelpClick() {
     var userType = User.getUser().type;
     var pagePath = `/guides/${userType}`;

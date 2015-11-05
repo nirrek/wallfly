@@ -10,6 +10,10 @@ var navItemData = [
   { text: 'Agent Chat', path: `${prefix}/messages`, icon: 'message' },
 ];
 
+/**
+ * OwnerNav Component.
+ * Navigation list component for the owner user.
+ */
 var OwnerNav = React.createClass({
   render() {
     return (

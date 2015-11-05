@@ -16,8 +16,11 @@ var Snackbar = MaterialUi.Snackbar;
 
 var CalendarListDay = require('./CalendarListDay.jsx');
 
+/**
+ * AgentCalendar component.
+ * Provides a navigatable calendar view for the agent.
+ */
 var AgentCalendar = React.createClass({
-
   getInitialState() {
     return {
       month: Moment(),
@@ -37,6 +40,9 @@ var AgentCalendar = React.createClass({
     window.removeEventListener('resize', this.onWindowResize);
   },
 
+  /**
+   * Window resize event handler.
+   */
   onWindowResize() {
     this.setState({
       toolbarWidth: React.findDOMNode(this.refs.days).clientWidth
@@ -51,18 +57,22 @@ var AgentCalendar = React.createClass({
         minContainerHeight: this.computeContainerHeight(),
         toolbarWidth: React.findDOMNode(this.refs.days).clientWidth,
       });
-
     }, 200);
   },
 
-  // Computes the necessary height of the container, so that 'today' is able
-  // to be scrolled to. If there is no 'today', returns 0.
+  /**
+   * Computes the necessary height of the container, so that 'today' is able
+   * to be scrolled to. If there is no 'today', returns 0.
+   */
   computeContainerHeight() {
     if (!this.refs.today || !React.findDOMNode(this.refs.today)) return 0;
     var today = React.findDOMNode(this.refs.today);
     return today.offsetTop * 2 + today.offsetHeight;
   },
 
+  /**
+   * Scrolls the viewport to the current day.
+   */
   scrollToToday() {
     var today = React.findDOMNode(this.refs.today);
     var page =  React.findDOMNode(this.refs.container).parentElement;
@@ -85,6 +95,9 @@ var AgentCalendar = React.createClass({
     }
   },
 
+  /**
+   * Fetch all events for the current user.
+   */
   getEvents() {
     var user = User.getUser() || {};
 
@@ -106,28 +119,47 @@ var AgentCalendar = React.createClass({
     });
   },
 
+  /**
+   * Updates the current month to be the prior month.
+   */
   getPrevMonth() {
     var newMonth = this.state.month.subtract('1', 'months');
     this.setState({month: newMonth});
   },
 
+  /**
+   * Updates the current month to be the next month.
+   */
   getNextMonth() {
     var newMonth = this.state.month.add('1', 'months');
     this.setState({month: newMonth});
   },
 
+  /**
+   * Updates the current day to todays date.
+   */
   getToday() {
     this.setState({month: Moment()});
     this.scrollToToday();
   },
 
+  /**
+   * Refreshes the calendar list after a new event has been added and display
+   * a snackbar message for the newly added event.
+   * @param  {String} snackbarMsg The message to display in the snackbar.
+   */
   refresh(snackbarMsg) {
-    console.log(snackbarMsg);
     this.getEvents();
     this.setState({snackbarMsg: snackbarMsg});
     this.refs.snackbar.show();
   },
 
+  /**
+   * Takes a list of events, groups the events by day, and produces the new
+   * grouped list.
+   * @param  {Array} events List of event objects.
+   * @return {Array}        List of event objects gropued by day.
+   */
   groupByDay(events) {
     var obj = events.reduce((acc, d) => {
       var p = Moment(d.date).format('DD dddd');

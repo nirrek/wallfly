@@ -22,7 +22,6 @@ var Calendar = React.createClass({
     Api.getEvents({
       callback: (err, response) => {
         if (err) {
-          // TODO
           return;
         }
 

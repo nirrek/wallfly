@@ -9,8 +9,13 @@ var mui = require('material-ui');
 var FontIcon = mui.FontIcon;
 var FloatingActionButton = mui.FloatingActionButton;
 
-// Merges two message lists. Returns the merged list ordered by oldest first.
-// O(n)
+/**
+ * Merges two message lists and produces the merged list. O(n).
+ * List is ordered from oldest to youngest.
+ * @param  {Array} oldList The old message list.
+ * @param  {Array} newList The new message list.
+ * @return {Array}         The merged message list.
+ */
 function mergeMessageLists(oldList, newList) {
   oldList.sort((a, b) => a.id - b.id);
   newList.sort((a, b) => a.id - b.id);
@@ -37,6 +42,10 @@ function mergeMessageLists(oldList, newList) {
   return merged;
 }
 
+/**
+ * Chat Component.
+ * Provides a chat component for instant messaging between participants.
+ */
 var Chat = React.createClass({
   propTypes: {
     sender: React.PropTypes.number.isRequired,
@@ -70,6 +79,9 @@ var Chat = React.createClass({
     window.clearInterval(this.intervalToken);
   },
 
+  /**
+   * Fetch the chat messages.
+   */
   fetchMessages() {
     var { receiver } = this.props;
     var { messages } = this.state;
@@ -83,6 +95,9 @@ var Chat = React.createClass({
     });
   },
 
+  /**
+   * Send message event handler.
+   */
   onSend() {
     if (this.state.message == '') return;
 
@@ -100,6 +115,11 @@ var Chat = React.createClass({
     React.findDOMNode(this.refs.compose).focus(); // refocus compose input.
   },
 
+  /**
+   * Chat composer keypress event handler. Detects when the enter key
+   * has been pressed and sends a message.
+   * @param  {Object} event The event object.
+   */
   onKeyDown(event) {
     if (event.keyCode === 13) { // Enter key pressed
       event.preventDefault();
@@ -107,6 +127,10 @@ var Chat = React.createClass({
     }
   },
 
+  /**
+   * Event handler that captures characters types in the chat composer field.
+   * @param  {Object} event Event object.
+   */
   onType(event) {
     this.setState({ message: event.target.value });
   },
@@ -119,16 +143,12 @@ var Chat = React.createClass({
       return <Message key={m.id} message={m} isUser={isUser} />
     });
 
-    var rootStyles = {
-      // height: window.innerHeight / 4,
-    };
-
     var messagePanelHeight = {
       height: window.innerHeight - 160 + (this.props.offset || 0),
     };
 
     return (
-      <div style={[styles.root, rootStyles]}>
+      <div style={[styles.root]}>
         <MessagesPanel messages={messages} style={[styles.messagesPanel, messagePanelHeight]} />
         <div style={styles.composePanel}>
           <textarea
@@ -160,7 +180,6 @@ var styles = {
     flexGrow: 1,
     overflow: 'auto',
     padding: '10px 10px 0 0',
-    // borderTop: '2px solid #ddd',
   },
   composePanel: {
     paddingTop: 3,

@@ -15,6 +15,10 @@ var Label = require('./Label.jsx');
 
 var CalendarEditEventForm = require('./CalendarEditEventForm.jsx');
 
+/**
+ * CalendarListItem Component
+ * Component for a particular row in the calendar list.
+ */
 var CalendarListItem = React.createClass({
   propTypes: {
     event: React.PropTypes.object.isRequired,
@@ -27,15 +31,23 @@ var CalendarListItem = React.createClass({
     };
   },
 
+  /**
+   * Shows the event modal window.
+   */
   showEventDialog() {
     this.refs.dialog.show();
   },
 
-
-  editDialogDismissed(eventTitle) {
+  /**
+   * Dismiss event handler for the edit event dialog.
+   */
+  editDialogDismissed() {
     this.setState({ isEditDialogOpen: false });
   },
 
+  /**
+   * Delete event handler.
+   */
   deleteEvent() {
     var event = this.props.event
     Api.deleteEvent({
@@ -48,22 +60,38 @@ var CalendarListItem = React.createClass({
     });
   },
 
+  /**
+   * Shows the remove dialog.
+   */
   showRemoveDialog() {
     this.refs.deleteDialog.show();
   },
 
+  /**
+   * Dismissed the delete dialog.
+   */
   dismissDeleteDialog() {
     this.refs.deleteDialog.dismiss();
   },
 
+  /**
+   * Show edit dialog event handler.
+   */
   onShowEditDialog() {
     this.setState({ isEditDialogOpen: true });
   },
 
+  /**
+   * Close edit dialog event handler.
+   */
   onCloseEditDialog() {
     this.setState({ isEditDialogOpen: false });
   },
 
+  /**
+   * Event edited event handler.
+   * @param  {String} eventTitle The title of the edited event.
+   */
   onEventEdited(eventTitle) {
     this.setState({ isEditDialogOpen: false });
     this.props.refresh('Event "' + eventTitle + '" Updated.');

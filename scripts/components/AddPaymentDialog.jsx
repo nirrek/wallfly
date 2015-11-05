@@ -37,7 +37,9 @@ var AddPaymentDialog = React.createClass({
     this.setState({ [field]: event.target.value });
   },
 
-  // Adds a payment using the current state of the form.
+  /**
+   * Adds a payment using the current state of the form.
+   */
   onAddPayment() {
     // Clear prior error states.
     this.setState({
@@ -67,7 +69,9 @@ var AddPaymentDialog = React.createClass({
     });
   },
 
-  // Resets the state of the form
+  /**
+   * Resets the state of the form.
+   */
   resetState() {
     this.setState({
       amount: null,
@@ -76,7 +80,10 @@ var AddPaymentDialog = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validates the form; returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       dateDue: new Date(),
@@ -86,6 +93,9 @@ var AddPaymentDialog = React.createClass({
     }, schema);
   },
 
+  /**
+   * Close event handler for the modal.
+   */
   onClose() {
     this.resetState();
     this.props.onClose();
@@ -127,6 +137,9 @@ var AddPaymentDialog = React.createClass({
   }
 });
 
+/**
+ * Joi validation schema for the form.
+ */
 var schema = Joi.object().keys({
   dateDue: Joi.date().required(),
   amount: Joi.number().positive().required(),

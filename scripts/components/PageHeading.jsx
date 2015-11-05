@@ -1,9 +1,12 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * PageHeading Component.
+ * Component for displaying the heading of a page.
+ */
 var PageHeading = React.createClass({
   shouldComponentUpdate() { return false; },
-
   render() {
     return <h1 style={styles.heading}>{this.props.children}</h1>;
   }

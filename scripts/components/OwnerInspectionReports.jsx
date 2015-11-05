@@ -5,6 +5,11 @@ var InspectionReportForm = require('./InspectionReportForm.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 
+/**
+ * OwnerInspectionReports Component.
+ * View component for displaying inspection reports for the currently
+ * active property of the current owner user.
+ */
 var OwnerInspectionReports = React.createClass({
   getInitialState() {
     return {
@@ -12,6 +17,9 @@ var OwnerInspectionReports = React.createClass({
     };
   },
 
+  /**
+   * Fetches all inspection reports from the server.
+   */
   getInspectionReports() {
     var { propertyId } = this.props.params;
     Api.getPropertyInspectionReports({

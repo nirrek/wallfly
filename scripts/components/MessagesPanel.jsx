@@ -1,9 +1,10 @@
 var React = require('react');
-var Api = require('../utils/Api.js');
-var User = require('../utils/User.js');
-var Message = require('./Message.jsx');
 var Radium = require('radium');
 
+/**
+ * MessagesPanel Component
+ * Component for rendering a list of messages in the Chat component.
+ */
 var MessagesPanel = React.createClass({
   propTypes: {
     messages: React.PropTypes.array.isRequired,
@@ -12,7 +13,7 @@ var MessagesPanel = React.createClass({
   componentDidMount() {
     var node = React.findDOMNode(this);
 
-    // Need to wait for the paints to finish for some reason.
+    // Await the changes being flushed to the DOM.
     window.setTimeout(() => {
       node.scrollTop = node.scrollHeight;
     }, 100);

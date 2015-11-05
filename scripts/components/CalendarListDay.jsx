@@ -1,11 +1,12 @@
 var React = require('react');
 var Radium = require('radium');
-var Moment = require('moment');
 var MuiContextified = require('./MuiContextified.jsx');
-var MaterialUI = require('material-ui');
-
 var CalendarListItem = require('./CalendarListItem.jsx');
 
+/**
+ * CalendarListDay Component
+ * Component for an individual day in the list calendar.
+ */
 var CalendarListDay = React.createClass({
   propTypes: {
     dayEvents: React.PropTypes.array,
@@ -28,10 +29,5 @@ var CalendarListDay = React.createClass({
     );
   }
 });
-
-var style = {
-
-
-};
 
 module.exports = MuiContextified(Radium(CalendarListDay));

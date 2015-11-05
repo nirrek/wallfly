@@ -2,14 +2,11 @@ var React = require('react');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
-var Link = ReactRouter.Link;
 var history = require('react-router/lib/BrowserHistory').history;
 var injectTapEventPlugin = require('react-tap-event-plugin');
-var mui = require('material-ui');
 var User = require('./utils/User.js');
 var Property = require('./utils/Property.js');
 var Api = require('./utils/Api.js');
-var PropertyDetails = require('./components/PropertyDetails.jsx');
 var Payments = require('./components/Payments.jsx');
 var RepairRequest = require('./components/RepairRequest.jsx');
 var Calendar = require('./components/Calendar.jsx');
@@ -31,7 +28,6 @@ var OwnerRepairRequests = require('./components/OwnerRepairRequests.jsx');
 var OwnerInspectionReports = require('./components/OwnerInspectionReports.jsx');
 var OwnerCalendar = require('./components/OwnerCalendar.jsx');
 var AgentNav = require('./components/AgentNav.jsx');
-var Chat = require('./components/Chat.jsx');
 var AgentMessages = require('./components/AgentMessages.jsx');
 var OwnerMessages = require('./components/OwnerMessages.jsx');
 var TenantPropertyDetails = require('./components/TenantPropertyDetails.jsx');
@@ -45,6 +41,9 @@ var GuideOwner = require('./components/GuideOwner.jsx');
 
 require('../styles/main.scss');
 
+/**
+ * The application component at the root of the tree.
+ */
 var App = React.createClass({
   componentWillMount() {
     // material-ui components depend on this for touch event listening.
@@ -79,24 +78,21 @@ var App = React.createClass({
   }
 });
 
-/**
- * Placeholder for pages that are yet to be setup completely.
- */
-var Stub = React.createClass({
-  render() {
-    return <div>Stub</div>;
-  }
-});
 
 // AppFrame's onEnter method for redirecting the user if not authed.
-var redirectUnauthedUser = function(nextState, transition) {
+var redirectUnauthedUser = (nextState, transition) => {
   if (!User.getUserId()) transition.to('/');
-}
+};
 
+/**
+ * Defines the clientside routing and mounts the router to the DOM.
+ * This bootstraps the entire application on initialization.
+ */
 React.render((
   <Router history={history}>
     <Route component={App}>
       <Route path="/" component={Home} />
+
       <Route path="" component={UnauthedSection}>
         <Route path="/login" component={Login} />
         <Route path="/createAccount" component={CreateAccount} />
@@ -104,6 +100,7 @@ React.render((
         <Route path="/guides/owner" component={GuideOwner} />
         <Route path="/guides/tenant" component={GuideTenant} />
       </Route>
+
       <Route path="" component={AppFrame} onEnter={redirectUnauthedUser}>
         <Route path="owner" components={{ main: Page, sidebar: OwnerNav }}>
           <Route path="propertyList" component={PropertyList} />

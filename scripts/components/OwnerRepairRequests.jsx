@@ -10,6 +10,11 @@ var MaterialUi = require('material-ui');
 var SelectField = MaterialUi.SelectField;
 var Snackbar = MaterialUi.Snackbar;
 
+/**
+ * OwnerRepairRequests Component.
+ * View component for displaying the repair requests for the currently
+ * active property of the current owner user.
+ */
 var OwnerRepairRequests = React.createClass({
   getInitialState() {
     return {
@@ -18,6 +23,13 @@ var OwnerRepairRequests = React.createClass({
     };
   },
 
+  componentWillMount() {
+    this.getPropertyRepairRequests();
+  },
+
+  /**
+   * Fetches repair requests from the server for the currently active property.
+   */
   getPropertyRepairRequests(){
     var { propertyId } = this.props.params;
     Api.getPropertyRepairRequests({
@@ -32,14 +44,17 @@ var OwnerRepairRequests = React.createClass({
     });
   },
 
-  componentWillMount() {
-    this.getPropertyRepairRequests();
-  },
-
+  /**
+   * Status change event handler.
+   * @param  {Number} id                  The id of event whose status changed.
+   * @param  {Object} event               The event object.
+   * @param  {Number} selectedStatusIndex The index of the selected status.
+   */
   onStatusChange(id, event, selectedStatusIndex) {
     var modifiedRequest = this.state.requests.find(el => el.id === id);
     modifiedRequest.status = statuses[selectedStatusIndex].text;
 
+    // Sync the changes to the server.
     Api.putRepairRequest({
       data: {
         ...modifiedRequest

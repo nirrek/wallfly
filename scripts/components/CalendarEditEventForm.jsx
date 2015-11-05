@@ -3,7 +3,6 @@ var Api = require('../utils/Api.js');
 var MuiContextified = require('./MuiContextified.jsx');
 var MaterialUi = require('material-ui');
 var TextField = MaterialUi.TextField;
-var Dialog = MaterialUi.Dialog;
 var Label = require('./Label.jsx');
 var ErrorMessage = require('./ErrorMessage.jsx');
 var Joi = require('joi');
@@ -12,6 +11,10 @@ var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Radium = require('radium');
 var Kronos = require('react-kronos');
 
+/**
+ * CalendarEditEventForm Component.
+ * Modal component for editing an event.
+ */
 var CalendarEditEventForm = React.createClass({
   propTypes: {
     isOpen: React.PropTypes.bool.isRequired,
@@ -33,12 +36,17 @@ var CalendarEditEventForm = React.createClass({
     this.setState({ ...nextProps.details });
   },
 
+  /**
+   * Close event handler for the modal.
+   */
   onClose() {
     this.resetState();
     this.props.onClose();
   },
 
-  // Clears the state of the form
+  /**
+   * Clears the state of the form
+   */
   resetState() {
     this.setState({
       validationError: false,
@@ -102,7 +110,10 @@ var CalendarEditEventForm = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validates the form; returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       date: this.state.date,
@@ -180,6 +191,9 @@ var CalendarEditEventForm = React.createClass({
   }
 });
 
+/**
+ * Configuration options for the kronos datepicker component.
+ */
 var kronosOptions = {
   color: '#2ECC71',
   font: 'Roboto',
@@ -194,7 +208,9 @@ var styles = {
   },
 };
 
-// Validation schema for update property form data.
+/**
+ * Joi validation schema for event form data.
+ */
 var schema = Joi.object().keys({
   date: Joi.date(),
   event: Joi.string().max(64).required(),

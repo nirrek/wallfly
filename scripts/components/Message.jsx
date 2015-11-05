@@ -2,6 +2,10 @@ var React = require('react');
 var Radium = require('radium');
 var Avatar = require('./Avatar.jsx');
 
+/**
+ * Message Component.
+ * Component for rendering a single message in a chat view.
+ */
 var Message = React.createClass({
   propTypes: {
     message: React.PropTypes.object.isRequired,

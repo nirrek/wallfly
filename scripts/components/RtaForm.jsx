@@ -7,6 +7,10 @@ var MuiContextified = require('./MuiContextified.jsx');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 
+/**
+ * RtaForm Component.
+ * View component for the tenant displaying important RTA information.
+ */
 var RtaForm = React.createClass({
   render() {
     return (

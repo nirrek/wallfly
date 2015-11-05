@@ -1,6 +1,10 @@
 var React = require('react');
 var Radium = require('radium');
 
+/**
+ * Avatar Component.
+ * Used to display a user avatar.
+ */
 var Avatar = React.createClass({
   propTypes: {
     size: React.PropTypes.number,

@@ -38,18 +38,29 @@ var CreateAccount = React.createClass({
     };
   },
 
-  // Capture the input field state after each keypress.
+  /**
+   * Capture the input field state after each keypress.
+   * @param  {String} field The name of the field firing the event.
+   * @param  {Object} event The event object.
+   */
   onChange(field, event) {
     this.setState({ [field]: event.target.value });
   },
 
-  // Update select menu on change.
+  /**
+   * User type select menu change event.
+   * @param  {Object} event                 The event object.
+   * @param  {Number} selectedUserTypeIndex The index of the selected user type
+   */
   onSelectChange(event, selectedUserTypeIndex) {
     var userType = userTypes[selectedUserTypeIndex].name;
     this.setState({ userType: userType });
   },
 
-  // Handle the form submission event when the user tries to log in.
+  /**
+   * Handle the form submission event when the user tries to log in.
+   * @param  {Object} event The submit event object.
+   */
   onSubmit(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -96,8 +107,12 @@ var CreateAccount = React.createClass({
     });
   },
 
-  // Consumes a failureResponse from the server, and produces an appropriate
-  // component for displaying the error the user.
+  /**
+   * Consumes a failureResponse from the server, and produces an appropriate
+   * component for displaying the error the user.
+   * @param  {Object} failureResponse Failure response object from server.
+   * @return {ReactElement}           React component for displaying the error.
+   */
   getFailureMessage(failureResponse) {
     if (failureResponse.errorType === 'ER_DUP_ENTRY') {
       return (
@@ -109,10 +124,18 @@ var CreateAccount = React.createClass({
     return <ErrorMessage fillBackground={true}>{failureResponse}</ErrorMessage>;
   },
 
+  /**
+   * Image selected event handler
+   * @param  {Object} payload JS File API payload of selected file.
+   */
   onImageSelected(payload) {
     this.setState({ avatar: payload.dataURL });
   },
 
+  /**
+   * Image size error event handler.
+   * @param  {Object} error The error object.
+   */
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
@@ -120,7 +143,10 @@ var CreateAccount = React.createClass({
     this.setState({ fileSizeError: errorMsg });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       userType: this.state.userType,
@@ -212,7 +238,9 @@ var CreateAccount = React.createClass({
   }
 });
 
-// User types
+/**
+ * User types.
+ */
 var userTypes = [
   {name: 'owner', text: 'Owner'},
   {name: 'agent', text: 'Agent'},
@@ -250,7 +278,9 @@ var style = {
   }
 };
 
-// Validation schema for user profile form data.
+/**
+ * Joi validation schema for the form data.
+ */
 var schema = Joi.object().keys({
   username: Joi.string().alphanum().min(3).max(30),
   password: Joi.string().regex(/[a-zA-Z0-9]{5,100}/),

@@ -2,6 +2,7 @@ var React = require('react');
 var Radium = require('radium');
 
 /**
+ * Notice Component.
  * The notice component is used for displaying notices for users. Typically
  * the intent is a small notification about an exception circumstance (such
  * as not having a registered agent).

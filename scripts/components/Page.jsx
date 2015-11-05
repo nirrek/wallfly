@@ -4,6 +4,7 @@ var Radium = require('radium');
 
 /**
  * Page component.
+ * Component at the root of the 'page' render tree.
  */
 var Page = React.createClass({
   componentWillMount() {
@@ -11,6 +12,7 @@ var Page = React.createClass({
       this.setState({ height: window.innerHeight });
     };
 
+    // Capture the height of the viewport in state and rerender when it changes
     this.setState({ height: window.innerHeight });
     window.addEventListener('resize', this.listener);
   },
@@ -20,6 +22,7 @@ var Page = React.createClass({
   },
 
   render() {
+    // Height of the page needs to be a function of the viewport height.
     var panelHeight = {
       height: this.state.height - 50,
     };

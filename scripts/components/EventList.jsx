@@ -6,7 +6,6 @@ var EventItem = require('./EventItem.jsx');
  * Event List
  * This is a calendar component that lists events in the calendar days.
  */
-
 var EventList = React.createClass({
   propTypes: {
     events: React.PropTypes.array.isRequired

@@ -12,6 +12,10 @@ var Label = require('./Label.jsx');
 var DialogEnhanced = require('./DialogEnhanced.jsx');
 var Kronos = require('react-kronos');
 
+/**
+ * AddPropertyDialog component.
+ * Modal component that allows a property to be added.
+ */
 var AddPropertyDialog = React.createClass({
   propTypes: {
     isOpen: React.PropTypes.bool.isRequired,
@@ -42,7 +46,9 @@ var AddPropertyDialog = React.createClass({
     this.setState({ [field]: event.target.value });
   },
 
-  // Adds a new property with the current state of the form
+  /**
+   * Adds a new property with the current state of the form
+   */
   onAddProperty() {
     // Clear prior error states.
     this.setState({
@@ -86,7 +92,9 @@ var AddPropertyDialog = React.createClass({
     });
   },
 
-  // Resets the state of the form
+  /**
+   * Resets the state of the form.
+   */
   resetState() {
     this.setState({
       streetAddress: '',
@@ -102,7 +110,10 @@ var AddPropertyDialog = React.createClass({
     });
   },
 
-  // Validate the form, returns the Joi result of the validation.
+  /**
+   * Validate the form, returns the Joi result of the validation.
+   * @return {Object} Joi validation object.
+   */
   validate() {
     return Joi.validate({
       streetAddress: this.state.streetAddress,
@@ -115,10 +126,18 @@ var AddPropertyDialog = React.createClass({
     }, schema);
   },
 
+  /**
+   * Image selected event handler.
+   * @param  {Object} payload The JS File API payload for the selected file.
+   */
   onImageSelected(payload) {
     this.setState({ dataUrl: payload.dataURL });
   },
 
+  /**
+   * Image size error event handler.
+   * @param  {Object} error The image size error object.
+   */
   onImageSizeError(error) {
     var file = error.file;
     var sizeLimit = error.sizeLimit / 1000; // in KB (base10)
@@ -126,11 +145,18 @@ var AddPropertyDialog = React.createClass({
     this.setState({ fileSizeError: errorMessage });
   },
 
+  /**
+   * The modal close event handler.
+   */
   onClose() {
     this.resetState();
     this.props.onClose();
   },
 
+  /**
+   * Change event handler for the Kronos timepicker component.
+   * @param  {Date} date The newly selected date in the timepicker.
+   */
   onKronosChange(date) {
     this.setState({ leaseExpiry: date });
   },
@@ -216,6 +242,9 @@ var AddPropertyDialog = React.createClass({
   }
 });
 
+/**
+ * Joi validation schema for the form.
+ */
 var schema = Joi.object().keys({
   streetAddress: Joi.string().min(1).max(500),
   suburb: Joi.string().min(1).max(500),

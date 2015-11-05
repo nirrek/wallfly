@@ -4,6 +4,11 @@ var Radium = require('radium');
 var PropertyDetails = require('./PropertyDetails.jsx');
 var User = require('../utils/User.js');
 
+/**
+ * OwnerPropertyDetails Component.
+ * View component for displaying the property details for for the currently
+ * active property of the current owner user.
+ */
 var OwnerPropertyDetails = React.createClass({
   getInitialState() {
     return {
@@ -16,7 +21,9 @@ var OwnerPropertyDetails = React.createClass({
     this.getPropertyDetails();
   },
 
-  // Fetches the details for the property
+  /**
+   * Fetches property details from the server for the currently active property.
+   */
   getPropertyDetails() {
     var { propertyId } = this.props.params;
 
@@ -32,6 +39,10 @@ var OwnerPropertyDetails = React.createClass({
     });
   },
 
+  /**
+   * Renders the property details.
+   * @return {ReactElement} Rendered property details tree.
+   */
   renderPropertyDetails() {
     var { responseReceived, propertyDetails } = this.state;
     var user = User.getUser() || {};

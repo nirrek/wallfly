@@ -12,6 +12,10 @@ var navItemData = [
   { text: 'Overdue Rent', path: `${prefix}/overdueRent`, icon: 'attach_money' },
 ];
 
+/**
+ * AgentNav Component.
+ * This is the navigation component for the agent user.
+ */
 var AgentNav = React.createClass({
   render() {
     return (

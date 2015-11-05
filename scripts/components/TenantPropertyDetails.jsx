@@ -12,8 +12,11 @@ var MuiContextified = require('./MuiContextified.jsx');
 var Router = require('react-router');
 var Link = Router.Link;
 
-
-var OwnerPropertyDetails = React.createClass({
+/**
+ * TenantPropertyDetails Component.
+ * View component for displaying the current tenant's property details.
+ */
+var TenantPropertyDetails = React.createClass({
   getInitialState() {
     return {
       propertyDetails: undefined, // property details object
@@ -31,7 +34,10 @@ var OwnerPropertyDetails = React.createClass({
     }
   },
 
-  // Fetches the details for the property
+  /**
+   * Fetches the property details for the current tenant's property.
+   * @return {[type]} [description]
+   */
   getPropertyDetails() {
     Api.getUserPropertyDetails({
       callback: (err, response) => {
@@ -48,6 +54,19 @@ var OwnerPropertyDetails = React.createClass({
     });
   },
 
+  /**
+   * Close event handler for the welcome dialog.
+   */
+  onWelcomeClose() {
+    this.setState({ isWelcomeMessageOpen: false });
+    var user = User.getUser();
+    if (user) user.isFirstLogin = 0;
+  },
+
+  /**
+   * Render the property details.
+   * @return {ReactElement} Rendered vDOM tree of the property details.
+   */
   renderPropertyDetails() {
     var { responseReceived, propertyDetails, isNewAccount } = this.state;
     var user = User.getUser();
@@ -74,12 +93,6 @@ var OwnerPropertyDetails = React.createClass({
         isNewAccount={isNewAccount}
         details={propertyDetails} />
     );
-  },
-
-  onWelcomeClose() {
-    this.setState({ isWelcomeMessageOpen: false });
-    var user = User.getUser();
-    if (user) user.isFirstLogin = 0;
   },
 
   render() {
@@ -138,4 +151,4 @@ var style = {
   }
 };
 
-module.exports = MuiContextified(Radium(OwnerPropertyDetails));
+module.exports = MuiContextified(Radium(TenantPropertyDetails));

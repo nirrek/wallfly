@@ -4,6 +4,10 @@ var Api = require('../utils/Api.js');
 var Radium = require('radium');
 var PageHeading = require('./PageHeading.jsx');
 
+/**
+ * InspectionReport component.
+ * Inspection report view for displaying a list of inspection reports.
+ */
 var InspectionReport = React.createClass({
   getInitialState() {
     return {

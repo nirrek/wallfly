@@ -6,9 +6,19 @@ var MaterialUi = require('material-ui');
 var RaisedButton = MaterialUi.RaisedButton;
 var MuiContextified = require('./MuiContextified.jsx');
 
+/**
+ * Home Component.
+ * Homepage view component.
+ */
 var Home = React.createClass({
   mixins: [ Navigation ],
 
+  /**
+   * Transitions to the destination route.
+   * Function is intended to be a bound click event handler on links.
+   * @param  {String} destination The destination route
+   * @param  {Object} event       The click event object.
+   */
   transition(destination, event) {
     event.preventDefault();
     this.transitionTo(destination);

@@ -15,6 +15,11 @@ require('../../styles/fixed-data-table.css');
 var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
 
+/**
+ * OwnerPayments Component.
+ * View component for displaying the payments log for for the currently
+ * active property of the current owner user.
+ */
 var OwnerPayments = React.createClass({
   getInitialState() {
     return {
@@ -27,6 +32,9 @@ var OwnerPayments = React.createClass({
     this.fetchPayments();
   },
 
+  /**
+   * Fetches all the payments from the server for the currently active property
+   */
   fetchPayments() {
     Api.getAllPayments({
       params: {
@@ -39,16 +47,30 @@ var OwnerPayments = React.createClass({
     });
   },
 
+  /**
+   * Show Payment Dialog event handler.
+   */
   onShowPaymentDialog() { this.setState({ showPaymentDialog: true }); },
 
+  /**
+   * Close Payment Dialog event handler.
+   */
   onPaymentDialogClose() { this.setState({ showPaymentDialog: false }); },
 
+  /**
+   * Payment added event handler.
+   */
   onPaymentAdded() {
     this.fetchPayments();
     this.setState({ showPaymentDialog: false });
     this.refs.snackbar.show();
   },
 
+  /**
+   * Fetches the row data contents for the given rowIndex.
+   * @param  {Number} rowIndex The index of the row to fetch the content for.
+   * @return {Array}           Array of cell data for the row.
+   */
   rowGetter(rowIndex) {
     var row = this.state.payments[rowIndex];
 
@@ -60,6 +82,11 @@ var OwnerPayments = React.createClass({
     ];
   },
 
+  /**
+   * Custom renderer for the isPaid cell in the table.
+   * @param  {String}  data The data for the cell.
+   * @return {ReactElement} The rendered react element for the cell.
+   */
   isPaidRenderer(data) {
     var statusColor = data ? 'green' : 'red';
     return (
