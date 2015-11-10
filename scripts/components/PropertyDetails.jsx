@@ -110,7 +110,7 @@ var PropertyDetails = React.createClass({
       { icon: 'person', value: `${details.tenantFN} ${details.tenantLN}` },
       { icon: 'phone', value: details.tenantPhone },
       { icon: 'email', value: details.tenantEmail },
-      { icon: 'bookmark', value: moment(details.leaseExpiry).format('DD–MM–YYYY'), subscript: 'Lease expiry' },
+      { icon: 'bookmark', value: details.leaseExpiry ? moment(details.leaseExpiry).format('DD–MM–YYYY') : 'No Lease Expiry Given', subscript: 'Lease expiry' },
     ];
     var tenantDetails = this.renderDetails(tenantDetailRows) || <div>No current tenant</div>;
 
