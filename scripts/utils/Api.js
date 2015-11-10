@@ -7,7 +7,10 @@
 var axios = require('axios');
 var config = require('./config.js');
 var User = require('./User.js');
-let host = config.server;
+let host = `${config.server}/api`;
+if (__DEV__) {
+  host = config.server; // remove /api namespace for local server calls.
+}
 let userId = User.getUserId(); // current logged in user. Used in url creation.
 
 let Api = {
