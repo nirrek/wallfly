@@ -28,6 +28,15 @@ var ImageSelector = React.createClass({
     this.reader = new FileReader();
   },
 
+  componentDidMount() {
+    // React 0.13 has a bug that prevents the 'capture' attribute from being
+    // added to <input> types. This is a workaround to manually set this
+    // on the input. The bug is fixed in 0.14, so if the codebase is migrated
+    // to 0.14 or later this workaround can be removed.
+    var input = React.findDOMNode(this.refs.input);
+    input.setAttribute('capture', true);
+  },
+
   /**
    * Event handler for the file selected event.
    * @param  {Object} event The event object.
@@ -61,7 +70,7 @@ var ImageSelector = React.createClass({
 
     return (
       <div>
-        <input type="file" accept="image/*" onChange={this.onFileSelected} />
+        <input ref="input" type="file" accept="image/*" onChange={this.onFileSelected} capture={true}/>
         <div style={style.imgContainer}>
           {preview}
         </div>
