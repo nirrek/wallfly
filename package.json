@@ -2,8 +2,8 @@
   "scripts": {
     "start": "BUILD_DEV=1 npm install && node server.js",
     "start_windows": "set BUILD_DEV=1&&npm install && node server.js",
-    "build": "BUILD_DEV=0 NODE_ENV=production webpack -p --config webpack.config.production.js",
-    "build_windows": "set BUILD_DEV=0&&set NODE_ENV=production&&webpack -p --config webpack.config.production.js",
+    "build": "BUILD_DEV=0 NODE_ENV=production webpack -p --config webpack.config.production.js && cp index.html favicon.ico dist",
+    "build_windows": "set BUILD_DEV=0&&set NODE_ENV=production&&webpack -p --config webpack.config.production.js && cp index.html favicon.ico dist",
     "deploy": "cp index.html favicon.ico dist && surge -p dist -d wallfly.surge.sh",
     "lint": "eslint ."
   },
