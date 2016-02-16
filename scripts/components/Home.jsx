@@ -49,9 +49,11 @@ var Home = React.createClass({
             <div style={styles.marqueeContent}>
               <div style={styles.slogan}>
                 <h1 style={styles.sloganHeading}>Rental Management Made Easy</h1>
-                <h2 style={styles.sloganSubheading}>
-                  A unified experience for agents, owners, and tenants that<br/>  provides everything you need to manage a property.
-                </h2>
+                <div style={styles.alignCenter}>
+                  <h2 style={styles.sloganSubheading}>If you are ready to begin taking the pain out of property management,</h2>
+                  <br style={styles.br} />
+                  <h2 style={styles.sloganSubheading}> sign up for a free account today.</h2>
+                </div>
               </div>
               <a ref="button" style={styles.button} onClick={this.transition.bind(this, 'createAccount')}>
                 Get started for <i>FREE</i>
@@ -61,21 +63,27 @@ var Home = React.createClass({
         </div>
 
         <div>
-          <div style={styles.macContainer}>
-            <h2 style={styles.macTitle}>Wallfly brings all of your rental management needs<br />on to one web application.</h2>
-            <img
-              style={styles.mac}
-              src={require('../../assets/mac.png')} />
+          <div style={styles.appDisplay}>
+            <div style={styles.alignCenter}>
+              <h2 style={styles.appDisplayTitle}>Wallfly brings all of your rental management needs</h2>
+              <br style={styles.br} />
+              <h2 style={styles.appDisplayTitle}> into a simple, unified app.</h2>
+            </div>
+
+            <div style={styles.macContainer}>
+              <img
+                style={styles.mac}
+                src={require('../../assets/mac.png')} />
+            </div>
           </div>
         </div>
         <div style={[styles.slat, styles.slatAccent]}>
-          <div style={[
-              styles.img,
-              // styles.agent
-            ]}>
-            <img
-              style={styles.img}
-              src={require('../../assets/agent.png')} />
+          <div style={[styles.imgContainer, styles.imgContainerAccent]}>
+            <div style={[styles.img, styles.imgAccent]}>
+              <img
+                style={[styles.img, styles.imgAccent]}
+                src={require('../../assets/agent.png')} />
+            </div>
           </div>
           <div style={styles.featuresContainer}>
             <div style={styles.features}>
@@ -90,13 +98,12 @@ var Home = React.createClass({
           </div>
         </div>
         <div style={[styles.slat]}>
-          <div style={[
-              styles.img,
-              // styles.agent
-            ]}>
-            <img
-              style={styles.img}
-              src={require('../../assets/owner.png')} />
+          <div style={[styles.imgContainer, styles.imgContainerAccent]}>
+            <div style={styles.img}>
+              <img
+                style={styles.img}
+                src={require('../../assets/owner.png')} />
+            </div>
           </div>
           <div style={[styles.featuresContainer, styles.featuresAlternate]}>
             <div style={styles.features}>
@@ -112,13 +119,12 @@ var Home = React.createClass({
         </div>
 
         <div style={[styles.slat, styles.slatAccent]}>
-          <div style={[
-              styles.img,
-              // styles.agent
-            ]}>
-            <img
-              style={styles.img}
-              src={require('../../assets/tenant.png')} />
+          <div style={[styles.imgContainer, styles.imgContainerAccent]}>
+            <div style={[styles.img, styles.imgAccent]}>
+              <img
+                style={[styles.img, styles.imgAccent]}
+                src={require('../../assets/tenant.png')} />
+            </div>
           </div>
           <div style={[styles.featuresContainer]}>
             <div style={styles.features}>
@@ -135,7 +141,11 @@ var Home = React.createClass({
 
         <div style={styles.cta}>
           <h2 style={styles.ctaHeading}>Get started today.</h2>
-          <div>If you are ready to begin taking the pain out of property management,</div><div>sign up for a free account today.</div>
+          <div style={styles.alignCenter}>
+            <span>If you are ready to begin taking the pain out of property management,</span>
+            <br style={styles.br} />
+            <span> sign up for a free account today.</span>
+          </div>
           <br />
           <RaisedButton style={styles.ctaBtn} primary={true} label="Sign up for FREE" onClick={this.transition.bind(this, 'createAccount')} />
         </div>
@@ -180,14 +190,18 @@ var styles = {
     height: 80,
     flexShrink: 0,
     display: 'flex',
+    justifyContent: 'center',
     backgroundColor: 'rgba(12, 68, 36, 0.06)',
   },
   headerInner: {
     width: '60vw',
-    margin: '0 auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    '@media (max-width: 768px)': {
+      width: '100%',
+      margin: '0 2em',
+    },
   },
   logo: {
     marginTop: -1,
@@ -205,6 +219,9 @@ var styles = {
   navBtnAccent: {
     border: '2px solid',
     borderRadius: 2,
+    '@media (max-width: 768px)': {
+      display: 'none',
+    },
   },
   slogan: {
     fontWeight: 500,
@@ -218,6 +235,7 @@ var styles = {
     fontWeight: 400,
     margin: '-1em 0 1.5em',
     textShadow: '0 1px 1px rgba(0,0,0, 0.1)',
+    display: 'inline',
   },
   button: {
     background: '#fff',
@@ -229,37 +247,63 @@ var styles = {
     boxShadow: '0 1px 3px rgba(0,0,0, .2)',
     textShadow: 'none',
     transition: 'all 150ms linear',
+    marginTop: '1.5em',
 
     ':hover': {
       cursor: 'pointer',
       boxShadow: '0 1px 6px rgba(0,0,0, .4)',
     },
   },
-  macContainer: {
+  appDisplay: {
     display: 'flex',
     flexFlow: 'column',
     alignItems: 'center',
-    padding: '12em 0',
+    padding: '12em 1em',
+    '@media (max-width: 768px)': {
+      padding: '6em 1em',
+    },
   },
-  mac: {
-    maxWidth: 800,
-  },
-  macTitle: {
+  appDisplayTitle: {
     fontWeight: 400,
     textAlign: 'center',
     color: '#333',
     lineHeight: 1.3,
     marginBottom: '2em',
     marginTop: 0,
+    display: 'inline',
+  },
+  macContainer: {
+    marginTop: '2em',
+    maxWidth: 800,
+  },
+  mac: {
+    width: '100%',
   },
   img: {
     lineHeight: 0,
     '@media (max-width: 1440px)': {
-        width: 600
+      width: 600
     },
     '@media (max-width: 1250px)': {
-        width: '100%'
+      width: '100%',
+      borderRadius: '4px 0 0 4px',
     }
+  },
+  imgContainer: {
+    '@media (max-width: 1250px)': {
+      display: 'flex',
+      alignItems: 'center',
+    }
+  },
+  imgContainerAccent: {
+    '@media (max-width: 768px)': {
+      order: 1,
+    },
+  },
+  imgAccent: {
+    '@media (max-width: 1250px)': {
+      borderRadius: '0 4px 4px 0',
+    },
   },
   slat: {
     display: 'flex',
@@ -268,7 +312,10 @@ var styles = {
     fontSize: 18,
     '@media (max-width: 1440px)': {
       fontSize: 16,
-    }
+    },
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+    },
   },
   slatAccent: {
     backgroundColor: '#2ECC71',
@@ -276,7 +323,7 @@ var styles = {
     justifyContent: 'flex-start',
   },
   featuresContainer: {
-    width: '50em',
+    maxWidth: '50em',
     boxSizing: 'border-box',
   },
   featuresAlternate: {
@@ -286,6 +333,9 @@ var styles = {
     padding: '6em 6em 0 6em',
     '@media (max-width: 1440px)': {
       padding: '4em'
+    },
+    '@media (max-width: 768px)': {
+      padding: '2em'
     }
   },
   cta: {
@@ -315,6 +365,14 @@ var styles = {
   footerLogo: {
     width: 80,
     opacity: .7,
+  },
+  br: {
+    '@media (max-width: 768px)': {
+      display: 'none',
+    },
+  },
+  alignCenter: {
+    textAlign: 'center',
   },
 };
 
