@@ -21,7 +21,7 @@
     "image-webpack-loader": "1.6.1",
     "imagemin": "3.2.1",
     "json-loader": "0.5.3",
-    "node-sass": "3.2.0",
+    "node-sass": "3.4.2",
     "react-hot-loader": "1.2.8",
     "sass-loader": "1.0.3",
     "style-loader": "0.12.3",
