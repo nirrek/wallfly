@@ -1,24 +1,18 @@
-# WallFly
-Property rental management platform for owners, agents, and tenants. The latest deployment of the site can be seen here: http://wallfly.surge.sh/
+# Wallfly
+Property rental management platform for owners, agents, and tenants. Built with React.
 
-## Setup
-#### Step 1.
-You need to have Node.js and NPM installed
+[View Demo →](wallfly.surge.sg)
 
-#### Step 2.
-Clone the repo
-`git clone https://github.com/nirrek/wallfly.git`
-
-#### Step 3.
-Install project dependencies
-```
-cd wallfly
+### Setup
+```bash
+git clone https://github.com/nirrek/wallfly.git && cd wallfly
 npm install
+npm run start
 ```
 
-#### Step 4.
-Run the development server
-`npm run start`
-Now go to http://localhost:3000 to view the site.
+Go to `http://localhost:3000`.
+
+### Screenshot
+![Screenshot](https://infinit.io/_/xDgcvVZ.png)
 
 
