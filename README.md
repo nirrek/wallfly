@@ -1,7 +1,7 @@
 # Wallfly
 Property rental management platform for owners, agents, and tenants. Built with React.
 
-[View Demo →](wallfly.surge.sg)
+[View Demo →](http://wallfly.surge.sh)
 
 ### Setup
 ```bash
