@@ -12,6 +12,8 @@ npm run start
 
 Go to `http://localhost:3000`.
 
+Run the associated server by cloning this project: https://github.com/nirrek/wallflyServer
+
 ### Screenshot
 ![Screenshot](https://infinit.io/_/xDgcvVZ.png)
 
